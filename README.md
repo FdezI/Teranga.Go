@@ -10,6 +10,7 @@
 - **Nodejs:** ```# apt-get install nodejs```
 - **MySQL:** ```# apt-get install mysql-server```
 
+####Descarga del proyecto
 ```$ git clone https://github.com/FdezI/bbc_migrantes.git bbc_migrantes```
 
 ####Puesta en marcha de la base de datos de prueba:
