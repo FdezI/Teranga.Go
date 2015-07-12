@@ -1,0 +1,151 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="user-service.html">
+<link rel="import" href="car-service.html">
+<link rel="import" href="trip-service.html">
+
+<dom-module name="user-info">
+  <style>
+    /*:host {
+      display: block;
+      width: 100%;
+    }*/
+    user-card {
+      margin-bottom: 30px;
+    }
+  </style>
+  
+  <template>
+    
+    <user-service id="service" data="{{user}}" update="[[update]]" fetch="{{selecteduser}}"></user-service>
+<!--     <car-service data="{{user.cars}}" fetch="all" user="{{user._id}}"></car-service> -->
+<!--     <trip-service data="{{user.trips}}" fetch="all" user="{{user._id}}"></trip-service> -->
+    
+    
+    <div class="layout vertical center">
+      <template is="dom-if" if="{{!modify}}">
+        <h2>{{user.nick}}</h2>
+        <p>Acepta paquetes:
+          <template is="dom-if" if="{{user.packets}}">Si</template><template is="dom-if" if="{{!user.packets}}">No</template>
+        </p>
+	
+        <p>Email: <span>{{user.email}}</span></p>
+        
+        <paper-button raised on-click="toggleModify">Modificar</paper-button>
+      </template>
+      
+      <template is="dom-if" if="{{modify}}">
+      	<h2 class="layout horizontal center">Nick:
+      	<paper-input-decorator label="Nick" error="¡dato requerido!" autoValidate>
+  	      <input id="nick" name="nick" is="iron-input" value="{{dataBackup.nick::input}}" required>
+      	</paper-input-decorator></h2>
+      	  
+      	  
+      	<p class="layout horizontal center">Acepta paquetes:
+          <paper-toggle-button checked={{dataBackup.packets::input}}></paper-toggle-button>
+      	</p>
+      	
+      	<p class="layout horizontal center">Email:
+      	<paper-input-decorator label="Email" error="¡dato requerido!" autoValidate>
+  	      <input id="nick" name="nick" is="iron-input" value="{{dataBackup.email::input}}" required>
+      	</paper-input-decorator></p>
+      	<div class="layout horizontal center">
+      	  <paper-button raised on-click="saveChanges">Guardar</paper-button>
+      	  <paper-button raised on-click="toggleModify">Cancelar</paper-button>
+      	</div>
+      </template>
+      
+    </div>
+    
+    <div class="layout vertical center">
+      <div class="layout horizontal">
+      	<p>Viajes:</p>
+      	<paper-icon-button id="favicon" icon="add" on-tap="addTrip"></paper-icon-button>
+      </div>
+      
+      <template is="dom-repeat" items="{{user.trips}}" as="trip">
+        <p><span>{{trip.origin}}</span> -> <span>{{trip.destination}}</span></p>
+      </template>
+      
+      <div class="layout horizontal">
+      	<p>Coches:</p>
+      	<paper-icon-button id="favicon" icon="add" on-tap="addCar"></paper-icon-button>
+      </div>
+      
+      <template is="dom-repeat" items="{{user.cars}}" as="car">
+        <p>{{car.name}}</p>
+      </template>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "user-info",
+    properties: {
+      selecteduser: String,
+      user: {
+      	type: Object,
+      	notify: true
+      },
+      selected: {
+      	type: String,
+      	notify: true
+      },
+      modify: {
+      	type: Boolean,
+      	value: false
+      },
+      update: String
+    },
+    addCar: function() {
+      console.log("addCar");
+      this.selected = "cars";
+//       this.fire('create-car');
+    },
+    addTrip: function() {
+      console.log("addTrip");
+      this.selected = "trips";
+//       this.fire('create-car');
+    },
+    toggleModify: function() {
+      console.log("toggleModify");
+      console.log("CARS: " + this.user.iduser)
+      if(!this.modify) {
+      	var dataBackup = {};
+      	var user = this.user;
+      	var modifiables = ["nick", "packets", "email"];
+      	for(var i in modifiables) {
+      	  var value = modifiables[i];
+      	  dataBackup[value] = user[value];
+      	}
+      // 	Object.keys(modifiables).forEach(function(key) {
+      // 	  dataBackup[key] = user[key];
+      // 	});
+      	this.dataBackup = dataBackup;
+      }
+      
+      this.modify = !this.modify;
+    },
+    saveChanges: function() {
+      console.log("saveChanges");
+      var user = this.user;
+      var dataBackup = this.dataBackup;
+      Object.keys(dataBackup).forEach(function(key) {
+        user[key] = dataBackup[key];
+      });
+// this.user = this.dataBackup;
+//       this.user = user;
+//       console.log("PACK: " + this.user["packets"]);
+      
+      this.update = JSON.stringify(dataBackup);
+//       console.log("UPD: " + this.update);
+      
+      this.modify = false;
+      Polymer.dom(this.root).querySelector("user-service").saveData();
+    }
+  });
+  </script>
+</dom-module>

@@ -1,0 +1,110 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+
+<dom-module name="trip-card">
+  
+  <style>
+    :host {
+      display: block;
+      position: relative;
+      background-color: white;
+      padding: 20px;
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+    .card-header {
+      margin-bottom: 10px;
+    }
+    polyfill-next-selector { content: '.card-header h2'; }
+    .card-header ::content h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    polyfill-next-selector { content: '.card-header h3'; }
+    .card-header ::content h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bolder;
+    }
+    polyfill-next-selector { content: '.card-header img'; }
+    .card-header ::content img {
+      width: 70px;
+      border-radius: 50%;
+      margin: 10px;
+    }
+    :host([selected]) paper-icon-button {
+      color: #da4336;
+    }
+  </style>
+  
+  <template>
+
+    
+
+    <div class="card-header layout horizontal center">
+
+      <div class="layout vertical">
+        <content select="img"></content>
+        <div class="layout horizontal">
+          <paper-icon-button icon="social:person-outline" on-tap=""></paper-icon-button>
+          <content select="free"></content>
+          <paper-icon-button icon="maps:local-shipping" on-tap="test" hidden$="{{!packages}}"></paper-icon-button>
+        </div>
+      </div>
+      <div class="layout vertical">
+      	<content select="h2"></content>
+      	<content select="h3"></content>
+      	<content></content>  
+      </div>
+
+      <paper-icon-button
+        id="more"
+        icon="more-horiz"
+        on-tap="selectedTapped"
+        class="right">
+      </paper-icon-button>
+
+    </div>
+
+    
+
+   
+  </template>
+  <script>
+  //TODO instead of getting the trip per attribute bind the full trip
+  Polymer({
+    is: "trip-card",
+    properties: {
+      tripid: String,
+      selected: {
+        type: String,
+        notify: true
+      },
+      packages: {
+        type: Boolean,
+        value: false
+      }
+    },
+//     publish: {
+//       selected: {
+//         value: "",
+//         reflect: true
+//       }
+//     },
+    selectedTapped: function(event, detail, sender) {
+//       document.write("TRIP-CARD");
+//       this.selected = "Seleccionado";
+      this.selected = this.tripid;
+      console.log("CHANGED SELECTED TRIP TO: " + this.tripid);
+      this.fire('selected-tap');
+    },
+    test: function() {
+      console.log(this.packages);
+    }
+  });
+  </script>
+</dom-module>

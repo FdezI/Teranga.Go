@@ -1,0 +1,91 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="login-service">
+  <style>
+      :host {
+	display: none;
+      }
+  </style>
+    
+<!--   body='{"email": "usuarioprueba1@gmail.com", "password": "asdfasdf"}' <-NO RULA   -->
+<!--   body='&email=usuarioprueba1@gmail.com&password=asdfasdf'             <- RULA     -->
+  <template>
+    <iron-ajax id="request"
+      body="[[data]]"
+      last-response="{{session.user}}"
+      content-type="application/json"
+      on-response="onResponse"
+      method="POST">
+    </iron-ajax>
+  </template>
+  <script>
+  Polymer({
+    is: "login-service",
+    properties: {
+      session: {
+      	type: Object,
+      	notify: true
+      },
+      data: Object
+// 	type: Array
+// 	observer: 'dataChanged'
+//       }
+    },
+    onResponse: function() {
+//       session.user = {};
+//       session.user.name = session.name;
+      if(this.$.request.url.slice(-1) == "s") {
+      	var response = this.$.request.lastResponse;
+      	if(response && response.iduser) {
+      	  console.log("CREATED NEW USER");
+      // 	  if(!session.user) session.user = {};
+      	  session.user = {};
+      	  session.user.iduser = response.iduser;
+      	  session.user.email = this.data.email;
+      	  session.user.nick = email.split("@")[0];
+      	} else console.log("COULD NOT CREATE NEW USER");
+      }
+      else {
+      	console.log("AUTHED: " + this.session);
+      	console.log("AUTHED: " + this.session.user);
+      	console.log("AUTHED: " + this.lastResponse);
+      }
+      
+    },
+    ready: function() {
+      console.log("Login-Service ready, session: " + this.session);
+    },
+    
+    auth: function() {
+      console.log("auth");
+      this.$.request.url="http://localhost:8080/api/v1/auth";
+      this.$.request.generateRequest();
+    },
+    
+    register: function() {
+      console.log("register");
+      this.$.request.url="http://localhost:8080/api/v1/users";
+      this.$.request.generateRequest();
+    },
+//     created: function() {
+//       this.data = {};
+//     },
+//     dataChanged: function() {
+//       console.log("CHANGED: email: " + this.data.email + ", password: " + this.data.password);
+//       this.$.ajax.body = JSON.stringify(this.data);
+//       this.$.ajax.generateRequest();
+//     },
+//     authedResponse: function() {
+// //       console.log("RESPONSE:" + this.$.ajax.lastResponse + ", Id: " + this.$.ajax.lastResponse.id);
+// //       console.log("REQUEST:" + this.$.ajax.lastRequest + ", email: " + this.$.ajax.params["email"]);
+// //       this.data = this.$.ajaxAll.response.slice(0);
+//       this.session = this.$.ajax.lastResponse;
+//       if(this.session && Object.keys(this.session).length == 0) this.session = null;
+//       
+//       console.log("Respuesta: " + this.session + ", longitud: " + Object.keys(this.session) + ", name: " + this.session.name);
+//     },
+    
+  });
+  </script>
+</dom-module>

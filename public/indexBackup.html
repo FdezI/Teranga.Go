@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <!-- 1. Load platform support before any code that touches the DOM. -->
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- 2. Load the component using an HTML Import -->
+    <!--<link rel="import" href="elements/my-element.html">-->
+<!--     <link rel="import" href="bower_components/iron-animated-pages/iron-animated-pages.html"> -->
+    <link rel="import" href="bower_components/neon-animation/neon-animated-pages.html">
+<!--     <link rel="import" href="bower_components/iron-animated-pages/transitions/slide-from-right.html"> -->
+    <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+<!--     <link rel="import" href="bower_components/iron-scaffold/iron-scaffold.html"> -->
+    <link rel="import" href="bower_components/paper-drawer-panel/paper-drawer-panel.html">
+
+    <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="bower_components/iron-icon/iron-icon.html">
+    <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="bower_components/paper-item/paper-item.html">
+<!--     <link rel="import" href="bower_components/flatiron-director/flatiron-director.html"> -->
+    <link rel="import" href="bower_components/font-roboto/roboto.html">
+    <link rel="import" href="bower_components/iron-a11y-keys/iron-a11y-keys.html">
+    <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="bower_components/iron-localstorage/iron-localstorage.html">
+    <link rel="import" href="elements/login-box.html">
+<!--    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/google-map/google-map.html">-->
+<!--    <link rel="import" href="elements/user-info.html">
+    <link rel="import" href="elements/car-info.html">-->
+    
+    <link rel="import" href="views/home.html">
+    <link rel="import" href="views/trips.html">
+    <link rel="import" href="views/profile.html">
+    
+  
+    <link rel="stylesheet" href="styles.css" shim-shadowdom>
+  </head>
+  
+  <body unresolved class="fullbleed layout vertical">
+    <template id="mainBody" is="dom-bind">
+      <style>
+	login-box {
+	  position: absolute;
+	  top: 45px;
+	  right: 45px;
+	  display: {{displayLogin}};
+	}
+      </style>
+    
+      <!-- Route controller. -->
+<!--       <flatiron-director route="{{route}}" autoHash></flatiron-director> -->
+      
+      <!-- Keyboard nav controller. -->
+      <iron-a11y-keys target="{{parentElement}}"
+                keys="up down left right"
+                on-keys-pressed="{{keyHandler}}">
+      </iron-a11y-keys>
+      
+      <!-- Dynamic content controller -->
+      <iron-ajax auto id="ajax" url="{{selectedPage.page.url}}" handleAs="document"
+		on-iron-response="{{onResponse}}">
+      </iron-ajax>
+      
+      <iron-localstorage name="my-app-storage" value="{{session}}"></iron-localstorage>
+      
+      <paper-drawer-panel>
+<!--       <iron-scaffold id="scaffold"> -->
+      
+	<nav>
+	  <paper-toolbar><span>Single Page Polymer</span></paper-toolbar>
+	  <paper-menu attr-for-selected="hash" selected="{{route}}" selectedModel="{{selectedPage}}" on-iron-select="{{menuItemSelected}}">
+	    <template is="dom-repeat" items="{{pages}}">
+	      <paper-item hash="{{page.hash}}" noink>
+		<iron-icon icon="label-outline"></iron-icon>
+<!-- 		<a _href="{{page.url}}">{{page.name}}</a> -->
+		<a href="#{{page.hash}}">{{page.name}}</a>
+	      </paper-item>
+	    </template>
+	  </paper-menu>
+	</nav>
+	
+	<!-- flex makes the bar span across the top of the main content area -->
+	<paper-toolbar tool flex>
+	  <!-- flex spaces this element and justifies the icons to the right-side -->
+	  <div flex>{{selectedPage.page.name}}</div>
+	  <paper-icon-button icon="refresh"></paper-icon-button>
+	  <paper-icon-button icon="add"></paper-icon-button>
+	  <paper-icon-button icon="account-circle" on-tap="{{loginIconClicked}}"></paper-icon-button>
+	</paper-toolbar>
+	
+	<div layout horizontal center-center fit>
+	  <neon-animated-pages id="pages" valueattr="hash" selected="{{route}}" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
+	    <section hash="home">
+	      <home-view session="{{session}}"></home-view>
+	    </section>
+	    <section hash="profile">
+	      <profile-view session="{{session}}"></profile-view>
+	    </section>
+	    <section hash="trips">
+	      <trip-view session="{{session}}"></trip-view>
+	    </section>
+	  </neon-animated-pages>
+	</div>
+	
+<!--       </iron-scaffold> -->
+      </paper-drawer-panel>
+      
+      <login-box session="{{session}}"></login-box>
+    </template>
+  </body>
+    
+  <script>
+    var template = Polymer.dom(document).querySelector('template[id="mainBody"]');
+    template.displayLogin = "none";
+    template.loginIconClicked = function(e, detail, sender) {
+      this.displayLogin = this.displayLogin == "block" ? "none" : "block";
+    };
+    
+    template.pages = [
+      {name: 'Inicio', hash: 'home', url: '/views/home.html'},
+      {name: 'Viajes', hash: 'trips', url: '/views/trips.html'},
+      {name: 'Perfil', hash: 'profile', url: '/views/profile.html'},
+      {name: 'Register', hash: 'register', url: '/views/register.html'},
+      {name: 'Tracking', hash: 'three', url: '/views/profile.html'}
+    ];
+    
+    template.keyHandler = function(e, detail, sender) {
+      var pages = Polymer.dom(document).querySelector('#pages');
+
+      switch (detail.key) {
+	case 'left':
+	case 'up':
+	  pages.selectPrevious();
+	  break;
+	case 'right':
+	case 'down':
+	  pages.selectNext();
+	  break;
+// 	case 'space':
+// 	  detail.shift ? pages.selectPrevious() : pages.selectNext();
+// 	  break;
+      }
+    };
+    
+    template.menuItemSelected = function(e, detail, sender) {
+      if(detail.isSelected) {
+// 	var pages = document.querySelector('#pages');
+// 	this.injectBound
+	scaffold.closeDrawer();
+      }
+      
+    };
+    
+//     template.onResponse = function(e, detail, sender) {
+//       var article = detail.response;
+// 
+//       var pages = document.querySelector('#pages');
+//       this.injectBoundHTML(
+// // 	'<link rel="import" href="elements/user-info.html">' +
+// // 	'<link rel="import" href="elements/car-info.html">' +
+//       
+// 	    article.documentElement.innerHTML
+// // 	    '<link rel="import" href="views/profile.html">' + '<profile-view></profile-view>'
+// 	    
+// 	    , pages.selectedItem.firstElementChild);
+//     };
+    
+  </script>
+</html>

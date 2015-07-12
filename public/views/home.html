@@ -1,0 +1,38 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+
+<dom-module name="home-view">
+  
+  <style>
+    google-map {
+      height: 60%;
+      width: 70%;
+    }
+    .center {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <template>
+<!--   <section layout center-center fit> -->
+    <article class="center">
+      <div layout horizontal vertical center-center class="center">
+	  <google-map latitude="14.7324022" longitude="-17.3881194"></google-map>
+	  <div layout horizontal>
+	    <paper-input label="Origen"></paper-input>
+	    <paper-input label="Destino"></paper-input>
+	  </div>
+      </div>
+    </article>
+  </template>
+<!--   </section> -->
+
+  <script>
+    Polymer({
+      is:"home-view",
+      properties: {
+	session: Object
+      }
+    });
+  </script>
+</dom-module>

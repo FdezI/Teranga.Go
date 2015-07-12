@@ -1,0 +1,108 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="car-service">
+  <style>
+    :host {
+      display: none;
+    }
+  </style>
+  
+  <template>
+    <iron-ajax id="ajaxAll"
+      url="http://localhost:8080/api/v1/cars"
+      last-response="{{response}}"
+      on-response="carsLoaded">
+    </iron-ajax>
+
+    <iron-ajax id="ajax"
+      last-response="{{response}}"
+      on-response="carLoaded">
+    </iron-ajax>
+    
+    <iron-ajax id="add"
+      url="http://localhost:8080/api/v1/users/:iduser/cars"
+      body="{{update}}"
+      last-response="{{response}}"
+      on-response="addedResponse"
+      content-type="application/json"
+      method="POST">
+    </iron-ajax>
+    
+  </template>
+  <script>
+  Polymer({
+    is: "car-service",
+    properties: {
+      data: {
+        type: Object,
+        notify: true
+      },
+      fetch: {
+      	type: String,
+      	observer: 'fetchChanged'
+      },
+      user: {
+      	type: Object,
+      	observer: 'userChanged'
+      },
+      response: {
+        type: Object,
+        notify: true
+      },
+      update: String
+    },
+//     ready: function() {
+//       if(this.fetch == "all") {
+// 	if(this.user) this.$.ajaxAll.url="http://localhost:8080/api/v1/" + this.user + "/cars";
+//       }
+//       
+//       this.$.ajaxAll.go();
+//     },
+    
+    userChanged: function() {
+      if(this.fetch == "all") {
+      	if(this.user) {
+      	  this.$.ajaxAll.url="http://localhost:8080/api/v1/users/" + this.user + "/cars";
+      	  console.log("Cars Loaded!");
+      	}
+      	console.log("Cars loaded with: " + this.$.ajaxAll.url);
+      	this.$.ajaxAll.generateRequest();
+      }
+    },
+    
+    fetchChanged: function() {
+      if(this.fetch != "all" && this.fetch != "") {
+      	if(this.user) this.$.ajax.url="http://localhost:8080/api/v1/users/" + this.user + "/cars/" + this.fetch;
+      }
+    },
+    
+    carsLoaded: function() {
+      console.log("carSloaded");
+//      this.data = this.$.ajaxAll.lastResponse;
+//      this.response = this.data;
+      this.data = this.response;
+    },
+    
+    carLoaded: function() {
+      console.log("carLoaded");
+//      this.data = this.$.ajax.lastResponse;
+//      this.response = this.data;
+      this.data = this.response;
+    },
+    
+    saveData: function() {
+      console.log("BODY TO SEND:");
+      this.$.add.url="http://localhost:8080/api/v1/users/" + this.user + "/cars";
+      this.$.add.generateRequest();
+    },
+    
+    addedResponse: function() {
+      console.log("ADDED RESPONSE");
+//      this.response = this.$.add.lastResponse;
+      this.data.id = this.response.id;
+    }
+    
+  });
+  </script>
+</dom-module>

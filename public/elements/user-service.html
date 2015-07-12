@@ -1,0 +1,98 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="user-service">
+  <style>
+    :host {
+      display: none;
+    }
+  </style>
+    
+  <template>
+    <iron-ajax id="loadAll"
+      url="http://localhost:8080/api/v1/users"
+      on-response="usersLoaded">
+    </iron-ajax>
+    <iron-ajax id="loadOne"
+      last-response="{{data}}"
+      on-response="userLoaded">
+    </iron-ajax>
+    <iron-ajax id="save"
+      url="http://localhost:8080/api/v1/users/:iduser"
+      body="{{update}}"
+      content-type="application/json"
+      on-response="userSaved"
+      method="PUT">
+    </iron-ajax>
+  </template>
+  
+  <script>
+  Polymer({
+    is: "user-service",
+    properties: {
+      data: {
+      	type: Object,
+      	notify: true
+      },
+      fetch: {
+      	type: String,
+      	observer: 'fetchChanged'
+      },
+      update: String,
+      mode: String
+    },
+    
+    ready: function() {
+      console.log("user-service ready");
+      console.log("FETCH: " + this.fetch );
+      if(this.fetch == "all") this.$.loadAll.generateRequest();
+    },
+    
+    fetchChanged: function() {
+      console.log("fetchChanged");
+//       console.log("1");
+      if(this.fetch && this.fetch != "all" && this.fetch != "") {
+      // 	console.log("2");
+      	if(this.mode != "full") {
+      	  this.$.loadOne.url = "http://localhost:8080/api/v1/users/" + this.fetch;
+      	  this.$.loadOne.generateRequest();
+      // 	  console.log("3");
+      	}
+      }
+    },
+    
+    usersLoaded: function() {
+      console.log("usersLoaded");
+//       this.data = this.$.loadAll.response.slice(0);
+      this.data = this.$.loadAll.lastResponse;
+    },
+    
+    userLoaded: function() {
+      console.log("userLoaded");
+      
+//       this.data = this.$.ajax.lastResponse;
+      console.log(this.data);
+    },
+    saveData: function() {
+      console.log("saveData");
+//       if(!this.fetch) return;
+      
+      this.$.save.url = "http://localhost:8080/api/v1/users/" + this.fetch;
+//       var save = this.$.save;
+//       var string = "";
+//       Object.keys(this.$.save.body).forEach(function(key) {
+// 	  string += "&" + key + "=" + save.body[key];
+// 	});
+//       this.$.save.body = string;
+      if(!this.update) return;
+//       this.$.save.body = JSON.stringify(this.update);
+      
+      console.log("BODY: " + this.$.save.body + ", for user: " + this.fetch);
+      
+      this.$.save.generateRequest();
+    },
+    
+    
+  });
+  </script>
+</dom-module>

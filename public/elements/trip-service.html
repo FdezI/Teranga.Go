@@ -1,0 +1,114 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="trip-service">
+  <style>
+    :host {
+      display: none;
+    }
+  </style>
+  
+  <template>
+    <iron-ajax id="loadAll"
+      url='http://localhost:8080/api/v1/trips'
+      last-response="{{response}}"
+      on-response="tripsLoaded">
+    </iron-ajax>
+
+    <iron-ajax id="loadOne"
+      last-response="{{response}}"
+      on-response="tripLoaded">
+    </iron-ajax>
+    
+    <iron-ajax id="create"
+      url="http://localhost:8080/api/v1/trips"
+      body="{{update}}"
+      last-response="{{response}}"
+      on-response="createdResponse"
+      content-type="application/json"
+      method="POST">
+    </iron-ajax>
+    
+  </template>
+  <script>
+    Polymer({
+      is: "trip-service",
+      properties: {
+        data: {
+          type: Object,
+          notify: true
+        },
+        fetch: {
+        	type: String,
+        	observer: 'fetchChanged'
+        },
+        response: {
+          type: Object,
+          notify: true
+        },
+        user: {
+        	type: Object,
+        	observer: 'userChanged'
+        },
+        update: String
+      },
+      
+      ready: function() {
+        console.log("trip-service ready! for: " + this.fetch);
+      },
+      userChanged: function() {
+        if(this.fetch == "all") {
+        	if(this.user) {
+        	  this.$.loadAll.url = "http://localhost:8080/api/v1/users/" + this.user + "/trips";
+        	  console.log("Trips loading for user!");
+        	}
+        	console.log("Trips loading with: " + this.$.loadAll.url);
+        	
+        	this.$.loadAll.generateRequest();
+        }
+      },
+      
+      fetchChanged: function() {
+        if(this.fetch == "all") {
+          console.log("Fetching all trips");
+        	if(this.user)
+        	  this.$.loadAll.url = "http://localhost:8080/api/v1/users/" + this.user + "/trips";
+          console.log("trips to fetch: " + this.$.loadAll.url);
+          this.$.loadAll.generateRequest();
+        }
+        else if(this.fetch != "") {
+        	console.log("ESTO ES: " + this.fetch);
+        	this.$.loadOne.url="http://localhost:8080/api/v1/trips/" + this.fetch;
+          this.$.loadOne.generateRequest();
+        }
+      },
+      
+      tripsLoaded: function() {
+        // Make a copy of the loaded data
+        console.log('Trips loaded:');
+        console.log(this.response);
+  //       this.data = this.$.loadAll.response.slice(0);
+        // this.data = this.$.loadAll.lastResponse;
+        // this.response = this.data;
+        this.data = this.response;
+      },
+      
+      tripLoaded: function() {
+        console.log('Trip Loaded:');
+        console.log(this.response);
+        // this.data = this.$.loadOne.lastResponse;
+        // this.response = this.data;
+        this.data = this.response;
+      },
+      
+      saveData: function() {
+        console.log('SAVING TRIP');
+        this.$.create.generateRequest();
+      },
+      
+      createdResponse: function() {
+        // this.response = this.$.create.lastResponse;
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,133 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<!-- <link rel="import" href="../bower_components/iron-icon-button/iron-icon-button.html"> -->
+
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-right-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-left-animation.html">
+
+<link rel="import" href="../elements/user-info.html">
+<link rel="import" href="../elements/car-info.html">
+<link rel="import" href="../elements/trip-info.html">
+
+<dom-module name="profile-view">
+
+<!--   <section layout center-center fit> -->
+  <!--   <template is="auto-binding"> -->
+  <!--     <app-globals id="globals"></app-globals> -->
+  <template>
+      <template id="profileTemplate" is="dom-if" if="{{session.user}}">
+        <neon-animated-pages class="flex" id="profilePages" attr-for-selected="hash" selected="{{selected}}" >
+<!-- 	  <template> -->
+    	    <neon-animatable hash="main" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
+    <!-- 	      <template> -->
+    		    <user-info selectedUser="[[session.user.iduser]]" user="{{session.user}}" selected="{{selected}}"></user-info>
+    <!-- 	      </template> -->
+    	    </neon-animatable>
+    <!-- 	  </template> -->
+    <!-- 	  <template> -->
+    	    <neon-animatable hash="cars" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+    <!-- 	      <template> -->
+    		    <car-info selected="{{selected}}" user="[[session.user.iduser]]" carList="{{session.user.cars}}"></car-info>
+    <!-- 	      </template> -->
+    	    </neon-animatable>
+    <!-- 	  </template> -->
+    <!-- 	  <template> -->
+    	    <neon-animatable hash="trips" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
+    <!-- 	      <template> -->
+    		    <trip-info selected="{{selected}}" modify user="{{session.user}}" tripList="{{session.user.trips}}"></trip-info>
+    <!-- 	      </template> -->
+    	    </neon-animatable>
+    <!-- 	  </template> -->
+      	</neon-animated-pages>
+      </template>
+      <template is="dom-if" if="{{!session.user}}">
+	<p>Please, log-in</p>
+      </template>
+  <!--   </template> -->
+<!--   </section> -->
+  </template>
+
+<!--<script>
+  Polymer({
+  publish: {
+    session: this.$.globals.values.session;
+  }
+  });
+  </script>-->
+
+  <script>
+    Polymer({
+      is: "profile-view",
+      properties: {
+      	session: {
+      	  type: Object,
+      	  notify: true
+      	},
+      	selected: {
+      	  type: String,
+      	  value: "main"
+      	}
+      },
+      
+//       observers: [
+// 	'userChanged(session.user)'
+//       ],
+//       userChanged: function(newValue) {
+// 	  this.session.name = this.session.user.name;
+//       }
+    });
+  </script>
+</dom-module>
+
+
+<!--<script>
+  var template = document.querySelector('template[id="profileTemplate"]');
+  
+  template.addEventListener('polymer-ready', function() {
+    console.log("LAKIJSDASD");
+    this.injectBoundHTML('<user-info selectedUser="{{session.id}}" selected="{{selected}}"></user-info>', document.querySelector("article"));
+  });
+  
+  template.addEventListener('Polymer-ready', function() {
+    console.log("AQUI NO LLEGA");
+    var pages = this.$.profilePages;//querySelector("#tripPages");
+    
+    pages.querySelector("car-info").addEventListener("back-to-user", function(event, detail, sender) {
+      pages.setAttribute("selected", "info");
+    });
+    
+    pages.querySelector("user-info").addEventListener("create-car", function(event, detail, sender) {
+      pages.setAttribute("selected", "cars");
+    });
+  });
+</script>-->
+
+
+
+<!--<script>
+  var template = document.querySelector('template[id="profileTemplate"]');
+//   template.model.selected = "cars";
+  template.addEventListener('template-bound', function() {
+//     var pages = this.$.profilePages;
+//     
+//     pages.querySelector("user-info").addEventListener("selected-selected", function(event, detail, sender) {
+//       pages.setAttribute("selected", "{{selected}}");
+//     });
+  });
+
+
+
+//   console.log("{{loged}}");
+//   var template = document.querySelector('template[id="profileTemplate"]');
+  
+//   template.addEventListener('template-bound', function() {
+//     this.appendChild("{{loged}}");
+//   });
+  
+//   template.model.loged = "{{loged}}";
+  
+</script>-->
+

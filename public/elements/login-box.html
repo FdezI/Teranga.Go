@@ -1,0 +1,227 @@
+<!--TODO modify to create profile-box so when loged-in show profile configurations and such things  -->
+
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="login-service.html">
+
+<dom-module name="login-box">
+  <style>
+      /*:host {
+	@apply(--login-box-theme);
+      }*/
+      * {
+	  -webkit-box-sizing: border-box;
+	      -moz-box-sizing: border-box;
+		  box-sizing: border-box;
+  /*                         pointer-events: none; */
+      }
+      .container {
+	font-family:verdana;
+	height: 350px;
+	-webkit-perspective: 500px;
+	position: relative;
+	width: 250px;
+  /*               pointer-events: none; */
+      }
+      .card {
+	border-radius: 5px;
+	border: 1px solid #CCC;
+	height: 100%;
+	position: absolute;
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition: 1s;
+	width: 100%;
+	box-shadow: 0px 0 10px #ccc;
+  /*               pointer-events: none; */
+      }
+      .card section {
+	-webkit-backface-visibility: hidden;
+	border-radius: 5px;
+	position: absolute;
+  /*               pointer-events: none; */
+      }
+      .back {
+	-webkit-transform: rotateY(180deg);
+      }
+      .card.flipped {
+	-webkit-transform: rotateY(180deg);
+      }
+      .front, .back {
+	width: 100%;
+	height: 100%;
+      }
+      .toggle {
+	display: block;
+	background-color: rgb(148, 201, 243);
+	padding: 10px;
+	text-align: center;
+	border-radius: 5px;
+	color: #fff;
+	text-decoration: none;
+	border: none;
+	width: 100%;
+	cursor: pointer;
+      }
+  </style>
+  
+  <template>
+    <div class="container">
+	<div id="card" class="card">
+	  <template is="dom-if" if={{session.user}}>
+	    <style>
+	    </style>
+	    <section class='back'>
+	      <p>Bienvenido, <span>{{session.user.nick}}<span></p>
+	      <button class='toggle' on-click="onExit">Salir</button>
+	    </section>
+	    <section class='front'>
+	    </section>
+	  </template>
+	  <template is="dom-if" if={{!session.user}}>
+	    <style>
+		form {
+		  font-size: 0.8em;
+		  padding: 10px;
+		}
+		label {
+		  display: block;
+		  font-weight: bold;
+		}
+		input {
+		  border: 1px solid #ccc;
+		  font-size: 0.9em;
+		  padding: 2px 5px;
+		  width: 100%;
+		  border-radius: 5px;
+		  height: 35px;
+		}
+	    </style>
+	    <login-service id="loginserv" session="{{session}}" data="{{data}}"></login-service>
+	    <section class='back'>
+	      <form>
+		<h2>Register now!</h2>
+		<p>
+		  <label for="account_email">E-mail</label>
+		  <input type='email' id="account_email" value="{{item.email::input}}">
+		</p>
+		<p>
+		  <label for="account_password">Password</label>
+		  <input type='password' id="account_password" value="{{item.password::input}}">
+		</p>
+		<p>
+		  <label for="account_password_confirmation">Confirm password</label>
+		  <input type='password' id="account_password_confirmation">
+		</p>
+		<p><button on-click="onRegister">Register</button></p>
+		<button class='toggle' on-click="onClick">Loguear</button>
+	      </form>
+	    </section>
+	    <!-- LOGIN -->
+	    <section class='front'>
+	      <form>
+		<h2>Enter site</h2>
+		<p>
+		  <label for="user_email">E-mail</label>
+		  <input type='email' id="user_email" value="{{item.email::input}}">
+		</p>
+		<p>
+		  <label for="user_password">Password</label>
+		  <input type='password' id="user_password" value="{{item.password::input}}">
+		</p> <p>
+		  <button on-click="onSubmit">Submit</button>
+		</p>
+		<button class='toggle' on-click="onClick">Registrar</button>
+	      </form>
+	    </section>
+	  </template>
+	</div>
+      </div>
+  </template>
+  <script>
+    Polymer({
+      is: "login-box",
+      properties: {
+		session: {
+		  type: Object,
+		  notify: true
+	// 	  observer: 'sessionChanged'
+		},
+		item: {
+		  type: Object,
+		  value: {},
+		},
+		data: Object
+      },
+      
+      observers: [
+		'sessionUserChanged(session.user)'
+      ],
+      
+      ready: function() {
+		console.log("login-box ready: " + this.session.user);
+	// 	console.log(Polymer.dom(this).childNodes);
+      },
+//       created: function() {
+// 	this.item = {};
+// // 	this.data = {};
+//       },
+      onClick: function() {
+		console.log("click");
+		event.preventDefault();
+		event.stopPropagation();
+	//                 document.querySelector('.card');
+		this.$.card.classList.toggle('flipped');
+
+      },
+      onExit: function() {
+		console.log("exit");
+		this.$.card.classList.toggle('flipped');
+		delete this.data;
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+		delete this.session.user;
+	// 	delete this.session;
+		this.session = {};
+	// 	this.session = false;
+		console.log("USER AFTER DELETE: " + this.session.user);
+		console.log("SESSION AFTER DELETE: " + this.session);
+      },
+      onSubmit: function() {
+		console.log("submit");
+		event.preventDefault();
+		event.stopPropagation();
+	// 	console.log(JSON.stringify(this.shadowRoot.querySelector("#loginForm").serializeArray()));
+		
+	// 	this.data = this.item.slice(0);
+	// 	this.$.card.classList.toggle('flipped');
+	// 	var data = {};
+	// 	var data = "";
+	// 	var item = this.item;
+	// 	Object.keys(item).forEach(function(key) { data[key] = item[key]; });
+	// 	Object.keys(item).forEach(function(key) { data += "&" + key + "=" + item[key]; });
+		
+	// 	console.log("DATA: " + item.email);
+		this.data = JSON.stringify(this.item);
+		console.log("AUTHDATA: " + this.data);
+	// 	Polymer.dom(this).querySelector("#loginserv").auth();
+		this.$$("login-service").auth();
+      },
+      onRegister: function() {
+		event.preventDefault();
+		event.stopPropagation();
+		
+		this.data = JSON.stringify(this.item);
+		this.$$("login-service").register();
+      },
+      sessionUserChanged: function() {
+	      //TODO chequear si no está ya en el back
+		if(!this.session) this.session = {};
+		console.log("SESSION USER CHANGED, SESSION: " + this.session);
+		console.log("--- USER: ");
+		console.log(this.session.user);
+	// 	if(this.session.user && !this.session.user.email) this.$.card.classList.toggle('flipped');
+		if(this.session.user) this.$.card.classList.add('flipped');
+		else this.$.card.classList.remove('flipped');
+      }
+    });
+  </script>
+</dom-module>

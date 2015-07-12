@@ -1,0 +1,180 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<!-- <link rel="import" href="../bower_components/paper-dropdown/paper-dropdown.html"> -->
+<!-- <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html"> -->
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-autogrow-textarea/iron-autogrow-textarea.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-backdrop.html">
+<!--<link rel="import" href="../bower_components/iron-overlay/iron-overlay.html">-->
+<link rel="import" href="../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<!-- <link rel="import" href="../bower_components/iron-transition/iron-transition-css.html"> -->
+
+<link rel="import" href="trip-service.html">
+<link rel="import" href="route-service.html">
+<link rel="import" href="request-service.html">
+
+<dom-module name="trip-info">
+  <style>
+    /*:host {
+      display: block;
+      width: 100%;
+    }*/
+    /*trip-card {
+      margin-bottom: 30px;
+    }*/
+  </style>
+    
+  <template>
+    
+    <trip-service id="service" data="{{trip}}" fetch="{{selectedtrip}}" response="{{response}}"></trip-service>
+    
+    <iron-overlay-backdrop opened="{{overlay}}">
+      <h2>Ocupar plaza</h2>
+      <h3>Mensaje al conductor</h3>
+<!--       <textarea id="t1"></textarea> -->
+      <iron-autogrow-textarea id="a1">
+        <textarea id="t1" value="{{message::input}}"></textarea>
+      </iron-autogrow-textarea>
+      
+      <paper-button raised on-click="requestTravel">Ok</paper-button>
+<!--       <button iron-overlay-toggle>OK</button> -->
+      <request-service id="request" mode="travel" trip="{{selectedtrip}}" object="{{user.iduser}}" message="{{message}}"></request-service>
+    </iron-overlay-backdrop>
+    
+    <paper-icon-button id="favicon" icon="arrow-back" on-tap="backToList"> </paper-icon-button>
+    <div class="layout vertical center">
+      <template is="dom-if" if="{{modify}}">
+        <route-service data="{{rutas}}" fetch="all"></route-service>
+        <div class="layout horizontal center">
+    <!--	  <paper-dropdown-menu label="Elige una ruta">
+    	        <paper-dropdown class="dropdown">
+    	          <iron-menu class="menu" selected="{{trip.route}}">
+      		        <template repeat="{{ruta in rutas}}">
+      		          <paper-item name="{{ruta._id}}">{{ruta.origin}} -> {{ruta.destination}}</paper-item>
+      		        </template>
+    	           </iron-menu>
+              </paper-dropdown>
+            </paper-dropdown-menu>-->
+        </div>
+      	<div class="layout horizontal center">
+      <!--	  <paper-dropdown-menu label="Elige un coche">
+      	    <paper-dropdown class="dropdown">
+      	      <iron-menu class="menu" selected="{{trip.car}}">
+      		<template repeat="{{car in user.cars}}">
+      		  <paper-item name="{{car._id}}">{{car.name}}</paper-item>
+      		</template>
+      	      </iron-menu>
+      	    </paper-dropdown>
+      	  </paper-dropdown-menu>-->
+      	</div>
+      	<div class="layout horizontal center">
+      	  <paper-button raised on-click="saveChanges">Guardar</paper-button>
+      	  <paper-button raised on-click="backToList">Cancelar</paper-button>
+      	</div>
+      </template>
+    
+      <template is="dom-if" if="{{!modify}}">
+      	<h2>{{trip.destiny}}</h2>
+      	<h3>{{trip.origin}}</h3>
+      	<span>Asientos libres: <strong>{{trip.free}}</strong></span>
+      	<template is="dom-repeat" items="{{trip.car.seats}}" as="seat">
+      	  <template if="{{seat}}">
+      	    <paper-icon-button id="favicon" icon="social:person" on-tap=""> </paper-icon-button>
+      	  </template>
+
+      	  <template if="{{!seat}}">
+      	    <paper-icon-button id="favicon" icon="social:person-outline" on-tap="showOverlay"> </paper-icon-button>
+      	  </template>
+      	  <!--TODO: add an icon saying a seat was asked but not yet accepted-->
+      	</template>
+      	<template is="dom-if" if="{{trip.packages}}">
+      	  Packages:
+      	  <template is="dom-repeat" items="{{trip.packageList}}" as="packet">
+      	    <paper-icon-button id="favicon" icon="assignment-turned-in" on-tap=""> </paper-icon-button>
+      	  </template>
+      	  
+          <paper-icon-button id="favicon" icon="add-box" on-tap=""> </paper-icon-button>
+      	  <!--TODO: add an icon saying a box was added but not yet accepted-->
+      	</template>
+      </template>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "trip-info",
+    properties: {
+      selected: {
+      	type: String,
+      	notify: true
+      },
+      selectedtrip: String,
+      modify: {
+        type: Boolean,
+        value: false
+      },
+      user: Object,
+      triplist: {
+      	type: Array,
+      	notify: true
+      },
+      response: {
+      	type: Object,
+      	observer: 'responseChanged'
+      },
+      trip: {
+      	type: Object,
+      	value: {},
+      	observer: 'tripChanged'
+      }
+    },
+    
+    tripChanged: function(event, detail, sender) {
+      if(this.trip.car) {
+      	var seats = this.trip.car.seats;
+      	if(seats) {
+      	  this.trip.car.seats = new Array(seats);
+      	  if(this.trip.passengers) {
+      	    var size = this.trip.passengers.length;
+      	    for(i = 0; i < size; i++)
+      	      seats[i] = this.trip.passengers[i];
+      	  }
+      	}
+      }
+    },
+    backToList: function() {
+      this.selected = "main";
+//       this.fire('back-to-list');
+//       var trip = sender.templateInstance.model.trip;
+//       this.$.service.setSelected(trip.uid, trip.selected);
+//       document.write(this.selectedtrip);
+      
+    },
+    saveChanges: function() {
+      Polymer.dom(this).querySelector("trip-service").saveData();
+    },
+    
+    responseChanged: function(oldValue, newValue) {
+      if(!this.response['errors'] && !this.response['err']) {
+      	if(this.triplist) this.triplist.push(this.response);
+      // 	this.selected = "main";
+      } else console.log("Ha habido un error al guardar el viaje");
+    },
+    
+    showOverlay: function() {
+      this.overlay = true;
+    },
+    
+    hideOverlay: function() {
+      this.overlay = false;
+    },
+    
+    requestTravel: function() {
+      console.log("REQ?");
+//       sender.request();
+      Polymer.dom(this).querySelector("request-service").request();
+    }
+  });
+  </script>
+</dom-module>

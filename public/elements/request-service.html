@@ -1,0 +1,69 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="request-service" attributes="mode trip object message">
+  <style> :host { display: none; } </style>
+  
+  <template>
+    <iron-ajax id="request"
+      url="http://localhost:8080/api/v1/request/..."
+      params="{{data}}"
+      on-response="savedResponse"
+      method="POST">
+    </iron-ajax>
+    
+    <!--<iron-ajax id="reqPacket"
+      url="http://localhost:8080/api/v1/request/packet"
+      params="{{data}}"
+      on-iron-response="{{savedResponse}}"
+      method="POST"
+      handleAs="json">
+    </iron-ajax>-->
+    
+    <!--<iron-ajax id="reqTravel"
+      url="http://localhost:8080/api/v1/request/travel"
+      params="{{data}}"
+      on-iron-response="{{savedResponse}}"
+      method="POST"
+      handleAs="json">
+    </iron-ajax>-->
+  </template>
+  
+  <script>
+    Polymer({
+      is: "request-service",
+      properties: {
+	mode: String,
+	trip: String,
+	object: String,
+	message: String,
+	data: {
+	  type: Array,
+	  value: []
+	}
+      },
+      
+      request: function() {
+	this.data = [];
+	this.$.request.url = "http://localhost:8080/api/v1/request/" + this.mode;
+	
+	this.data.idtrip = this.trip;
+	this.data.message = this.message;
+	
+	if(this.mode == "packet") this.data.idpackage = this.object;
+	else this.data.iduser = this.object;
+	
+	this.$.request.generateRequest();
+	
+      }
+    
+//       reqTravel: function() {
+// 	this.$.reqTravel.go();
+//       },
+      
+//       reqPackage: function() {
+// 	this.$.reqPackage.go();
+//       }
+    });
+  </script>
+</dom-module>

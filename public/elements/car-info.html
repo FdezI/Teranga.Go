@@ -1,0 +1,96 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="car-service.html">
+
+<dom-module name="car-info">
+  <style>
+    /*:host {
+      display: block;
+      width: 100%;
+    }*/
+  </style>
+  
+  <template>
+<!--     <trip-service id="service" data="{{trip}}" fetch="{{selectedTrip}}"></trip-service> -->
+    
+    <car-service data="{{data}}" update="[[update]]" user="{{user}}" response="{{response}}"></car-service>
+    
+    <paper-icon-button id="favicon" icon="arrow-back" on-tap="backToList"> </paper-icon-button>
+    <div class="layout vertical center">
+    	<h2> Nuevo coche </h2>
+    	<h3> Añade un coche nuevo </h3>
+    	<div class="layout vertical start center">
+    	  <p></p>
+    	  <div class="layout horizontal center">
+    	    <label for="name">Nombre: <br/></label>
+    	    <paper-input-decorator label="Nombre" floatingLabel error="¡dato requerido!" autoValidate>
+    	      <input id="name" name="nombre" is="iron-input" value="{{data.name::input}}" required>
+    	    </paper-input-decorator>
+    	    <label for="modelo">Modelo: <br/></label>
+    	    <paper-input-decorator label="Modelo" floatingLabel error="¡dato requerido!" autoValidate>
+    	      <input id="modelo" name="modelo" is="iron-input" value="{{data.model::input}}" required>
+    	    </paper-input-decorator>
+    	  </div>
+    	  <div class="layout horizontal center">
+    	    <label for="asientos">Asientos: <br/></label>
+    	    <paper-input-decorator label="Nº de asientos" floatingLabel error="¡dato requerido!" autoValidate>
+    	      <input id="asientos" name="asientos" is="iron-input" value="{{data.seats::input}}" required>
+    	    </paper-input-decorator>
+    	  </div>
+    	</div>
+    	<div class="layout horizontal center">
+    	  <paper-button raised on-click="saveChanges">Guardar</paper-button>
+    	  <paper-button raised on-click="backToList">Cancelar</paper-button>
+    	</div>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "car-info",
+    properties: {
+      selected: {
+      	type: String,
+      	notify: true
+      },
+      user: Object,
+      carList: Array,
+      data: {
+      	type: Object,
+      	value: {}
+      },
+      response: {
+      	type: Object,
+      	value: {},
+      	Observer: 'responseChanged'
+      },
+      update: String
+    },
+//     publish: {data: [], response: []},
+    backToList: function(event, detail, sender) {
+      this.selected = "main";
+//       this.fire('back-to-user');
+    },
+    saveChanges: function(event, detail, sender) {
+      console.log("JAJA");
+      console.log(this.data);
+      console.log("----");
+      this.update = JSON.stringify(this.data);
+      this.$$("car-service").saveData();
+      console.log("JEJE");
+      console.log(this.data);
+      console.log("----");
+    },
+    
+    responseChanged: function(oldValue, newValue) {
+      console.log("1111111111111111111");
+      if(!this.response['errors'] && !this.response['err']) {
+      	if(this.carList) this.carList.push(this.response);
+      	this.selected = "main"; 
+      } else console.log("Ha habido un error al guardar el coche");
+    }
+    
+  });
+  </script>
+</dom-module>

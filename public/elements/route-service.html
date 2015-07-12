@@ -1,0 +1,54 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="route-service">
+   <style>
+    :host {
+      display: none;
+    }
+  </style>
+    
+  <template>
+    <iron-ajax id="ajaxAll"
+      url="http://localhost:8080/api/v1/routes"
+      on-response="routesLoaded">
+    </iron-ajax>
+
+    <iron-ajax id="ajax"
+      on-response="routeLoaded">
+    </iron-ajax>
+  </template>
+  <script>
+  Polymer({
+    is: "route-service",
+    properties: {
+      data: Array,
+      fetch: {
+	type: String,
+	observer: 'fetchChanged'
+      }
+    },
+    ready: function() {
+        if(this.fetch == "all") this.$.ajaxAll.generateRequest();
+    },
+    
+    fetchChanged: function() {
+      if(this.fetch != "all" && this.fetch != "") {
+	console.log("ESTO ES: " + this.fetch);
+	this.$.ajax.url="http://localhost:8080/api/v1/routes/" + this.fetch;
+      }
+    },
+    
+    routesLoaded: function() {
+      console.log('PETICION 1');
+      this.data = this.$.ajaxAll.lastResponse;
+    },
+    
+    routeLoaded: function() {
+      console.log('PETICION 2');
+      this.data = this.$.ajax.lastResponse;
+    },
+    
+  });
+  </script>
+</dom-module>
