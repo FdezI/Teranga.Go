@@ -14,18 +14,24 @@
 
 ####Descarga del proyecto:
 
-```$ git clone https://github.com/FdezI/bbc_migrantes.git bbc_migrantes```
+```$ git clone https://github.com/FdezI/Teranga.Go.git```
+
+####Actualización a la última versión:
+
+Desde la misma carpeta que se ejecutó el clone:
+
+```$ cd Teranga.Go/ && git pull```
 
 ####Puesta en marcha de la base de datos de prueba:
 
-```$  mysql -u root -p[root_password] < bbc_migrantes/tfgdata.sql```
+```$  mysql -u root -p[root_password] < Teranga.Go/tfgdata.sql```
 
-La instrucción anterior creará la base de datos necesaria así como creará al usuario con los permisos pertinentes para que el servidor pueda conectarse a la misma.
+La instrucción anterior creará la base de datos necesaria así como creará al usuario (tfg) con los permisos pertinentes para que el servidor pueda conectarse a la misma.
 
 
 ##Ejecución
 
-```$ cd bbc_migrantes/ && nodejs server.js```
+```$ cd Teranga.Go/ && nodejs server.js```
 
 
 ##Acceso
