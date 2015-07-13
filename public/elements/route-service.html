@@ -9,46 +9,53 @@
   </style>
     
   <template>
-    <iron-ajax id="ajaxAll"
+    <iron-ajax id="loadAll"
       url="http://localhost:8080/api/v1/routes"
+      last-response="{{response}}"
       on-response="routesLoaded">
     </iron-ajax>
 
-    <iron-ajax id="ajax"
+    <iron-ajax id="loadOne"
+      last-response="{{response}}"
       on-response="routeLoaded">
     </iron-ajax>
   </template>
+
   <script>
-  Polymer({
-    is: "route-service",
-    properties: {
-      data: Array,
-      fetch: {
-      	type: String,
-      	observer: 'fetchChanged'
-      }
-    },
-    ready: function() {
-        if(this.fetch == "all") this.$.ajaxAll.generateRequest();
-    },
-    
-    fetchChanged: function() {
-      if(this.fetch != "all" && this.fetch != "") {
-      	console.log("ESTO ES: " + this.fetch);
-      	this.$.ajax.url="http://localhost:8080/api/v1/routes/" + this.fetch;
-      }
-    },
-    
-    routesLoaded: function() {
-      console.log('PETICION 1');
-      this.data = this.$.ajaxAll.lastResponse;
-    },
-    
-    routeLoaded: function() {
-      console.log('PETICION 2');
-      this.data = this.$.ajax.lastResponse;
-    },
-    
-  });
+    Polymer({
+      is: "route-service",
+      properties: {
+        response: {
+          type: Object,
+          notify: true
+        },
+        fetch: {
+        	type: String,
+        	observer: 'fetchChanged'
+        }
+      },
+      ready: function() {
+          console.log("route-service ready!");
+          if(this.fetch == "all") this.$.loadAll.generateRequest();
+      },
+      
+      fetchChanged: function() {
+        if(this.fetch != "all" && this.fetch != "") {
+        	console.log("ESTO ES: " + this.fetch);
+        	this.$.loadOne.url="http://localhost:8080/api/v1/routes/" + this.fetch;
+        }
+      },
+      
+      routesLoaded: function() {
+        console.log('PETICION 1');
+        // this.data = this.$.loadAll.lastResponse;
+      },
+      
+      routeLoaded: function() {
+        console.log('PETICION 2');
+        // this.data = this.$.loadOne.lastResponse;
+      },
+      
+    });
   </script>
 </dom-module>

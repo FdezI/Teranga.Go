@@ -22,7 +22,7 @@ exports.getAll = function(req, res) {
 								SELECT idtrip\
 								FROM userTrips\
 								WHERE userTrips.accepted = true\
-							) T1\
+							) AS T1\
 							ON T1.idtrip = trip.idtrip\
 						GROUP BY trip.idtrip',
 						function(err, rows, fields) {

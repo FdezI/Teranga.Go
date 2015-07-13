@@ -19,6 +19,9 @@
   <!--     <app-globals id="globals"></app-globals> -->
   <template>
       <template id="profileTemplate" is="dom-if" if="{{session.user}}">
+            
+
+
         <neon-animated-pages class="flex" id="profilePages" attr-for-selected="hash" selected="{{selected}}" >
 <!-- 	  <template> -->
     	    <neon-animatable hash="main" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">

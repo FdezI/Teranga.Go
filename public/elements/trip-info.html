@@ -9,7 +9,6 @@
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <!-- <link rel="import" href="../bower_components/iron-transition/iron-transition-css.html"> -->
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="trip-service.html">
 <link rel="import" href="route-service.html">
@@ -17,6 +16,9 @@
 
 <dom-module name="trip-info">
   <style>
+    .iron-selected {
+      background: #eee;
+    }
     /*:host {
       display: block;
       width: 100%;
@@ -27,53 +29,45 @@
   </style>
     
   <template>
-    
     <trip-service id="service" data="{{trip}}" fetch="{{selectedtrip}}" response="{{response}}"></trip-service>
-    
-    <iron-overlay-backdrop opened="{{overlay}}">
-      <h2>Ocupar plaza</h2>
-      <h3>Mensaje al conductor</h3>
-<!--       <textarea id="t1"></textarea> -->
-      <iron-autogrow-textarea id="a1">
-        <textarea id="t1" value="{{message::input}}"></textarea>
-      </iron-autogrow-textarea>
-      
-      <paper-button raised on-click="requestTravel">Ok</paper-button>
-<!--       <button iron-overlay-toggle>OK</button> -->
-      <request-service id="request" mode="travel" trip="{{selectedtrip}}" object="{{user.iduser}}" message="{{message}}"></request-service>
-    </iron-overlay-backdrop>
     
     <paper-icon-button id="favicon" icon="arrow-back" on-tap="backToList"> </paper-icon-button>
     <div class="layout vertical center">
       <template is="dom-if" if="{{modify}}">
-        <!-- <route-service data="{{rutas}}" fetch="all"></route-service> -->
-        <div class="layout horizontal center">
+        <route-service response="{{routes}}" fetch="all"></route-service>
+        <div class="layout vertical center">
     <!--	  <paper-dropdown-menu label="Elige una ruta">
     	        <paper-dropdown class="dropdown">
     	          <iron-menu class="menu" selected="{{trip.route}}">
-      		        <template is="dom-repeat" items="{{rutas}}" as="ruta">
+      		        <template is="dom-repeat" items="{{routes}}" as="ruta">
       		          <paper-item name="{{ruta._id}}">{{ruta.origin}} -> {{ruta.destination}}</paper-item>
       		        </template>
     	           </iron-menu>
               </paper-dropdown>
             </paper-dropdown-menu>-->
-            <iron-selector attr-for-selected="value">
-              <!-- <template is="dom-repeat" items="{{rutas}}" as="ruta"> -->
-                <div value="1">uno</div>
-                <div value="2">DOS</div>
-                
-              <!-- </template> -->
-            </iron-selector>
-            <iron-selector attr-for-selected="value" selected="{{selRoute}}">
-              <template is="dom-repeat" items="{{rutas}}" as="ruta">
-                <option value="{{ruta.idroute::input}}">{{ruta.name}}</option>
+            <select value="{{selroute::input}}">
+              <option disabled selected> -- Selecciona una ruta -- </option>
+              <template is="dom-repeat" items="{{routes}}" as="ruta">
+                <option value="{{index}}">{{ruta.name}}</option>
               </template>
-            </iron-selector>
-            <!-- <select>
-              <template is="dom-repeat" items="{{rutas.{{selRoute}}.start}}" as="start">
-                <option value="{{start.idlocation}}">{{start.name}}</option>
-              </template>
-            </select> -->
+            </select>
+
+            <template is="dom-if" if="[[selroute]]">
+              <!-- TODO: use a template for the three, need a previous conversion -->
+              <select value="{{selstart::input}}">
+                <option disabled selected> -- Selecciona un punto de partida -- </option>
+                <template is="dom-repeat" items="{{waypoints.start}}" as="start">
+                  <option value="{{start.idlocation}}">{{start.name}}</option>
+                </template>
+              </select>
+              MOSTRAR DE ALGUNA FORMA LOS PUNTOS INTERMEDIOS
+              <select value="{{selend::input}}">
+                <option disabled selected> -- Selecciona un punto de destino -- </option>
+                <template is="dom-repeat" items="{{waypoints.end}}" as="end">
+                  <option value="{{end.idlocation}}">{{end.name}}</option>
+                </template>
+              </select>
+            </template>
         </div>
       	<div class="layout horizontal center">
       	  <!-- <paper-dropdown-menu label="Elige un coche">
@@ -85,11 +79,11 @@
       	      </iron-menu>
       	    </paper-dropdown>
       	  </paper-dropdown-menu> -->
-          <iron-selector attr-for-selected="value">
+          <!-- <iron-selector attr-for-selected="value">
             <template is="dom-repeat" items="{{user.cars}}" as="car">
               <option value="{{car.idcar::input}}">{{car.name}}</option>
             </template>
-          </iron-selector>
+          </iron-selector> -->
       	</div>
       	<div class="layout horizontal center">
       	  <paper-button raised on-click="saveChanges">Guardar</paper-button>
@@ -98,6 +92,17 @@
       </template>
     
       <template is="dom-if" if="{{!modify}}">
+        <!-- <iron-overlay-backdrop opened="{{overlay}}">
+          <h2>Ocupar plaza</h2>
+          <h3>Mensaje al conductor</h3>
+          <iron-autogrow-textarea id="a1">
+            <textarea id="t1" value="{{message::input}}"></textarea>
+          </iron-autogrow-textarea>
+          
+          <paper-button raised on-click="requestTravel">Ok</paper-button>
+          <request-service id="request" mode="travel" trip="{{selectedtrip}}" object="{{user.iduser}}" message="{{message}}"></request-service>
+        </iron-overlay-backdrop> -->
+
       	<h2>{{trip.destiny}}</h2>
       	<h3>{{trip.origin}}</h3>
       	<span>Asientos libres: <strong>{{trip.free}}</strong></span>
@@ -151,23 +156,35 @@
       	value: {},
       	observer: 'tripChanged'
       },
-      rutas: {
+      overlay: {
+        type: Boolean,
+        value: false
+      },
+      selroute: {  // Index on the array, not idroute
+        type: String,
+        observer: 'selrouteChanged'
+      },
+      selstart: String,
+      selcenter: String,
+      selend: String,
+      routes: {
         type: Array,
-        value: [
-          {"idroute":1, "name":"Ruta1", "waypoints": {
-                                          "start": [{"idlocation":1, "name":"loc1"}],
-                                          "center": [{"idlocation":2, "name":"loc2"}],
-                                          "end": [{"idlocation":3, "name":"loc3"}],
-                                        }
-          },
-          {"idroute":2, "name":"Ruta2", "waypoints": {
-                                          "start": [{"idlocation":1, "name":"loc1"}],
-                                          "center": [{"idlocation":2, "name":"loc2"}],
-                                          "end": [{"idlocation":3, "name":"loc3"}],
-                                        }
-          }
-        ]
-      }
+        // value: [
+        //   {"idroute":1, "name":"Ruta1", "waypoints": {
+        //                                   "start": [{"idlocation":1, "name":"loc1"}],
+        //                                   "center": [{"idlocation":2, "name":"loc2"}],
+        //                                   "end": [{"idlocation":3, "name":"loc3"}],
+        //                                 }
+        //   },
+        //   {"idroute":2, "name":"Ruta2", "waypoints": {
+        //                                   "start": [{"idlocation":1, "name":"loc1"}],
+        //                                   "center": [{"idlocation":2, "name":"loc2"}],
+        //                                   "end": [{"idlocation":3, "name":"loc3"}],
+        //                                 }
+        //   }
+        // ]
+      },
+      waypoints: Object
     },
     
     tripChanged: function(event, detail, sender) {
@@ -183,6 +200,16 @@
       	}
       }
     },
+    selrouteChanged: function() {
+      // console.log(this.$$("#prueba").attributes);
+      // console.log("routes: ")
+      // console.log(this.routes);
+      // console.log("ROUTE: " + this.selroute);
+      this.waypoints = this.routes[this.selroute].waypoints;
+      // this.selstart = this.selroute.waypoints.start;
+      // console.log("AHI VA");
+      // console.log(this.selstart);
+    },
     backToList: function() {
       this.selected = "main";
 //       this.fire('back-to-list');
@@ -195,6 +222,10 @@
       Polymer.dom(this).querySelector("trip-service").saveData();
     },
     
+    // convertedWaypoints: function() {
+    //   return this.routes[this.selroute].waypoints
+    // },
+
     responseChanged: function(oldValue, newValue) {
       if(!this.response['errors'] && !this.response['err']) {
       	if(this.triplist) this.triplist.push(this.response);

@@ -33,7 +33,7 @@ exports.getAll = function(req, res) {
 	// });
 	mysql.pool.query('SELECT * FROM route', function(err, rows, fields) {
 		var routes = rows;
-		mysql.pool.query('SELECT * FROM waypoints', function(err, rows, fields){
+		mysql.pool.query('SELECT waypoints.*, name FROM waypoints, location WHERE waypoints.idlocation = location.idlocation', function(err, rows, fields){
 			var index = {};
 			for(i in routes) {
 				var route = routes[i];
