@@ -1,4 +1,4 @@
-# bbc_migrantes
+# Teranga.Go
 
 #####MUY IMPORTANTE: El proyecto está en sus inicios por lo que es MUY inestable
 #####MUY IMPORTANTE: El estilo de la página está sin "toquetear"
