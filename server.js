@@ -124,7 +124,7 @@ apiRouter.route('/users/:iduser/packets/:packet_id') // Maybe should this be del
 	
 apiRouter.route('/routes')
 	.post(db.routeController.create)
-	.post(db.routeController.getAll);
+	.get(db.routeController.getAll);
 apiRouter.route('/routes/:idroute')
 	.get(db.tripUnlinkedController.get)
 // 	.post(db.routeController.update)

@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <!-- <link rel="import" href="../bower_components/iron-transition/iron-transition-css.html"> -->
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
 <link rel="import" href="trip-service.html">
 <link rel="import" href="route-service.html">
@@ -45,28 +46,50 @@
     <paper-icon-button id="favicon" icon="arrow-back" on-tap="backToList"> </paper-icon-button>
     <div class="layout vertical center">
       <template is="dom-if" if="{{modify}}">
-        <route-service data="{{rutas}}" fetch="all"></route-service>
+        <!-- <route-service data="{{rutas}}" fetch="all"></route-service> -->
         <div class="layout horizontal center">
     <!--	  <paper-dropdown-menu label="Elige una ruta">
     	        <paper-dropdown class="dropdown">
     	          <iron-menu class="menu" selected="{{trip.route}}">
-      		        <template repeat="{{ruta in rutas}}">
+      		        <template is="dom-repeat" items="{{rutas}}" as="ruta">
       		          <paper-item name="{{ruta._id}}">{{ruta.origin}} -> {{ruta.destination}}</paper-item>
       		        </template>
     	           </iron-menu>
               </paper-dropdown>
             </paper-dropdown-menu>-->
+            <iron-selector attr-for-selected="value">
+              <!-- <template is="dom-repeat" items="{{rutas}}" as="ruta"> -->
+                <div value="1">uno</div>
+                <div value="2">DOS</div>
+                
+              <!-- </template> -->
+            </iron-selector>
+            <iron-selector attr-for-selected="value" selected="{{selRoute}}">
+              <template is="dom-repeat" items="{{rutas}}" as="ruta">
+                <option value="{{ruta.idroute::input}}">{{ruta.name}}</option>
+              </template>
+            </iron-selector>
+            <!-- <select>
+              <template is="dom-repeat" items="{{rutas.{{selRoute}}.start}}" as="start">
+                <option value="{{start.idlocation}}">{{start.name}}</option>
+              </template>
+            </select> -->
         </div>
       	<div class="layout horizontal center">
-      <!--	  <paper-dropdown-menu label="Elige un coche">
+      	  <!-- <paper-dropdown-menu label="Elige un coche">
       	    <paper-dropdown class="dropdown">
       	      <iron-menu class="menu" selected="{{trip.car}}">
-      		<template repeat="{{car in user.cars}}">
-      		  <paper-item name="{{car._id}}">{{car.name}}</paper-item>
-      		</template>
+            		<template is="dom-repeat" items="{{user.cars}}" as="car">
+            		  <paper-item name="{{car._id}}">{{car.name}}</paper-item>
+            		</template>
       	      </iron-menu>
       	    </paper-dropdown>
-      	  </paper-dropdown-menu>-->
+      	  </paper-dropdown-menu> -->
+          <iron-selector attr-for-selected="value">
+            <template is="dom-repeat" items="{{user.cars}}" as="car">
+              <option value="{{car.idcar::input}}">{{car.name}}</option>
+            </template>
+          </iron-selector>
       	</div>
       	<div class="layout horizontal center">
       	  <paper-button raised on-click="saveChanges">Guardar</paper-button>
@@ -127,6 +150,23 @@
       	type: Object,
       	value: {},
       	observer: 'tripChanged'
+      },
+      rutas: {
+        type: Array,
+        value: [
+          {"idroute":1, "name":"Ruta1", "waypoints": {
+                                          "start": [{"idlocation":1, "name":"loc1"}],
+                                          "center": [{"idlocation":2, "name":"loc2"}],
+                                          "end": [{"idlocation":3, "name":"loc3"}],
+                                        }
+          },
+          {"idroute":2, "name":"Ruta2", "waypoints": {
+                                          "start": [{"idlocation":1, "name":"loc1"}],
+                                          "center": [{"idlocation":2, "name":"loc2"}],
+                                          "end": [{"idlocation":3, "name":"loc3"}],
+                                        }
+          }
+        ]
       }
     },
     

@@ -19,10 +19,46 @@ exports.create = function(req, res) {
 
 // UNREGISTERED
 exports.getAll = function(req, res) {
-	mysql.pool.query('SELECT * FROM route', function(err, rows, fields) {
-		if(err) throw err;
+	// mysql.pool.query('SELECT route.*, locations, types\
+	// 					FROM route\
+	// 					LEFT JOIN (\
+	// 						SELECT idroute,\
+	// 								GROUP_CONCAT(idlocation) AS locations,\
+	// 								GROUP_CONCAT(type) AS types FROM waypoints\
+	// 					) AS wps ON wps.idroute = route.idroute',
+	// 					function(err, rows, fields) {
+	// 	if(err) throw err;
 		
-		res.json(rows);
+	// 	res.json(rows);
+	// });
+	mysql.pool.query('SELECT * FROM route', function(err, rows, fields) {
+		var routes = rows;
+		mysql.pool.query('SELECT * FROM waypoints', function(err, rows, fields){
+			var index = {};
+			for(i in routes) {
+				var route = routes[i];
+				route.waypoints = {'start':[], 'center':[], 'end':[]};
+				index[route.idroute] = route;
+				// route.waypoints.start = [];
+				// route.waypoints.center = [];
+				// route.waypoints.end = [];
+			}
+			var waypoints = rows;
+			for(i in waypoints) {
+				var waypoint = waypoints[i];
+				var rt = index[waypoint.idroute];
+				if(rt) {
+					wp = rt.waypoints[waypoint.type];
+					if(wp) {
+						delete waypoint.type;
+						delete waypoint.idroute;
+						wp.push(waypoint);
+					}
+				}
+			}
+
+			res.json(routes);
+		});
 	});
 };
 

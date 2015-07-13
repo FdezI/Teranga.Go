@@ -30,6 +30,7 @@
     "paper-menu": "PolymerElements/paper-menu#^1.0",
     "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#^1.0",
     "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0",
+    "iron-selector": "PolymerElements/iron-selector#^1.0",
     "google-map": "GoogleWebComponents/google-map#^1.0",
     "neon-animation": "PolymerElements/neon-animation#^1.0",
     "iron-flex-layout": "Polymerelements/iron-flex-layout#^1.0",

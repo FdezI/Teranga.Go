@@ -24,8 +24,8 @@
     properties: {
       data: Array,
       fetch: {
-	type: String,
-	observer: 'fetchChanged'
+      	type: String,
+      	observer: 'fetchChanged'
       }
     },
     ready: function() {
@@ -34,8 +34,8 @@
     
     fetchChanged: function() {
       if(this.fetch != "all" && this.fetch != "") {
-	console.log("ESTO ES: " + this.fetch);
-	this.$.ajax.url="http://localhost:8080/api/v1/routes/" + this.fetch;
+      	console.log("ESTO ES: " + this.fetch);
+      	this.$.ajax.url="http://localhost:8080/api/v1/routes/" + this.fetch;
       }
     },
     
