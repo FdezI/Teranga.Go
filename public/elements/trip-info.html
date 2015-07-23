@@ -79,11 +79,12 @@
       	      </iron-menu>
       	    </paper-dropdown>
       	  </paper-dropdown-menu> -->
-          <!-- <iron-selector attr-for-selected="value">
+          <select attr-for-selected="value">
+            <option disabled selected> -- Selecciona un coche -- </option>
             <template is="dom-repeat" items="{{user.cars}}" as="car">
-              <option value="{{car.idcar::input}}">{{car.name}}</option>
+              <option value="{{car.idcar}}">{{car.name}}</option>
             </template>
-          </iron-selector> -->
+          </select>
       	</div>
       	<div class="layout horizontal center">
       	  <paper-button raised on-click="saveChanges">Guardar</paper-button>

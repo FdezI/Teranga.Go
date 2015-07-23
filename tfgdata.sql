@@ -19,7 +19,7 @@
 -- Current Database: `TFG`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `TFG` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `TFG` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 
 GRANT ALL PRIVILEGES ON TFG . * TO 'tfg'@'localhost' IDENTIFIED BY 'asdfasdf';
 FLUSH PRIVILEGES;
@@ -43,7 +43,7 @@ CREATE TABLE `car` (
   PRIMARY KEY (`idcar`),
   KEY `fk_car_1_idx` (`iduser`),
   CONSTRAINT `fk_car_1` FOREIGN KEY (`iduser`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `location` (
   `idlocation` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idlocation`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `location` (
 
 LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
-INSERT INTO `location` VALUES (1,'Loc1'),(2,'Loc2');
+INSERT INTO `location` VALUES (1,'Loc1'),(2,'Loc2'),(3,'Loc3'),(4,'Loc4'),(5,'Loc5'),(6,'Loc6');
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +91,7 @@ CREATE TABLE `package` (
   `idpackage` int(11) NOT NULL AUTO_INCREMENT,
   `size` enum('0','1','2','3','4','5') DEFAULT NULL,
   PRIMARY KEY (`idpackage`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +117,7 @@ CREATE TABLE `packageTrips` (
   KEY `fk_packageTrips_2_idx` (`idpackage`),
   CONSTRAINT `fk_packageTrips_1` FOREIGN KEY (`idtrip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_packageTrips_2` FOREIGN KEY (`idpackage`) REFERENCES `package` (`idpackage`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `route` (
   `idroute` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idroute`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE `route` (
 
 LOCK TABLES `route` WRITE;
 /*!40000 ALTER TABLE `route` DISABLE KEYS */;
-INSERT INTO `route` VALUES (1,'Ruta1');
+INSERT INTO `route` VALUES (1,'Ruta1'),(2,'Ruta2');
 /*!40000 ALTER TABLE `route` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +174,7 @@ CREATE TABLE `trip` (
   KEY `trip_location_2_idx` (`destiny`),
   CONSTRAINT `fk_trip_location_1` FOREIGN KEY (`origin`) REFERENCES `location` (`idlocation`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_trip_location_2` FOREIGN KEY (`destiny`) REFERENCES `location` (`idlocation`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +200,7 @@ CREATE TABLE `user` (
   `email` varchar(45) NOT NULL,
   `password` binary(32) NOT NULL,
   PRIMARY KEY (`iduser`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,7 +228,7 @@ CREATE TABLE `userTrips` (
   KEY `fk_user_idx` (`iduser`),
   CONSTRAINT `fk_userTrips_1` FOREIGN KEY (`idtrip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userTrips_2` FOREIGN KEY (`iduser`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,7 +256,7 @@ CREATE TABLE `waypoints` (
   KEY `fk_waypoints_2_idx` (`idlocation`),
   CONSTRAINT `fk_waypoints_1` FOREIGN KEY (`idroute`) REFERENCES `route` (`idroute`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_waypoints_2` FOREIGN KEY (`idlocation`) REFERENCES `location` (`idlocation`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,6 +265,7 @@ CREATE TABLE `waypoints` (
 
 LOCK TABLES `waypoints` WRITE;
 /*!40000 ALTER TABLE `waypoints` DISABLE KEYS */;
+INSERT INTO `waypoints` VALUES (1,1,'start'),(1,2,'start'),(1,3,'center'),(1,4,'center'),(1,5,'center'),(1,6,'end');
 /*!40000 ALTER TABLE `waypoints` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -277,4 +278,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-12 22:48:16
+-- Dump completed on 2015-07-23 17:56:44
