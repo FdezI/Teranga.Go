@@ -16,11 +16,6 @@
 
 ```$ git clone https://github.com/FdezI/Teranga.Go.git```
 
-####Actualización a la última versión:
-
-Desde la misma carpeta que se ejecutó el clone:
-
-```$ cd Teranga.Go/ && git pull```
 
 ####Puesta en marcha de la base de datos de prueba:
 
@@ -41,3 +36,10 @@ Desde cualquier navegador (recomendado chrome):
 `localhost:8080`
 
 Para acceder a la API REST (web-service), basta con realizar una petición *GET*, *POST* o *PUT* al servidor, dependiendo de la acción deseada (recomendado usar la aplicación **POSTMAN**)
+
+
+##Actualización a la última versión:
+
+Desde la misma carpeta que se ejecutó el clone:
+
+```$ cd Teranga.Go/ && git pull```
