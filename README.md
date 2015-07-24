@@ -26,6 +26,7 @@
 ```$  mysql -u root -p[root_password] < Teranga.Go/tfgdata.sql```
 
 La instrucción anterior creará la base de datos necesaria así como creará al usuario (tfg) con los permisos pertinentes para que el servidor pueda conectarse a la misma.
+(Recomendado poner un espacio antes de la órden para no registrar la misma, junto con la contraseña, en el historial)
 
 
 ##Ejecución
