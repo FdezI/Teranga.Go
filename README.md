@@ -14,7 +14,11 @@
 
 ####Descarga del proyecto:
 
-```$ git clone https://github.com/FdezI/Teranga.Go.git```
+* Mediante el uso de git:
+
+  ```$ git clone https://github.com/FdezI/Teranga.Go.git```
+
+* A través de la [interfaz web](https://github.com/FdezI/Teranga.Go), utilizando el botón "[Download ZIP](https://github.com/FdezI/Teranga.Go/archive/master.zip)"
 
 
 ####Puesta en marcha de la base de datos de prueba:
