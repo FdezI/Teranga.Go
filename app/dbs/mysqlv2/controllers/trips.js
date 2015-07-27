@@ -11,25 +11,26 @@ exports.create = function(req, res) {
 // AUTHENTICATED
 exports.getAll = function(req, res) {
 
-	mysql.pool.query('SELECT trip.idtrip, trip.packages = 1 as packages, car.seats-COUNT(T1.idtrip) AS free,\
-							origin.name AS origin,\
-							destiny.name AS destiny\
-						FROM trip\
-							JOIN car ON car.idcar = trip.idcar\
-							JOIN location AS origin ON origin.idlocation = trip.origin\
-							JOIN location AS destiny ON destiny.idlocation = trip.destiny\
-							LEFT JOIN (\
-								SELECT idtrip\
-								FROM userTrips\
-								WHERE userTrips.accepted = true\
-							) AS T1\
-							ON T1.idtrip = trip.idtrip\
-						GROUP BY trip.idtrip',
-						function(err, rows, fields) {
-		if(err) throw err;
+	// mysql.pool.query('SELECT trip.idtrip, trip.packages = 1 as packages, car.seats-COUNT(T1.idtrip) AS free,\
+	// 						origin.name AS origin,\
+	// 						destiny.name AS destiny\
+	// 					FROM trip\
+	// 						JOIN car ON car.idcar = trip.idcar\
+	// 						JOIN location AS origin ON origin.idlocation = trip.origin\
+	// 						JOIN location AS destiny ON destiny.idlocation = trip.destiny\
+	// 						LEFT JOIN (\
+	// 							SELECT idtrip\
+	// 							FROM userTrips\
+	// 							WHERE userTrips.accepted = true\
+	// 						) AS T1\
+	// 						ON T1.idtrip = trip.idtrip\
+	// 					GROUP BY trip.idtrip',
+	// 					function(err, rows, fields) {
+	// 	if(err) throw err;
 		
-		res.json(rows);
-	});
+	// 	res.json(rows);
+	// });
+	res.json([])
 };
 
 exports.get = function(req, res) {
