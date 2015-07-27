@@ -10,7 +10,6 @@
   
   <template>
     <iron-ajax id="loadAll"
-      url='http://localhost:8080/api/v1/trips'
       last-response="{{response}}"
       on-response="tripsLoaded">
     </iron-ajax>
@@ -21,7 +20,6 @@
     </iron-ajax>
     
     <iron-ajax id="create"
-      url="http://localhost:8080/api/v1/trips"
       body="{{update}}"
       last-response="{{response}}"
       on-response="createdResponse"
@@ -59,9 +57,10 @@
       userChanged: function() {
         if(this.fetch == "all") {
         	if(this.user) {
-        	  this.$.loadAll.url = "http://localhost:8080/api/v1/users/" + this.user + "/trips";
+        	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
         	  console.log("Trips loading for user!");
-        	}
+        	} else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+
         	console.log("Trips loading with: " + this.$.loadAll.url);
         	
         	this.$.loadAll.generateRequest();
@@ -71,14 +70,17 @@
       fetchChanged: function() {
         if(this.fetch == "all") {
           console.log("Fetching all trips");
+
         	if(this.user)
-        	  this.$.loadAll.url = "http://localhost:8080/api/v1/users/" + this.user + "/trips";
+        	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
+          else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+
           console.log("trips to fetch: " + this.$.loadAll.url);
           this.$.loadAll.generateRequest();
         }
         else if(this.fetch != "") {
         	console.log("ESTO ES: " + this.fetch);
-        	this.$.loadOne.url="http://localhost:8080/api/v1/trips/" + this.fetch;
+        	this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
           this.$.loadOne.generateRequest();
         }
       },
@@ -103,6 +105,7 @@
       
       saveData: function() {
         console.log('SAVING TRIP');
+        this.$.create.url = window.Polymer.restAPI + "trips";
         this.$.create.generateRequest();
       },
       

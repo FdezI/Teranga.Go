@@ -10,7 +10,6 @@
     
   <template>
     <iron-ajax id="loadAll"
-      url="http://localhost:8080/api/v1/users"
       on-response="usersLoaded">
     </iron-ajax>
     <iron-ajax id="loadOne"
@@ -45,7 +44,10 @@
     ready: function() {
       console.log("user-service ready");
       console.log("FETCH: " + this.fetch );
-      if(this.fetch == "all") this.$.loadAll.generateRequest();
+      if(this.fetch == "all") {
+        this.$.loadAll.url = window.Polymer.restAPI + "users";
+        this.$.loadAll.generateRequest();
+      }
     },
     
     fetchChanged: function() {
@@ -54,7 +56,7 @@
       if(this.fetch && this.fetch != "all" && this.fetch != "") {
       // 	console.log("2");
       	if(this.mode != "full") {
-      	  this.$.loadOne.url = "http://localhost:8080/api/v1/users/" + this.fetch;
+      	  this.$.loadOne.url = window.Polymer.restAPI + "users/" + this.fetch;
       	  this.$.loadOne.generateRequest();
       // 	  console.log("3");
       	}
@@ -77,7 +79,7 @@
       console.log("saveData");
 //       if(!this.fetch) return;
       
-      this.$.save.url = "http://localhost:8080/api/v1/users/" + this.fetch;
+      this.$.save.url = window.Polymer.restAPI + "users/" + this.fetch;
 //       var save = this.$.save;
 //       var string = "";
 //       Object.keys(this.$.save.body).forEach(function(key) {

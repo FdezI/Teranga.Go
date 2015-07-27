@@ -10,7 +10,6 @@
     
   <template>
     <iron-ajax id="loadAll"
-      url="http://localhost:8080/api/v1/routes"
       last-response="{{response}}"
       on-response="routesLoaded">
     </iron-ajax>
@@ -36,13 +35,17 @@
       },
       ready: function() {
           console.log("route-service ready!");
-          if(this.fetch == "all") this.$.loadAll.generateRequest();
+
+          if(this.fetch == "all") {
+            this.$.loadAll.url = window.Polymer.restAPI + "routes";
+            this.$.loadAll.generateRequest();
+          }
       },
       
       fetchChanged: function() {
         if(this.fetch != "all" && this.fetch != "") {
         	console.log("ESTO ES: " + this.fetch);
-        	this.$.loadOne.url="http://localhost:8080/api/v1/routes/" + this.fetch;
+        	this.$.loadOne.url = window.Polymer.restAPI + "routes/" + this.fetch;
         }
       },
       

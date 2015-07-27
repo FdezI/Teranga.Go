@@ -10,7 +10,6 @@
   
   <template>
     <iron-ajax id="ajaxAll"
-      url="http://localhost:8080/api/v1/cars"
       last-response="{{response}}"
       on-response="carsLoaded">
     </iron-ajax>
@@ -21,7 +20,6 @@
     </iron-ajax>
     
     <iron-ajax id="add"
-      url="http://localhost:8080/api/v1/users/:iduser/cars"
       body="{{update}}"
       last-response="{{response}}"
       on-response="addedResponse"
@@ -63,9 +61,9 @@
     userChanged: function() {
       if(this.fetch == "all") {
       	if(this.user) {
-      	  this.$.ajaxAll.url="http://localhost:8080/api/v1/users/" + this.user + "/cars";
+      	  this.$.ajaxAll.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
       	  console.log("Cars Loaded!");
-      	}
+      	} else this.$.ajaxAll.url = window.Polymer.restAPI + "cars";
       	console.log("Cars loaded with: " + this.$.ajaxAll.url);
       	this.$.ajaxAll.generateRequest();
       }
@@ -73,7 +71,7 @@
     
     fetchChanged: function() {
       if(this.fetch != "all" && this.fetch != "") {
-      	if(this.user) this.$.ajax.url="http://localhost:8080/api/v1/users/" + this.user + "/cars/" + this.fetch;
+      	if(this.user) this.$.ajax.url = window.Polymer.restAPI + "users/" + this.user + "/cars/" + this.fetch;
       }
     },
     
@@ -93,7 +91,7 @@
     
     saveData: function() {
       console.log("BODY TO SEND:");
-      this.$.add.url="http://localhost:8080/api/v1/users/" + this.user + "/cars";
+      this.$.add.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
       this.$.add.generateRequest();
     },
     
