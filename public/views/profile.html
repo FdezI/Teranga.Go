@@ -20,6 +20,10 @@
 <dom-module name="profile-view">
 
   <template>
+
+
+      <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service>
+
       <template id="profileTemplate" is="dom-if" if="{{session.user}}">
         <div class="margin-block layout horizontal">
           <div class="layout vertical profile-a">
@@ -32,7 +36,7 @@
             </template>
           </div>
           <div class="layout vertical profile-b">
-            <div class="profile-name"><span>Nombre</span> <span>Apellidos</span></div>
+            <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
             <div class="profile-age"><span>XX</span> años</div>
             <template is="dom-if" if="{{edit}}">
               <span>Email</span>
@@ -48,15 +52,15 @@
           <div class="profile-c layout self-end profile-buttons">
 
             <template is="dom-if" if="{{!edit}}">
-              <button class="primary-button" on-click="editProfile">Crear viaje</button>
+              <button class="primary-button">Crear viaje</button>
               <div class="space"></div>
-              <button class="secondary-button">Editar perfil</button>
+              <button class="secondary-button" on-click="editProfile">Editar perfil</button>
             </template>
 
             <template is="dom-if" if="{{edit}}">
               <button class="primary-button">Guardar cambios</button>
               <div class="space"></div>
-              <button class="secondary-button">Cancelar</button>
+              <button class="secondary-button" on-click="cancelEdit">Cancelar</button>
             </template>
 
           </div>
@@ -115,7 +119,7 @@
       editProfile: function() {
         this.edit = true;
       },
-      closeProfile: function() {
+      cancelEdit: function() {
         this.edit = false;
       },
       saveProfile: function() {
