@@ -153,7 +153,8 @@
       properties: {
 		route: {	//¿¿¿TO POSSIBLY REMOVE IF USING FLATIRON OR... ¿PAGE.JS? ????
 		  type: String,
-		  value: "home"
+		  value: "home",
+		  observer: 'routeChanged'
 		},
 		displayLogin: {
 		  type: String,
@@ -213,6 +214,10 @@
 		var drawerPanel = this.$.paperDrawerPanel;
 		if(drawerPanel.narrow) drawerPanel.closeDrawer();
 	// 	console.log(this.session);
+      },
+
+      routeChanged: function() {
+      	if(this.route === "profile") this.$$("profile-view").edit = false;
       }
     });    
   </script>
