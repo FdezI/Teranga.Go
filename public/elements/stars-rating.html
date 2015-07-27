@@ -1,0 +1,44 @@
+<dom-module name="stars-rating">
+  <style>
+    .star-image {
+      /*width: 30px;*/
+      width: 20%;
+    }
+  </style>
+  
+  <template>
+    <div class="layout horizontal center travel">
+      <template is="dom-repeat" items="[[stars]]" as="star">
+        <img class="star-image" src="[[star.src]]"/>
+      </template>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "stars-rating",
+    properties: {
+      score: Number,
+      stars: Array
+    },
+    ready: function() {
+      var maxStars = 5;
+      var starscore = this.score/2 - 1;
+      var i;
+
+      this.stars = [];
+
+      for(i = 0; i <= starscore; i++) 
+        this.push('stars', {src: "../images/full-star.png"});
+
+      if(this.score%2 == 1) {
+        this.push('stars', {src: "../images/half-star.png"});
+        i++;
+      }
+
+      for(; i < maxStars; i++) 
+        this.push('stars', {src: "../images/empty-star.png"});
+    }
+  });
+  </script>
+</dom-module>

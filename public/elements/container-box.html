@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+
+<dom-module name="container-box">
+  <style>
+    :host {
+      width: 100%;
+    }
+    .container {
+      border: 2px solid #ccc;
+      width: 100%;
+      height: 50px;
+      text-align: left;
+      padding: 10px;
+    }
+    .collapse-content {
+      border: 1px solid #dedede;
+      display: -webkit-box;
+      overflow-x: auto;
+    }
+  </style>
+  
+  <template>
+    	<button on-click="toggle" class="container">[[name]]</button>
+      <iron-collapse class="content" id="collapse">
+        <div class="collapse-content">
+          <content></content>
+        </div>
+      </iron-collapse>
+  </template>
+
+  <script>
+  Polymer({
+    is: "container-box",
+    properties: {
+      name: String
+    },
+    toggle: function() {
+      this.$.collapse.toggle();
+    }
+  });
+  </script>
+</dom-module>

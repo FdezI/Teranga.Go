@@ -7,10 +7,15 @@
 <link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-left-animation.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="../elements/user-info.html">
 <link rel="import" href="../elements/car-info.html">
 <link rel="import" href="../elements/trip-info.html">
+<link rel="import" href="../elements/container-box.html">
+<link rel="import" href="../elements/travel-box.html">
+<link rel="import" href="../elements/comment-box.html">
+<link rel="import" href="../elements/stars-rating.html">
 
 <dom-module name="profile-view">
 
@@ -19,47 +24,66 @@
   <!--     <app-globals id="globals"></app-globals> -->
   <template>
       <template id="profileTemplate" is="dom-if" if="{{session.user}}">
-            
+        <div class="margin-block layout horizontal">
+          <div class="layout vertical profile-a">
+            <img class="profile-photo" src=""/>
+            <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+          </div>
+          <div class="layout vertical profile-b">
+            <div class="profile-name"><span>Nombre</span> <span>Apellidos</span></div>
+            <div class="profile-age"><span>XX</span> años</div>
+          </div>
+          <div class="profile-c layout self-end profile-buttons">
+              <button class="primary-button">Crear viaje</button>
+              <div class="space"></div>
+              <button class="secondary-button">Editar perfil</button>
+          </div>
+        </div>
 
-
-        <neon-animated-pages class="flex" id="profilePages" attr-for-selected="hash" selected="{{selected}}" >
-<!-- 	  <template> -->
-    	    <neon-animatable hash="main" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
-    <!-- 	      <template> -->
-    		    <user-info selectedUser="[[session.user.iduser]]" user="{{session.user}}" selected="{{selected}}"></user-info>
-    <!-- 	      </template> -->
-    	    </neon-animatable>
-    <!-- 	  </template> -->
-    <!-- 	  <template> -->
-    	    <neon-animatable hash="cars" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-    <!-- 	      <template> -->
-    		    <car-info selected="{{selected}}" user="[[session.user.iduser]]" carList="{{session.user.cars}}"></car-info>
-    <!-- 	      </template> -->
-    	    </neon-animatable>
-    <!-- 	  </template> -->
-    <!-- 	  <template> -->
-    	    <neon-animatable hash="trips" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-    <!-- 	      <template> -->
-    		    <trip-info selected="{{selected}}" modify user="{{session.user}}" tripList="{{session.user.trips}}"></trip-info>
-    <!-- 	      </template> -->
-    	    </neon-animatable>
-    <!-- 	  </template> -->
-      	</neon-animated-pages>
+        <container-box name="Viajes">
+          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+          <travel-box departure="Sevilla" arrival="Portos" day="30" month="Mayo" driver="Yo" travelurl="/"></travel-box>
+          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+        </container-box>
+        
+        <container-box name="Opiniones">
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="0" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="1" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="2" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="3" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="4" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="5" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="6" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="7" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="8" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="9" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="10" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+        </container-box>
       </template>
+
       <template is="dom-if" if="{{!session.user}}">
-	<p>Please, log-in</p>
+	      <p>Please, log-in</p>
+        <div class="margin-block layout horizontal">
+          <div class="layout vertical profile-a">
+            <img class="profile-photo" src=""/>
+            <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+          </div>
+          <div class="layout vertical profile-b">
+            <div class="profile-name"><span>Nombre</span> <span>Apellidos</span></div>
+            <div class="profile-age"><span>XX</span> años</div>
+          </div>
+          <div class="profile-c layout self-end profile-buttons">
+              <button class="primary-button">Crear viaje</button>
+              <div class="space"></div>
+              <button class="secondary-button">Editar perfil</button>
+          </div>
+        </div>
       </template>
-  <!--   </template> -->
-<!--   </section> -->
   </template>
-
-<!--<script>
-  Polymer({
-  publish: {
-    session: this.$.globals.values.session;
-  }
-  });
-  </script>-->
 
   <script>
     Polymer({
@@ -73,14 +97,7 @@
       	  type: String,
       	  value: "main"
       	}
-      },
-      
-//       observers: [
-// 	'userChanged(session.user)'
-//       ],
-//       userChanged: function(newValue) {
-// 	  this.session.name = this.session.user.name;
-//       }
+      }
     });
   </script>
 </dom-module>
