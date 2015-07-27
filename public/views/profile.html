@@ -19,50 +19,58 @@
 
 <dom-module name="profile-view">
 
-<!--   <section layout center-center fit> -->
-  <!--   <template is="auto-binding"> -->
-  <!--     <app-globals id="globals"></app-globals> -->
   <template>
       <template id="profileTemplate" is="dom-if" if="{{session.user}}">
         <div class="margin-block layout horizontal">
           <div class="layout vertical profile-a">
-            <img class="profile-photo" src=""/>
-            <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+            <div>
+              <img class="profile-photo" src="../images/full-star.png"/>
+              <div class="new-element-cover"></div>
+            </div>
+            <template is="dom-if" if="{{!edit}}">
+              <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+            </template>
           </div>
           <div class="layout vertical profile-b">
             <div class="profile-name"><span>Nombre</span> <span>Apellidos</span></div>
             <div class="profile-age"><span>XX</span> años</div>
+            <template is="dom-if" if="{{edit}}">
+              <span>Email</span>
+              <span>telefono</span>
+              <span>password</span>
+              <span>password 2</span>
+              <div class="layout horizontal center-justified">
+              <button>si</button>
+                <span>Carner de conducir</span>
+              </div>
+            </template>
           </div>
           <div class="profile-c layout self-end profile-buttons">
-              <button class="primary-button">Crear viaje</button>
+
+            <template is="dom-if" if="{{!edit}}">
+              <button class="primary-button" on-click="editProfile">Crear viaje</button>
               <div class="space"></div>
               <button class="secondary-button">Editar perfil</button>
+            </template>
+
+            <template is="dom-if" if="{{edit}}">
+              <button class="primary-button">Guardar cambios</button>
+              <div class="space"></div>
+              <button class="secondary-button">Cancelar</button>
+            </template>
+
           </div>
         </div>
 
-        <container-box name="Viajes">
-          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-          <travel-box departure="Sevilla" arrival="Portos" day="30" month="Mayo" driver="Yo" travelurl="/"></travel-box>
-          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-          <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-        </container-box>
-        
-        <container-box name="Opiniones">
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="0" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="1" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="2" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="3" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="4" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="5" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="6" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="7" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="8" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="9" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          <comment-box image="../images/driverIcon.jpg" profileurl="/" score="10" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-        </container-box>
+        <template is="dom-if" if="{{!edit}}">
+            <container-box name="Viajes">
+              <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            </container-box>
+            
+            <container-box name="Opiniones">
+              <comment-box image="../images/driverIcon.jpg" profileurl="/" score="5" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+            </container-box>
+        </template>
       </template>
 
       <template is="dom-if" if="{{!session.user}}">
@@ -70,7 +78,9 @@
         <div class="margin-block layout horizontal">
           <div class="layout vertical profile-a">
             <img class="profile-photo" src=""/>
-            <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+            <template is="dom-if" if="{{!edit}}">
+              <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+            </template>
           </div>
           <div class="layout vertical profile-b">
             <div class="profile-name"><span>Nombre</span> <span>Apellidos</span></div>
@@ -96,7 +106,20 @@
       	selected: {
       	  type: String,
       	  value: "main"
-      	}
+      	},
+        edit: {
+          type: Boolean,
+          value: false
+        }
+      },
+      editProfile: function() {
+        this.edit = true;
+      },
+      closeProfile: function() {
+        this.edit = false;
+      },
+      saveProfile: function() {
+
       }
     });
   </script>
