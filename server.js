@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 
 var app        = express();                 // define our app using express
 // var db         = require('./app/dbs/mongo/mongoDB');
-var db         = require('./app/dbs/mysql/mysqlDB');
+var db         = require('./app/dbs/mysqlv2/mysqlDB');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
