@@ -1,0 +1,57 @@
+<link rel="import" href="../elements/stars-rating.html">
+
+<dom-module name="comment-box">
+  <style>
+    .comment {
+      border: 2px solid #ccc;
+      width: 150px;
+      height: 150px;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .comment-box-user {
+      width: 100%;
+    }
+
+    .image-user-comment-box {
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+      border: 2px solid #ccc;
+      margin-right: 10px;
+    }
+
+    .comment-box-opinion {
+      margin-top: 10px;
+      height: 90px;
+    }
+
+    .comment-box-stars {
+      width: 87px;
+    }
+  </style>
+  
+  <template>
+    <div class="layout vertical center comment">
+      <div class="comment-box-user layout horizontal left-justified">
+        <a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a>
+        <div class="layout vertical center-justified comment-box-stars"><stars-rating score="{{score}}"></stars-rating></div>
+      </div>
+      <div class="comment-box-opinion">[[comment]]</div>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "comment-box",
+    properties: {
+      image: String,
+      score: Number,
+      profileurl: String,
+      comment: String
+    }
+  });
+  </script>
+</dom-module>

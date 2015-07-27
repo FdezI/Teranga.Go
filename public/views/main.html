@@ -83,8 +83,8 @@
     
       <nav drawer>
 	<!-- Drawer Toolbar -->
-	<paper-toolbar id="drawerToolbar">
-	  <span class="paper-font-title">Single Page Polymer</span>
+	<paper-toolbar id="drawerToolbar" class="title-bar">
+	  <span class="paper-font-title">Teranga Go!</span>
 	</paper-toolbar>
 	
 	<!-- Drawer Content -->
@@ -102,9 +102,9 @@
 	</paper-menu>
       </nav>
       
-      <paper-header-panel main mode="waterfall-tall">
+      <paper-header-panel main mode="waterfall">
 	<!-- Main Toolbar -->
-	<paper-toolbar id="mainToolBar">
+	<paper-toolbar id="mainToolBar" class="title-bar">
   <!-- 	<div class="flex">{{selectedPage.page.name}}</div> -->
 	  <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
 	  <span class="flex"></span>
@@ -115,17 +115,17 @@
 	  <paper-icon-button icon="account-circle" on-tap="loginIconClicked"></paper-icon-button>
 	  
 	  <!-- Application name -->
-	  <div class="middle paper-font-display2 app-name">Polymer Starter Kit</div>
+	  <!-- <div class="middle paper-font-display2 app-name"></div> -->
 	  
 	  <!-- Application sub title -->
-	  <div class="bottom title"></div>
+	  <!-- <div class="bottom title"></div> -->
 	</paper-toolbar>
 	
 	<!-- Main Content -->
-	<div class="content">
+	<div id="body-content">
 	  <neon-animated-pages id="pages" attr-for-selected="hash" selected="{{route}}" entry-animation="slide-up-animation" exit-animation="slide-down-animation">
 	    <neon-animatable hash="home">
-<!-- 	      <home-view session="{{session}}"></home-view> -->
+	      <home-view session="{{session}}"></home-view>
 	    </neon-animatable>
 	    <neon-animatable hash="profile">
 	      <profile-view session="{{session}}"></profile-view>
@@ -151,7 +151,7 @@
       properties: {
 		route: {	//¿¿¿TO POSSIBLY REMOVE IF USING FLATIRON OR... ¿PAGE.JS? ????
 		  type: String,
-		  value: "profile"
+		  value: "home"
 		},
 		displayLogin: {
 		  type: String,
