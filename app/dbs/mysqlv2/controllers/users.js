@@ -26,19 +26,15 @@ exports.getAll = function(req, res) {
 };
 
 exports.get = function(req, res) {
-	console.log("ENTRA AL MENOS");
 	if(!('exp' in req.query)) {
 
 		var identifiers = req.query;
 		var user = req.params.iduser;
-		console.log(0);
 		if(Object.keys(req.query).length == 0) {
 			console.log(1);
 			identifiers = ['name', 'surnames', 'avatar', 'birth', 'karma'];
 		} else identifiers = req.query;
 		
-		console.log(identifiers);
-		console.log(user);
 		mysql.pool.query('SELECT ?? FROM user WHERE user.iduser=?', [identifiers, user], function(err, rows, fields) {
 			if(err) throw err;
 
