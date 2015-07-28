@@ -81,6 +81,14 @@ body {
 	margin: 10px;
 }
 
+.vertical-separator {
+	height: 5px;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 1px 0px 1px 0px;
+	margin: 20px 5% 20px 5%;
+}
+
 .primary-button {
 	background: #f00;
 	width:100%;

@@ -11,6 +11,11 @@
       margin: 10px;
       padding: 10px;
       text-align: center;
+      display: inline-block;
+    }
+
+    .newcar {
+      background: #999;
     }
 
     .car:hover {
@@ -26,34 +31,48 @@
     .points-car-box {
       font-weight: bold;
     }
+
+    .car-box-plus {
+      width: 50%;
+      height: auto;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   </style>
   
   <template>
-    <div class="layout vertical center-justified car">
-    	<span class="points-car-box">[[car.model]]</span>
-      <div class="space"></div>
-      <span class="points-car-box">[[car.idcar]]</span>
-      <div class="space"></div>
-      <div class="travel-box-driver layout horizontal center-justified">
-        <div class="layout vertical center-justified"><img src="../images/seat-icon.png"/></div>
-        <div class="layout vertical center"><p>[[car.seats]]</p></div>
-        <div class="space"></div>
-        <div class="layout vertical center-justified"><img src="../images/hp-icon.png"/></div>
-        <div class="layout vertical center"><p>[[car.hp]]</p></div>
+    <template is="dom-if" if="[[newcar]]">
+      <div class="car newcar">
+        <img class="car-box-plus" src="../images/plus.png"/>
       </div>
-    </div>
+    </template>
+    <template is="dom-if" if="[[!newcar]]">
+      <div class="layout vertical center-justified car">
+      	<span class="points-car-box">[[car.model]]</span>
+        <div class="space"></div>
+        <span class="points-car-box">[[car.idcar]]</span>
+        <div class="space"></div>
+        <div class="travel-box-driver layout horizontal center-justified">
+          <div class="layout vertical center-justified"><img src="../images/seat-icon.png"/></div>
+          <div class="layout vertical center"><p>[[car.seats]]</p></div>
+          <div class="space"></div>
+          <div class="layout vertical center-justified"><img src="../images/hp-icon.png"/></div>
+          <div class="layout vertical center"><p>[[car.hp]]</p></div>
+        </div>
+      </div>
+    </template>
   </template>
 
   <script>
   Polymer({
     is: "car-box",
     properties: {
-      departure: String,
-      arrival: String,
-      day: String,
-      month: String,
-      driver: String,
-      travelurl: String
+      car: Object,
+      newcar: {
+        type: Boolean,
+        value: false
+      }
     }
   });
   </script>
