@@ -31,7 +31,7 @@
               <img class="profile-photo" src="../images/full-star.png"/>
               <div class="profile-photo-div"></div>
             </div>
-            <template is="dom-if" if="[[!edit]]">
+            <template is="dom-if" if="[[showKarma()]]">
               <div class="profile-stars"><stars-rating score="[[session.user.karma]]"></stars-rating></div>
             </template>
           </div>
@@ -107,6 +107,9 @@
       },
       saveProfile: function() {
 
+      },
+      showKarma: function() {
+        return !this.edit && this.session.user.karma != null;
       }
     });
   </script>
