@@ -72,8 +72,46 @@ exports.get = function(req, res) {
 };
 
 exports.getTrips = function(req, res) {
-	mysql.pool.query('SELECT  ', req.params.iduser, function(err, result) {
+	// TODO: benchmark both ways and choose the best one.
 
+	// SECOND METHOD:
+
+	// var query = '(SELECT GROUP_CONCAT(city ORDER BY TP.order ASC) AS points, false as driving\
+	// 	FROM userTrips, tripPoints AS TP, location\
+	// 	WHERE user = ? AND (userTrips.trip = TP.trip AND (pointA = TP.order OR pointB = TP.order)) AND location = idlocation)\
+	// 	UNION DISTINCT\
+	// 	(SELECT GROUP_CONCAT(city ORDER BY TP.order ASC), true AS driving\
+	// 	FROM trip, tripPoints AS TP, location\
+	// 	WHERE trip.driver = ? AND (idtrip = trip AND (TP.order = 0 OR TP.order = 99)) AND location = idlocation\
+	// 	GROUP BY idtrip)'
+	
+	// This method is returning: [{points: "pointA, pointB", driving: 0}, {...}]
+
+
+	// FIRST METHOD
+
+	var query = '(SELECT LA.city AS departure, LB.city arrival, false as driving\
+											FROM userTrips\
+												LEFT JOIN tripPoints AS TA ON userTrips.trip = TA.trip AND pointA = TA.order\
+												LEFT JOIN tripPoints AS TB ON userTrips.trip = TB.trip AND pointB = TB.order\
+												INNER JOIN location AS LA ON LA.idlocation = TA.location\
+												INNER JOIN location AS LB ON LB.idlocation = TB.location\
+											WHERE user = ?)\
+											UNION DISTINCT\
+											(SELECT LA.city, LB.city, true AS driving\
+											FROM trip\
+												LEFT JOIN tripPoints AS TA ON idtrip = TA.trip AND TA.order = 0\
+												LEFT JOIN tripPoints AS TB ON idtrip = TB.trip AND TB.order = 99\
+												INNER JOIN location AS LA ON LA.idlocation = TA.location\
+												INNER JOIN location AS LB ON LB.idlocation = TB.location\
+											WHERE trip.driver = ?)';
+
+	// This method is returning: [{departure: '', arrival: '', driving:0}, {...}]
+	mysql.pool.query(query, [req.params.iduser, req.params.iduser], function(err, rows, result) {
+
+		if(err) throw err;
+		
+		res.json(rows);
 	});
 };
 
