@@ -107,6 +107,9 @@ apiRouter.route('/users/:iduser/cars/:idcar') // Maybe should this be deleted an
 	.put(db.carController.update)
 	.delete(db.carController.delete);
 
+apiRouter.route('/users/:iduser/assessments')
+	.get(db.userController.getAssessments);
+
 apiRouter.route('/users/:iduser/trips')
 // 	.post(db.carController.create)
 	// .get(db.tripController.getAll);

@@ -96,7 +96,7 @@ exports.getTrips = function(req, res) {
 												LEFT JOIN tripPoints AS TB ON userTrips.trip = TB.trip AND pointB = TB.order\
 												INNER JOIN location AS LA ON LA.idlocation = TA.location\
 												INNER JOIN location AS LB ON LB.idlocation = TB.location\
-											WHERE user = ?)\
+											WHERE user=? AND accepted=1)\
 											UNION DISTINCT\
 											(SELECT LA.city, LB.city, true AS driving\
 											FROM trip\
@@ -104,7 +104,7 @@ exports.getTrips = function(req, res) {
 												LEFT JOIN tripPoints AS TB ON idtrip = TB.trip AND TB.order = 99\
 												INNER JOIN location AS LA ON LA.idlocation = TA.location\
 												INNER JOIN location AS LB ON LB.idlocation = TB.location\
-											WHERE trip.driver = ?)';
+											WHERE trip.driver=?)';
 
 	// This method is returning: [{departure: '', arrival: '', driving:0}, {...}]
 	mysql.pool.query(query, [req.params.iduser, req.params.iduser], function(err, rows, result) {
@@ -114,6 +114,16 @@ exports.getTrips = function(req, res) {
 		res.json(rows);
 	});
 };
+
+exports.getAssessments = function(req, res) {
+	mysql.pool.query('SELECT a.*, avatar FROM trip JOIN assessment AS a ON a.trip = idtrip\
+											JOIN user ON iduser = user\
+										WHERE trip.driver = ?', req.params.iduser, function(err, rows, result) {
+		if(err) throw err;
+
+		res.json(rows);
+	});
+}
 
 
 // AUTHENTICATED
