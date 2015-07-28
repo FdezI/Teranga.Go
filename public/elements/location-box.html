@@ -1,8 +1,10 @@
 <dom-module name="location-box">
   <style>
     .location {
-      background: #f00;
+      background: #333;
       padding: 10px;
+      width: 200px;
+      color: white;
     }
     .location-img {
       width: 40px;
@@ -14,13 +16,30 @@
       font-weight: bold;
       font-style: italic;
       font-size: 30px;
-      color: white;
     }
     .location-date {
       background: white;
       text-align: center;
       color: #333;
       font-weight: bold;
+      padding: 3px;
+    }
+
+    .location-hour {
+      margin: 10px;
+    }
+
+    .location-seats-available {
+      background: #0f0;
+      border-radius: 50%;
+      height: 50px;
+      width: 44px;
+      padding-left: 8px;
+      color: #333;
+    }
+
+    .location-img-seat {
+      margin-right: 5px;
     }
   </style>
   
@@ -35,23 +54,25 @@
         </template>
         <span class="location-departure">[[location]]</span>
       </div>
-      <div class="layout horizontal center">
-        <div class="location-date layout vertical center">
-          <span>[[day]]</span>
-          <span>[[month]]</span>
-        </div>
-        <span class="location-hour">[[hour]]</span>
-        
-        <template is="dom-if" if="[[seats]]">
-          <div class="location-seats-avalible">
-            <img class="location-img" src="../images/seats.png"/>
-            <span>[[seats]]</span>
+      <template is="dom-if" if="[[stop]]">
+        <div class="layout horizontal center">
+          <div class="location-date layout vertical center">
+            <span>[[day]]</span>
+            <span>[[month]]</span>
           </div>
-        </template>
-        <template is="dom-if" if="[[!seats]]">
-          <img class="location-img" src="../images/no-seats.png"/>
-        </template>
-      </div>
+          <span class="location-hour">[[hour]]</span>
+          
+          <template is="dom-if" if="[[seats]]">
+            <div class="location-seats-available layout horizontal center">
+              <img class="location-img-seat" src="../images/seat-only-icon.png"/>
+              <span>[[seats]]</span>
+            </div>
+          </template>
+          <template is="dom-if" if="[[!seats]]">
+            <img class="location-img" src="../images/no-seats.png"/>
+          </template>
+        </div>
+      </template>
     </div>
   </template>
 
