@@ -24,21 +24,21 @@
 
       <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service>
 
-      <template id="profileTemplate" is="dom-if" if="{{session.user}}">
+      <template id="profileTemplate" is="dom-if" if="[[session.user]]">
         <div class="margin-block layout horizontal">
           <div class="layout vertical profile-a">
             <div>
               <img class="profile-photo" src="../images/full-star.png"/>
               <div class="new-element-cover"></div>
             </div>
-            <template is="dom-if" if="{{!edit}}">
-              <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
+            <template is="dom-if" if="[[!edit]]">
+              <div class="profile-stars"><stars-rating score="[[session.user.karma]]"></stars-rating></div>
             </template>
           </div>
           <div class="layout vertical profile-b">
             <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
             <div class="profile-age"><span>XX</span> años</div>
-            <template is="dom-if" if="{{edit}}">
+            <template is="dom-if" if="[[edit]]">
               <span>Email</span>
               <span>telefono</span>
               <span>password</span>
@@ -51,13 +51,13 @@
           </div>
           <div class="profile-c layout self-end profile-buttons">
 
-            <template is="dom-if" if="{{!edit}}">
+            <template is="dom-if" if="[[!edit]]">
               <button class="primary-button">Crear viaje</button>
               <div class="space"></div>
               <button class="secondary-button" on-click="editProfile">Editar perfil</button>
             </template>
 
-            <template is="dom-if" if="{{edit}}">
+            <template is="dom-if" if="[[edit]]">
               <button class="primary-button">Guardar cambios</button>
               <div class="space"></div>
               <button class="secondary-button" on-click="cancelEdit">Cancelar</button>
@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <template is="dom-if" if="{{!edit}}">
+        <template is="dom-if" if="[[!edit]]">
             <container-box name="Viajes">
               <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             </container-box>
@@ -77,25 +77,8 @@
         </template>
       </template>
 
-      <template is="dom-if" if="{{!session.user}}">
+      <template is="dom-if" if="[[!session.user]]">
 	      <p>Please, log-in</p>
-        <div class="margin-block layout horizontal">
-          <div class="layout vertical profile-a">
-            <img class="profile-photo" src=""/>
-            <template is="dom-if" if="{{!edit}}">
-              <div class="profile-stars"><stars-rating score="5"></stars-rating></div>
-            </template>
-          </div>
-          <div class="layout vertical profile-b">
-            <div class="profile-name"><span>Nombre</span> <span>Apellidos</span></div>
-            <div class="profile-age"><span>XX</span> años</div>
-          </div>
-          <div class="profile-c layout self-end profile-buttons">
-              <button class="primary-button">Crear viaje</button>
-              <div class="space"></div>
-              <button class="secondary-button">Editar perfil</button>
-          </div>
-        </div>
       </template>
   </template>
 
