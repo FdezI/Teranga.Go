@@ -1,0 +1,74 @@
+<dom-module name="location-box">
+  <style>
+    .location {
+      background: #f00;
+      padding: 10px;
+    }
+    .location-img {
+      width: 40px;
+      height: 40px;
+    }
+    .location-departure {
+      margin: 10px;
+      font-variant: small-caps;
+      font-weight: bold;
+      font-style: italic;
+      font-size: 30px;
+      color: white;
+    }
+    .location-date {
+      background: white;
+      text-align: center;
+      color: #333;
+      font-weight: bold;
+    }
+  </style>
+  
+  <template>  
+    <div class="location layout vertical center">
+      <div class="layout horizontal center">
+        <template is="dom-if" if="[[stop]]">
+          <img class="location-img" src="../images/stop.png"/>
+        </template>
+        <template is="dom-if" if="[[!stop]]">
+          <img class="location-img" src="../images/no-stop.png"/>
+        </template>
+        <span class="location-departure">[[location]]</span>
+      </div>
+      <div class="layout horizontal center">
+        <div class="location-date layout vertical center">
+          <span>[[day]]</span>
+          <span>[[month]]</span>
+        </div>
+        <span class="location-hour">[[hour]]</span>
+        
+        <template is="dom-if" if="[[seats]]">
+          <div class="location-seats-avalible">
+            <img class="location-img" src="../images/seats.png"/>
+            <span>[[seats]]</span>
+          </div>
+        </template>
+        <template is="dom-if" if="[[!seats]]">
+          <img class="location-img" src="../images/no-seats.png"/>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "location-box",
+    properties: {
+      location: String,
+      day: String,
+      month: String,
+      hour: String,
+      seats: Number,
+      stop: {
+        type: Boolean,
+        value: false
+      }
+    }
+  });
+  </script>
+</dom-module>
