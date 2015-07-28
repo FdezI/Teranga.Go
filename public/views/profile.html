@@ -16,6 +16,8 @@
 <link rel="import" href="../elements/travel-box.html">
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/stars-rating.html">
+<link rel="import" href="../elements/car-box.html">
+<link rel="import" href="../elements/car-edit.html">
 
 <dom-module name="profile-view">
 
@@ -35,18 +37,34 @@
               <div class="profile-stars"><stars-rating score="[[session.user.karma]]"></stars-rating></div>
             </template>
           </div>
+
           <div class="layout vertical profile-b">
             <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
             <div class="profile-age"><span>XX</span> años</div>
             <template is="dom-if" if="[[edit]]">
-              <span>Email</span>
-              <span>telefono</span>
-              <span>password</span>
-              <span>password 2</span>
-              <div class="layout horizontal center-justified">
-              <button>si</button>
-                <span>Carner de conducir</span>
-              </div>
+              <form>
+                <table style="width:100%">
+                  <tr>
+                    <td>E-mail:</td>
+                    <td><input type="text" name="email" value="correo electrónico"></td>
+                  <tr> 
+                    <td>Teléfono:</td> 
+                    <td><input type="text" name="phone" value="teléfono"></td>
+                  </tr>
+                  <tr> 
+                    <td>Contraseña:</td>
+                    <td><input type="password" name="pass"></td>
+                  </tr>
+                  <tr> 
+                    <td>Repetir contraseña:</td>
+                    <td><input type="password" name="pass2"></td>
+                  </tr>
+                  <tr> 
+                    <td>Carnet de conducir:</td>
+                    <td><input type="checkbox" name="carnet" value="false"></td> 
+                  </tr>
+                </table>
+              </form>
             </template>
           </div>
           <div class="profile-c layout self-end profile-buttons">
@@ -66,14 +84,38 @@
           </div>
         </div>
 
+        <div class="vertical-separator"></div>
+
         <template is="dom-if" if="[[!edit]]">
-            <container-box name="Viajes">
-              <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            </container-box>
-            
-            <container-box name="Opiniones">
-              <comment-box image="../images/driverIcon.jpg" profileurl="/" score="5" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-            </container-box>
+          <container-box name="Viajes">
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <!-- <car-box model="Renault" idcar="3212ED" seats="3" hp="200"></car-box> -->
+          </container-box>
+          
+          <container-box name="Opiniones">
+            <comment-box image="../images/driverIcon.jpg" profileurl="/" score="5" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
+          </container-box>
+        </template>
+
+        <template is="dom-if" if="[[edit]]">
+          <div class="car-container">
+            <car-box newcar="true"></car-box> 
+            <car-box newcar="true"></car-box> 
+            <car-box newcar="true"></car-box> 
+            <car-box newcar="true"></car-box> 
+            <car-box newcar="true"></car-box> 
+            <car-box newcar="true"></car-box> 
+            <car-box newcar="true"></car-box> 
+          </div>
+
+          <car-edit newcar="true"></car-edit>
         </template>
       </template>
 
