@@ -1,3 +1,5 @@
+<link rel="import" href="../elements/car-box.html">
+
 <dom-module name="car-box">
   <style>
     #linkcar {
@@ -41,14 +43,14 @@
     }
   </style>
   
-  <template>
+  <template>  
     <template is="dom-if" if="[[newcar]]">
       <div class="car newcar">
         <img class="car-box-plus" src="../images/plus.png"/>
       </div>
     </template>
     <template is="dom-if" if="[[!newcar]]">
-      <div class="layout vertical center-justified car">
+      <div class="layout vertical center-justified car" onclick="">
       	<span class="points-car-box">[[car.model]]</span>
         <div class="space"></div>
         <span class="points-car-box">[[car.idcar]]</span>
