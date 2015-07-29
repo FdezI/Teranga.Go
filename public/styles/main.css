@@ -110,3 +110,8 @@ body {
 	background: #000;
 	opacity: 0.4f;
 }
+
+.travel-info {
+	width: 20%;
+	background: #ccc;
+}
