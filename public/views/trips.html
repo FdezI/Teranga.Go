@@ -12,48 +12,26 @@
 
 <link rel="import" href="../elements/trip-list.html">
 <link rel="import" href="../elements/trip-info.html">
+<link rel="import" href="../elements/location-box.html">
+<link rel="import" href="../elements/travel-line.html">
 
 <dom-module name="trip-view">
 
 <!--   <section layout center-center fit> -->
     <template id="tripsTemplate">
   <!--   <flatiron-director route="{{route}}" autoHash></flatiron-director> -->
-    
-      <neon-animated-pages id="tripPages" attr-for-selected="hash" selected="{{selected}}" transitions="slide-from-right">
-      <!--     <template> -->
-      <!--       <section hash="list"> -->
-  	    <neon-animatable class="center" hash="main" entry-animation="slide-from-left-animation" exit-animation="slide-left-animation">
-        <!-- <article class="center" hash="main"> -->
-  	      <div class="layout horizontal vertical center-center center">
-      		  <div class="layout horizontal">
-      		    <paper-input label="Origen"></paper-input>
-      		    <paper-input label="Destino"></paper-input>
-      		  </div>
-  		  
-  		      <trip-list show="all" selected="{{selected}}" selectedTrip="{{trip}}">{{trip}}</trip-list>
-  		  
-  	      </div>
-        </neon-animatable>
-  	    <!-- </article> -->
-  	    
-        <neon-animatable class="center" hash="specific" entry-animation="slide-from-right-animation" exit-animation="slide-right-animation">
-        <!-- <article class="center" hash="specific"> -->
-  	      <div class="layout horizontal vertical center-center center">
-  		      <trip-info selected="{{selected}}" selectedTrip="{{trip}}" user="{{session.user}}"></trip-info>
-      <!-- 	      <iron-icon-button id="favicon" icon="arrow-back" on-tap="{{backToList}}"> </iron-icon-button> -->
-      <!-- 	      <h2> {{trip}} </h2> -->
-      <!-- 	      <p>lajdlfkajlsdkfj</p> -->
-  		  
-  	      </div>
-        </neon-animatable>
-  	    </article>
-      <!--       </section> -->
-      <!--     </template> -->
-      </neon-animated-pages>
-      
-  <!--    <script>
-  Polymer({});
-  </script>-->
+      <div>
+        <travel-line>
+          <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
+          <location-box location="Motril"></location-box>
+          <location-box stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
+          <location-box location="Motril"></location-box>
+        </travel-line>
+
+        <div class="layout vertical">
+          
+        </div>
+      </div>
       
     </template>
     
