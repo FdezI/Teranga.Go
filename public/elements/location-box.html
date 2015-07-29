@@ -30,7 +30,7 @@
     }
 
     .location-seats-available {
-      background: #0f0;
+      background: #ea6900;
       border-radius: 50%;
       height: 50px;
       width: 44px;
@@ -41,38 +41,49 @@
     .location-img-seat {
       margin-right: 5px;
     }
+
+    .dots {
+      margin: 20px;
+      height: 40px;
+      width: auto;
+    }
   </style>
   
   <template>  
-    <div class="location layout vertical center">
-      <div class="layout horizontal center">
-        <template is="dom-if" if="[[stop]]">
-          <img class="location-img" src="../images/stop.png"/>
-        </template>
-        <template is="dom-if" if="[[!stop]]">
-          <img class="location-img" src="../images/no-stop.png"/>
-        </template>
-        <span class="location-departure">[[location]]</span>
-      </div>
-      <template is="dom-if" if="[[stop]]">
-        <div class="layout horizontal center">
-          <div class="location-date layout vertical center">
-            <span>[[day]]</span>
-            <span>[[month]]</span>
-          </div>
-          <span class="location-hour">[[hour]]</span>
-          
-          <template is="dom-if" if="[[seats]]">
-            <div class="location-seats-available layout horizontal center">
-              <img class="location-img-seat" src="../images/seat-only-icon.png"/>
-              <span>[[seats]]</span>
-            </div>
-          </template>
-          <template is="dom-if" if="[[!seats]]">
-            <img class="location-img" src="../images/no-seats.png"/>
-          </template>
-        </div>
+    <div class="layout vertical center">
+      <template is="dom-if" if="[[!first]]">
+        <img src="../images/dots.png" class="dots">
       </template>
+      <div class="location layout vertical center">
+        <div class="layout horizontal center">
+          <template is="dom-if" if="[[stop]]">
+            <img class="location-img" src="../images/stop.png"/>
+          </template>
+          <template is="dom-if" if="[[!stop]]">
+            <img class="location-img" src="../images/no-stop.png"/>
+          </template>
+          <span class="location-departure">[[location]]</span>
+        </div>
+        <template is="dom-if" if="[[stop]]">
+          <div class="layout horizontal center">
+            <div class="location-date layout vertical center">
+              <span>[[day]]</span>
+              <span>[[month]]</span>
+            </div>
+            <span class="location-hour">[[hour]]</span>
+            
+            <template is="dom-if" if="[[seats]]">
+              <div class="location-seats-available layout horizontal center">
+                <img class="location-img-seat" src="../images/seat-only-icon.png"/>
+                <span>[[seats]]</span>
+              </div>
+            </template>
+            <template is="dom-if" if="[[!seats]]">
+              <img class="location-img" src="../images/no-seats.png"/>
+            </template>
+          </div>
+        </template>
+      </div>
     </div>
   </template>
 
@@ -85,6 +96,10 @@
       month: String,
       hour: String,
       seats: Number,
+      first: {
+        type: Boolean,
+        value: false
+      },
       stop: {
         type: Boolean,
         value: false
