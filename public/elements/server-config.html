@@ -1,5 +1,18 @@
 <dom-module name="server-config">
 <script>
-	window.Polymer.restAPI = window.location.origin + "/api/v1/";
+	var pol = window.Polymer;
+	pol.restAPI = window.location.origin + "/api/v1/";
+
+
+
+	pol.image = {};
+	var images = pol.image;
+	
+	images.URL = window.location.origin + "/images/";
+	images.user = {};
+	images.user.URL = images.URL + "images/user/";
+	images.user.AVATARS = images.user.URL + "avatar/";
+
+	pol.month = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 </script>
 </dom-module>

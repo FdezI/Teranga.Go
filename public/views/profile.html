@@ -19,6 +19,9 @@
 <link rel="import" href="../elements/car-box.html">
 <link rel="import" href="../elements/car-edit.html">
 
+<link rel="import" href="../elements/trip-service.html">
+<link rel="import" href="../elements/assessment-service.html">
+
 <dom-module name="profile-view">
 
   <template>
@@ -33,7 +36,7 @@
               <img class="profile-photo" src="../images/full-star.png"/>
               <div class="profile-photo-div"></div>
             </div>
-            <template is="dom-if" if="[[showKarma()]]">
+            <template is="dom-if" if="[[showdriver]]">
               <div class="profile-stars"><stars-rating score="[[session.user.karma]]"></stars-rating></div>
             </template>
           </div>
@@ -86,22 +89,34 @@
 
         <div class="vertical-separator"></div>
 
-        <template is="dom-if" if="[[!edit]]">
+        <template id="moreInfo" is="dom-if" if="[[!edit]]">
           <container-box name="Viajes">
+            <trip-service user="[[session.user.iduser]]" response="{{session.user.trips}}" fetch="all"></trip-service>
+
+            <template id="tripsRepeat" is="dom-repeat" items="[[session.user.trips]]" as="trip">
+              <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/"></travel-box>
+            </template>
+
+<!--             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
+            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box> -->
             <!-- <car-box model="Renault" idcar="3212ED" seats="3" hp="200"></car-box> -->
           </container-box>
           
-          <container-box name="Opiniones">
-            <comment-box image="../images/driverIcon.jpg" profileurl="/" score="5" comment="Me ha parecido un chaval agradable y simpatico."></comment-box>
-          </container-box>
+          <template is="dom-if" if="[[showdriver]]">
+            <container-box name="Opiniones">
+              <assessment-service user="[[session.user.iduser]]" response="{{session.user.assessments}}" fetch="all"></assessment-service>
+
+              <template id="assessmentsRepeat" is="dom-repeat" items="[[session.user.assessments]]" as="assessment">
+                <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" score="[[assessment.karma]]" comment="[[assessment.comment]]"></comment-box>
+              </template>
+            </container-box>
+          </template>
         </template>
 
         <template is="dom-if" if="[[edit]]">
@@ -131,6 +146,7 @@
       	session: {
       	  type: Object,
       	  notify: true
+          // observer: 'sessionChanged'
       	},
       	selected: {
       	  type: String,
@@ -138,9 +154,21 @@
       	},
         edit: {
           type: Boolean,
+          value: false,
+          observer: 'updateShow'
+        },
+        trips: {
+          type: Object,
+          value: []
+        },
+        showdriver: {
+          type: Boolean,
           value: false
         }
       },
+
+      observers: ['tripsUpdated(session.user.trips)', 'updateShow(session.user)'],
+
       editProfile: function() {
         this.edit = true;
       },
@@ -150,8 +178,50 @@
       saveProfile: function() {
 
       },
-      showKarma: function() {
-        return !this.edit && this.session.user.karma != null;
+      updateShow: function() {
+        if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;
+        else this.showdriver = false;
+      },
+      tripsUpdated: function() {
+        // if(this.session && this.session.user && this.session.user.trips) {
+          
+        //   console.log("---------- OK: ----------");
+        //   // console.log(this);
+        //   // console.log(this.$);
+        //   // console.log(this.$.tripsRepeat);
+        //   var tripsRepeat = this.$$("#tripsRepeat");
+
+        //   this.trips.splice(0, this.trips.length);
+        //   // this.trips.push(1);
+        //   // this.trips.push(2);
+        //   this.push('trips', 1);
+        //   this.push('trips', 2);
+        //   // this.trips.push(this.session.user.trips);
+        //   if(tripsRepeat) {
+        //     console.log(this.trips);
+        //     console.log(this.session.user.trips)
+        //     // tripsRepeat.render();
+        //     console.log("updating repeat");
+        //     console.log(this.trips);
+        //     console.log(this.session.user.trips);
+        //   }
+
+        //   console.log("----------- DONE ----------")
+        // }
+      },
+      getImageUrl: function(name) {
+        return window.Polymer.image.user.AVATARS + name;
+      },
+      day: function(date) {
+        return new Date(Date.parse(date)).getDay();
+      },
+      month: function(date) {
+        var month = new Date(Date.parse(date)).getMonth();
+        
+        if(month >= 1 && month <= 12 )
+          return window.Polymer.month[month - 1].substring(0, 3);
+
+        return month;
       }
     });
   </script>

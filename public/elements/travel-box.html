@@ -37,8 +37,11 @@
         <div class="space"></div>
         <div class="travel-box-date"><span>[[day]]</span> <span>[[month]]</span></div>
         <div class="travel-box-driver layout horizontal center-justified">
-          <div class="layout vertical center-justified"><img src="../images/driverIcon.jpg"/></div>
-          <div class="layout vertical center"><p>[[driver]]</p></div>
+          <template is="dom-if" if="[[driver]]">
+            <img src="../images/driverIcon.jpg"/>
+          </template>
+          <!-- <div class="layout vertical center-justified"><img src="../images/driverIcon.jpg"/></div>
+          <div class="layout vertical center"><p>[[driver]]</p></div> -->
         </div>
       </div>
     </a>

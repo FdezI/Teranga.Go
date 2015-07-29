@@ -12,7 +12,7 @@ exports.create = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-	mysql.pool.query('SELECT name, surnames, avatar, karma FROM user', function(err, rows, fields) {
+	mysql.pool.query('SELECT iduser, name, surnames, avatar, karma FROM user', function(err, rows, fields) {
 		if(err) {
 			throw err;
 			//TODO handle errors on server.js
@@ -32,10 +32,10 @@ exports.get = function(req, res) {
 		var user = req.params.iduser;
 		if(Object.keys(req.query).length == 0) {
 			console.log(1);
-			identifiers = ['name', 'surnames', 'avatar', 'birth', 'karma'];
+			identifiers = ['iduser', 'name', 'surnames', 'avatar', 'birth', 'karma'];
 		} else identifiers = req.query;
 		
-		mysql.pool.query('SELECT ?? FROM user WHERE user.iduser=?', [identifiers, user], function(err, rows, fields) {
+		mysql.pool.query('SELECT ??, karma IS NOT NULL AS driver FROM user WHERE user.iduser=?', [identifiers, user], function(err, rows, fields) {
 			if(err) throw err;
 
 			res.json(rows[0]);
@@ -74,39 +74,39 @@ exports.get = function(req, res) {
 exports.getTrips = function(req, res) {
 	// TODO: benchmark both ways and choose the best one.
 
-	// SECOND METHOD:
+	// SECOND METHOD (Date not verified):
 
-	// var query = '(SELECT GROUP_CONCAT(city ORDER BY TP.order ASC) AS points, false as driving\
+	// var query = '(SELECT GROUP_CONCAT(city ORDER BY TP.order ASC) AS points, TP.date as dtime, false as driving\
 	// 	FROM userTrips, tripPoints AS TP, location\
 	// 	WHERE user = ? AND (userTrips.trip = TP.trip AND (pointA = TP.order OR pointB = TP.order)) AND location = idlocation)\
 	// 	UNION DISTINCT\
-	// 	(SELECT GROUP_CONCAT(city ORDER BY TP.order ASC), true AS driving\
+	// 	(SELECT GROUP_CONCAT(city ORDER BY TP.order ASC), trip.date, true AS driving\
 	// 	FROM trip, tripPoints AS TP, location\
-	// 	WHERE trip.driver = ? AND (idtrip = trip AND (TP.order = 0 OR TP.order = 99)) AND location = idlocation\
+	// 	WHERE trip.driver = ? AND ((TP.order = 0 OR TP.order = 99) AND idtrip = trip) AND location = idlocation\
 	// 	GROUP BY idtrip)'
 	
-	// This method is returning: [{points: "pointA, pointB", driving: 0}, {...}]
+	// This method is returning: [{points: "pointA, pointB", dtime: null, driving: 0}, {...}]
 
 
 	// FIRST METHOD
 
-	var query = '(SELECT LA.city AS departure, LB.city arrival, false as driving\
+	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, false as driving\
 											FROM userTrips\
-												LEFT JOIN tripPoints AS TA ON userTrips.trip = TA.trip AND pointA = TA.order\
-												LEFT JOIN tripPoints AS TB ON userTrips.trip = TB.trip AND pointB = TB.order\
-												INNER JOIN location AS LA ON LA.idlocation = TA.location\
-												INNER JOIN location AS LB ON LB.idlocation = TB.location\
+												LEFT JOIN tripPoints AS PA ON userTrips.trip = PA.trip AND pointA = PA.order\
+												LEFT JOIN tripPoints AS PB ON userTrips.trip = PB.trip AND pointB = PB.order\
+												INNER JOIN location AS LA ON LA.idlocation = PA.location\
+												INNER JOIN location AS LB ON LB.idlocation = PB.location\
 											WHERE user=? AND accepted=1)\
 											UNION DISTINCT\
-											(SELECT LA.city, LB.city, true AS driving\
+											(SELECT LA.city, LB.city, trip.date, true\
 											FROM trip\
-												LEFT JOIN tripPoints AS TA ON idtrip = TA.trip AND TA.order = 0\
-												LEFT JOIN tripPoints AS TB ON idtrip = TB.trip AND TB.order = 99\
-												INNER JOIN location AS LA ON LA.idlocation = TA.location\
-												INNER JOIN location AS LB ON LB.idlocation = TB.location\
+												LEFT JOIN tripPoints AS PA ON PA.order = 0 AND idtrip = PA.trip \
+												LEFT JOIN tripPoints AS PB ON PB.order = 99 AND idtrip = PB.trip\
+												INNER JOIN location AS LA ON LA.idlocation = PA.location\
+												INNER JOIN location AS LB ON LB.idlocation = PB.location\
 											WHERE trip.driver=?)';
 
-	// This method is returning: [{departure: '', arrival: '', driving:0}, {...}]
+	// This method is returning: [{departure: '', arrival: '', dtime: null, driving: 0}, {...}]
 	mysql.pool.query(query, [req.params.iduser, req.params.iduser], function(err, rows, result) {
 
 		if(err) throw err;
