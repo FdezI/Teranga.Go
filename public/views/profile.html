@@ -90,7 +90,7 @@
         <div class="vertical-separator"></div>
 
         <template id="moreInfo" is="dom-if" if="[[!edit]]">
-          <container-box name="Viajes">
+          <container-box on-reload="reloadTrips" name="Viajes">
             <trip-service user="[[session.user.iduser]]" response="{{session.user.trips}}" fetch="all"></trip-service>
 
             <template id="tripsRepeat" is="dom-repeat" items="[[session.user.trips]]" as="trip">
@@ -222,6 +222,10 @@
           return window.Polymer.month[month - 1].substring(0, 3);
 
         return month;
+      },
+      reloadTrips: function(event) {
+        this.$$("trip-service").reload();
+        this.$$("#tripsRepeat").render();
       }
     });
   </script>

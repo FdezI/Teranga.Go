@@ -59,17 +59,19 @@
         console.log("trip-service ready! for: " + this.fetch);
         this._ready = true;
       },
-      userChanged: function() {
-        if(this.fetch == "all") { 
-        	if(this.user) {
-        	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
-        	  console.log("Trips loading for user!: ");
-        	} else this.$.loadAll.url = window.Polymer.restAPI + "trips";
 
-        	console.log("Trips loading with: " + this.$.loadAll.url);
+      userChanged: function() {
+        this.reload();
+        // if(this.fetch == "all") { 
+        // 	if(this.user) {
+        // 	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
+        // 	  console.log("Trips loading for user!: ");
+        // 	} else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+
+        // 	console.log("Trips loading with: " + this.$.loadAll.url);
         	
-        	this.$.loadAll.generateRequest();
-        }
+        // 	this.$.loadAll.generateRequest();
+        // }
       },
       
       // fetchChanged: function() {
@@ -116,6 +118,19 @@
       
       createdResponse: function() {
         // this.response = this.$.create.lastResponse;
+      },
+
+      reload: function() {
+        if(this.fetch == "all") { 
+          if(this.user) {
+            this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
+          } else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+          
+          this.$.loadAll.generateRequest();
+        } else if(this.fetch != "") {
+          this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
+          this.$.loadOne.generateRequest();
+        }
       }
     });
   </script>
