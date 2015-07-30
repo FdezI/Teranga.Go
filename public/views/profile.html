@@ -8,6 +8,8 @@
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-left-animation.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<!-- <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-behavior.html"> -->
+<!-- <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-backdrop.html"> -->
 
 <link rel="import" href="../elements/user-info.html">
 <link rel="import" href="../elements/car-info.html">
@@ -49,10 +51,10 @@
                 <table style="width:100%">
                   <tr>
                     <td>E-mail:</td>
-                    <td><input type="text" name="email" value="correo electrónico"></td>
+                    <td><input type="text" name="email" value="{{update.email::input}}"></td>
                   <tr> 
                     <td>Teléfono:</td> 
-                    <td><input type="text" name="phone" value="teléfono"></td>
+                    <td><input type="text" name="phone" value="{{update.phone::input}}"></td>
                   </tr>
                   <tr> 
                     <td>Contraseña:</td>
@@ -60,11 +62,11 @@
                   </tr>
                   <tr> 
                     <td>Repetir contraseña:</td>
-                    <td><input type="password" name="pass2"></td>
+                    <td><input type="password" name="pass2" value="{{update.password::input}}"></td>
                   </tr>
                   <tr> 
                     <td>Carnet de conducir:</td>
-                    <td><input type="checkbox" name="carnet" value="false"></td> 
+                    <td><input type="checkbox" name="carnet" value="{{update.carnet::input}}"></td> 
                   </tr>
                 </table>
               </form>
@@ -79,7 +81,7 @@
             </template>
 
             <template is="dom-if" if="[[edit]]">
-              <button class="primary-button">Guardar cambios</button>
+              <button class="primary-button" on-click="saveProfile">Guardar cambios</button>
               <div class="space"></div>
               <button class="secondary-button" on-click="cancelEdit">Cancelar</button>
             </template>
@@ -130,7 +132,9 @@
             <car-box newcar="true"></car-box> 
           </div>
 
-          <car-edit newcar="true"></car-edit>
+          <!-- <iron-overlay-backdrop> -->
+            <car-edit newcar="true"></car-edit>
+          <!-- </iron-overlay-backdrop> -->
         </template>
       </template>
 
@@ -164,19 +168,46 @@
         showdriver: {
           type: Boolean,
           value: false
+        },
+        update: {
+          type: Object,
+          value: {}
         }
       },
 
       observers: ['tripsUpdated(session.user.trips)', 'updateShow(session.user)'],
 
       editProfile: function() {
+
+        var update = {};
+        var user = this.session.user;
+        var modifiables = ["email", "phone", "carnet"];
+        for(var i in modifiables) {
+          var value = modifiables[i];
+          update[value] = user[value];
+        }
+      //  Object.keys(modifiables).forEach(function(key) {
+      //    dataBackup[key] = user[key];
+      //  });
+        this.update = update;
+
         this.edit = true;
       },
       cancelEdit: function() {
         this.edit = false;
       },
       saveProfile: function() {
+        console.log("saveChanges");
+        var user = this.session.user;
+        var update = this.update;
+        //TODO only do this if the change has been really made
+        Object.keys(update).forEach(function(key) {
+          user[key] = update[key];
+        });
+        
 
+        this.$$("user-service").saveData();
+        this.edit = false;
       },
       updateShow: function() {
         if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;

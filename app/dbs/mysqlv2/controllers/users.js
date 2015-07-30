@@ -32,7 +32,7 @@ exports.get = function(req, res) {
 		var user = req.params.iduser;
 		if(Object.keys(req.query).length == 0) {
 			console.log(1);
-			identifiers = ['iduser', 'name', 'surnames', 'avatar', 'birth', 'karma'];
+			identifiers = ['iduser', 'name', 'surnames', 'email', 'phone', 'carnet', 'avatar', 'birth', 'karma'];
 		} else identifiers = req.query;
 		
 		mysql.pool.query('SELECT ??, karma IS NOT NULL AS driver FROM user WHERE user.iduser=?', [identifiers, user], function(err, rows, fields) {
@@ -128,7 +128,7 @@ exports.getAssessments = function(req, res) {
 
 // AUTHENTICATED
 exports.update = function(req, res) {
-	mysql.pool.query('UPDATE user SET ? WHERE iduser=?', req.body, req.params.iduser, function(err, result) {
+	mysql.pool.query('UPDATE user SET ? WHERE iduser=?', [req.body, req.params.iduser], function(err, result) {
 		if(err) throw err;
 		
 		res.json({changed:result.changedRows});
