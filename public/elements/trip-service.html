@@ -108,6 +108,10 @@
         // this.data = this.$.loadOne.lastResponse;
         // this.response = this.data;
         this.data = this.response;
+
+        var wps = this.data.wps;
+        this.data.origin = wps[0];
+        this.data.destiny = wps[wps.length - 1];
       },
       
       saveData: function() {
