@@ -1,0 +1,32 @@
+<link rel="import" href="box-container.html">
+<link rel="import" href="request-box.html">
+
+<dom-module name="request-container">
+  <template>
+    <box-container on-reload="reloadRequest" name="Solicitudes">
+      
+
+      <template id="requestRepeat" is="dom-repeat" items="[[requests]]" as="request">
+        <!-- <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/"></travel-box> -->
+        <request-box username="" departure="Granada" arrival="Portos"></request-box> 
+      </template>
+    </box-container>
+  </template>
+
+  <script>
+    Polymer({
+      is: "request-container",
+      properties: {
+        requests: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number
+      },
+      reloadRequests: function(event) {
+        this.$$("request-service").reload();
+        this.$$("#requestsRepeat").render();
+      }
+    });
+  </script>
+</dom-module>
