@@ -1,0 +1,23 @@
+<link rel="import" href="box-container.html">
+
+<dom-module name="box-container">
+  <template>
+    <container-box on-reload="reloadTrips" name="Viajes">
+      <trip-service user="[[iduser]]" response="{{trips}}" fetch="all"></trip-service>
+
+      <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
+        <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/"></travel-box>
+      </template>
+    </container-box>
+  </template>
+
+  <script>
+    Polymer({
+      is: "box-container",
+        properties: {
+        trips: Object,
+        iduser: Number
+      }
+    });
+  </script>
+</dom-module>
