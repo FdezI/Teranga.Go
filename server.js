@@ -96,7 +96,7 @@ apiRouter.route('/users')
 	.get(db.userController.getAll);
 apiRouter.route('/users/:iduser')
 	.get(db.userController.get)
-	.post(db.userController.update)
+	.put(db.userController.update)
 	.delete(db.userController.delete);
 	
 apiRouter.route('/users/:iduser/cars')
