@@ -50,10 +50,35 @@ exports.get = function(req, res) {
 	// 						ON T1.idtrip = trip.idtrip\
 	// 					WHERE trip.idtrip=?', req.params.idtrip, function(err, rows, fields) {
 
-		pool.query('SELECT * FROM trip WHERE idtrip=?', req.params.idtrip, function(err, rows, fields) {
+		pool.query('SELECT idtrip, date, driver, car, seats, packages = 1 as packages, animals = 1 as animals\
+								FROM trip WHERE idtrip=?', req.params.idtrip, function(err, rows, fields) {
 			if(err) throw err;
-		
-			res.json(rows[0]);
+			
+			var trip = rows[0];
+
+			// pool.query('SELECT TP.order, address, L.city, stop = 1 AS stop
+			// 						FROM tripPoints AS TP
+			// 							JOIN location AS L ON idlocation = location
+			// 						WHERE trip = 2;')
+				pool.query('SELECT TP.order, address, date, L.city, stop = 1 AS stop,\
+															SUM(CASE WHEN pointA = TP.order THEN 1 ELSE 0 END) as up,\
+															SUM(CASE WHEN pointB = TP.order THEN 1 ELSE 0 END) as down\
+										FROM tripPoints AS TP\
+											LEFT JOIN location AS L ON idlocation = location\
+											LEFT JOIN (\
+														SELECT trip\
+															,pointA, pointB\
+														FROM userTrips AS ut\
+														WHERE accepted) AS C ON C.trip = TP.trip AND (C.pointA = TP.order OR C.pointB = TP.order\
+											)\
+										WHERE TP.trip = ?\
+										GROUP BY TP.order\
+										ORDER BY TP.order ASC;', req.params.idtrip, function(err, rows, fields) {
+					
+					trip.wps = rows;
+
+					res.json(trip);
+				});
 		});
 };
 
