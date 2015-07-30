@@ -1,0 +1,245 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-right-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-left-animation.html">
+
+<link rel="import" href="../elements/trip-list.html">
+<link rel="import" href="../elements/trip-info.html">
+<link rel="import" href="../elements/location-box.html">
+<link rel="import" href="../elements/travel-line.html">
+
+<dom-module name="trip-view">
+    <style>
+      .content-travel-info {
+        width: 75%;
+        margin-left: 5%;
+      }
+      .principal-travel-info {
+        width: 80%;
+      }
+      .travel-info {
+        width: 120px;
+      }
+      .title-travel {
+        font-weight: bold;
+        font-variant: small-caps;
+        font-size: 40px;
+        margin: 0px 0px 20px 0px;
+      }
+      .departure-time {
+        margin: 5px;
+      }
+      .money-travel {
+        font-weight: bold;
+        font-size: 36px;
+        margin: 5px 5px 0px 5px;
+      }
+      .per-person-travel {
+        font-style: italic;
+        font-size: 10px;
+        margin-bottom: 10px;
+      }
+      .info-image-travel {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #999;
+        padding: 5px;
+      }
+
+      .small-container {
+        width: 240px;
+        background: #ccc;
+        margin: 30px 10px 10px 10px;
+        display: inline-block;
+      }
+      .title-small-container {
+        background: #f00;
+        padding: 5px;
+        font-weight: bold;
+        font-size: 20px;
+        font-variant: small-caps;
+        text-align: center;
+      }
+      .profile-img-small-container {
+        width: 60px;
+        height: 60px;
+        border: 1px solid #999;
+        box-shadow: 0px 0px 5px #999;
+      }
+
+      .pictures-small-container {
+        display: table;
+        margin: 5px 10px 5px 5px;
+      }
+      .stars-small-container {
+        height: 20px;
+        width: 100%;
+        background: #0f0;
+        margin-top: 5px;
+      }
+      .info-small-container {
+        margin: 5px 5px 5px 0px;
+        width: 70%;
+
+      }
+      .smalls-containers {
+        display: table;
+        background: #369;
+        margin: 5px;
+        width: 100%;
+      }
+      .asdf {
+        width: 300px;
+      }
+    </style>
+    <template id="tripsTemplate">
+      <trip-service fetch="[[idtrip]]" response="{{trip}}"></trip-service>
+      <div class="layout horizontal">
+        <travel-line>
+          <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
+          <location-box location="Motril"></location-box>
+          <location-box stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
+          <location-box location="Motril"></location-box>
+        </travel-line>
+
+        <div class="layout vertical content-travel-info">
+          <div class="layout horizontal">
+            <div class="layout vertical principal-travel-info">
+              <p class="title-travel"><span>Granada</span><span> - </span><span>Portos</span></p>
+              <p class="departure-time"><span>Fecha de salida </span><span>10 Jun</span></p>
+              <p class="departure-time"><span>Hora de salida </span><span>10:30</span></p>
+            </div>
+            <div>
+              <div class="travel-info">
+                <div class="layout vertical center">
+                  <div class="money-travel"><span>10</span><span>€</span></div><span class="per-person-travel"> por persona</span>
+                </div>
+                <div class="layout horizontal">
+                  <img class="info-image-travel travel-animals-info" src="../images/stop.png">
+                  <img class="info-image-travel travel-package-info" src="../images/stop.png">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="smalls-containers">
+
+            <div class="small-container">
+              <div class="title-small-container">Conductor</div>
+              <div class="layout horizontal">
+                <div class="pictures-small-container">
+                  <img src="" class="profile-img-small-container">
+                  <div class="stars-small-container"></div>
+                </div>
+                <div class="layout vertical info-small-container">
+                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
+                  <span><span>XX</span> años</span>
+                  <span>email@email.com</span>
+                  <span>666666666</span>
+                </div>
+              </div>
+            </div> 
+
+            <div class="small-container">
+              <div class="title-small-container">Conductor</div>
+              <div class="layout horizontal">
+                <div class="pictures-small-container">
+                  <img src="" class="profile-img-small-container">
+                  <div class="stars-small-container"></div>
+                </div>
+                <div class="layout vertical info-small-container">
+                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
+                  <span><span>XX</span> años</span>
+                  <span>email@email.com</span>
+                  <span>666666666</span>
+                </div>
+              </div>
+            </div> 
+
+          </div>
+
+          <div class="smalls-containers asdf">
+
+            <div class="small-container">
+              <div class="title-small-container">Conductor</div>
+              <div class="layout horizontal">
+                <div class="pictures-small-container">
+                  <img src="" class="profile-img-small-container">
+                  <div class="stars-small-container"></div>
+                </div>
+                <div class="layout vertical info-small-container">
+                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
+                  <span><span>XX</span> años</span>
+                  <span>email@email.com</span>
+                  <span>666666666</span>
+                </div>
+              </div>
+            </div> 
+
+            <div class="small-container">
+              <div class="title-small-container">Conductor</div>
+              <div class="layout horizontal">
+                <div class="pictures-small-container">
+                  <img src="" class="profile-img-small-container">
+                  <div class="stars-small-container"></div>
+                </div>
+                <div class="layout vertical info-small-container">
+                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
+                  <span><span>XX</span> años</span>
+                  <span>email@email.com</span>
+                  <span>666666666</span>
+                </div>
+              </div>
+            </div> 
+
+          </div>
+
+        </div>
+      </div>
+      
+    </template>
+    
+<!--   </section> -->
+
+<!--<script>
+  var template = document.querySelector('template[id="tripsTemplate"]');
+  template.addEventListener('template-bound', function() {
+    var pages = this.$.tripPages;//querySelector("#tripPages");
+    console.log("PAGES: " + pages);
+    
+    pages.querySelector("trip-list").addEventListener("selected-tap", function(event, detail, sender) {
+      pages.setAttribute("selected", "specific");
+    });
+
+    pages.querySelector("trip-info").addEventListener("back-to-list", function(event, detail, sender) {
+      pages.setAttribute("selected", "list");
+    });
+  });
+</script>-->
+
+  <script>
+    Polymer({
+      is: "trip-view",
+      properties: {
+        session: Object,
+        idtrip: Number,
+        trip: {
+          type: Object,
+          value: {}
+        }
+        selected: {
+          type: String,
+          value: "main"
+        }
+      },
+
+      ready: function() {
+        console.log("trips ready!");
+      }
+    });
+  </script>
+</dom-module>
