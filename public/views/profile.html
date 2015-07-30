@@ -98,6 +98,7 @@
           <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
           
           <template is="dom-if" if="[[showdriver]]">
+            <request-container iduser="[[session.user.iduser]]" trips="{{session.user.requests}}"></request-container>
             <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container>
           </template>
         </template>
