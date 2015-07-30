@@ -64,6 +64,7 @@ body {
 
 .profile-photo-div:hover {
 	box-shadow: 0px 0px 10px #555;
+	cursor: pointer;
 }
 
 .profile-photo-div > img {
