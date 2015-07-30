@@ -1,0 +1,30 @@
+<link rel="import" href="box-container.html">
+<link rel="import" href="assessment-service.html">
+
+<dom-module name="assessment-container">
+  <template>
+    <box-container name="Opiniones">
+      <assessment-service user="[[iduser]]" response="{{assessments}}" fetch="all"></assessment-service>
+
+      <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
+        <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" score="[[assessment.karma]]" comment="[[assessment.comment]]"></comment-box>
+      </template>
+    </box-container>
+  </template>
+
+  <script>
+    Polymer({
+      is: "assessment-container",
+      properties: {
+        assessments: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number
+      },
+      getImageUrl: function(name) {
+        return window.Polymer.image.user.AVATARS + name;
+      }
+    });
+  </script>
+</dom-module>

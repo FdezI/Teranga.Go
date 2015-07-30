@@ -7,14 +7,15 @@
 <link rel="import" href="../bower_components/neon-animation/animations/slide-right-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/slide-left-animation.html">
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<!-- <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html"> -->
 <!-- <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-behavior.html"> -->
 <!-- <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-backdrop.html"> -->
 
 <link rel="import" href="../elements/user-info.html">
 <link rel="import" href="../elements/car-info.html">
 <link rel="import" href="../elements/trip-info.html">
-<link rel="import" href="../elements/box-container.html">
+<link rel="import" href="../elements/trip-container.html">
+<link rel="import" href="../elements/assessment-container.html">
 <link rel="import" href="../elements/travel-box.html">
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/stars-rating.html">
@@ -94,32 +95,10 @@
         <div class="vertical-separator"></div>
 
         <template id="moreInfo" is="dom-if" if="[[!edit]]">
-          <box-container on-reload="reloadTrips" name="Viajes">
-            <trip-service user="[[session.user.iduser]]" response="{{session.user.trips}}" fetch="all"></trip-service>
-
-            <template id="tripsRepeat" is="dom-repeat" items="[[session.user.trips]]" as="trip">
-              <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/"></travel-box>
-            </template>
-
-<!--             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
-            <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box> -->
-            <!-- <car-box model="Renault" idcar="3212ED" seats="3" hp="200"></car-box> -->
-          </box-container>
+          <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
           
           <template is="dom-if" if="[[showdriver]]">
-            <box-container name="Opiniones">
-              <assessment-service user="[[session.user.iduser]]" response="{{session.user.assessments}}" fetch="all"></assessment-service>
-
-              <template id="assessmentsRepeat" is="dom-repeat" items="[[session.user.assessments]]" as="assessment">
-                <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" score="[[assessment.karma]]" comment="[[assessment.comment]]"></comment-box>
-              </template>
-            </box-container>
+            <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container>
           </template>
         </template>
 
@@ -214,51 +193,6 @@
       updateShow: function() {
         if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;
         else this.showdriver = false;
-      },
-      tripsUpdated: function() {
-        // if(this.session && this.session.user && this.session.user.trips) {
-          
-        //   console.log("---------- OK: ----------");
-        //   // console.log(this);
-        //   // console.log(this.$);
-        //   // console.log(this.$.tripsRepeat);
-        //   var tripsRepeat = this.$$("#tripsRepeat");
-
-        //   this.trips.splice(0, this.trips.length);
-        //   // this.trips.push(1);
-        //   // this.trips.push(2);
-        //   this.push('trips', 1);
-        //   this.push('trips', 2);
-        //   // this.trips.push(this.session.user.trips);
-        //   if(tripsRepeat) {
-        //     console.log(this.trips);
-        //     console.log(this.session.user.trips)
-        //     // tripsRepeat.render();
-        //     console.log("updating repeat");
-        //     console.log(this.trips);
-        //     console.log(this.session.user.trips);
-        //   }
-
-        //   console.log("----------- DONE ----------")
-        // }
-      },
-      getImageUrl: function(name) {
-        return window.Polymer.image.user.AVATARS + name;
-      },
-      day: function(date) {
-        return new Date(Date.parse(date)).getDay();
-      },
-      month: function(date) {
-        var month = new Date(Date.parse(date)).getMonth();
-        
-        if(month >= 1 && month <= 12 )
-          return window.Polymer.month[month - 1].substring(0, 3);
-
-        return month;
-      },
-      reloadTrips: function(event) {
-        this.$$("trip-service").reload();
-        this.$$("#tripsRepeat").render();
       }
     });
   </script>
