@@ -14,7 +14,7 @@
 <link rel="import" href="../elements/user-info.html">
 <link rel="import" href="../elements/car-info.html">
 <link rel="import" href="../elements/trip-info.html">
-<link rel="import" href="../elements/container-box.html">
+<link rel="import" href="../elements/box-container.html">
 <link rel="import" href="../elements/travel-box.html">
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/stars-rating.html">
@@ -94,7 +94,7 @@
         <div class="vertical-separator"></div>
 
         <template id="moreInfo" is="dom-if" if="[[!edit]]">
-          <container-box on-reload="reloadTrips" name="Viajes">
+          <box-container on-reload="reloadTrips" name="Viajes">
             <trip-service user="[[session.user.iduser]]" response="{{session.user.trips}}" fetch="all"></trip-service>
 
             <template id="tripsRepeat" is="dom-repeat" items="[[session.user.trips]]" as="trip">
@@ -110,16 +110,16 @@
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box>
             <travel-box departure="Granada" arrival="Dogo" day="23" month="Junio" driver="Carmen" travelurl="/"></travel-box> -->
             <!-- <car-box model="Renault" idcar="3212ED" seats="3" hp="200"></car-box> -->
-          </container-box>
+          </box-container>
           
           <template is="dom-if" if="[[showdriver]]">
-            <container-box name="Opiniones">
+            <box-container name="Opiniones">
               <assessment-service user="[[session.user.iduser]]" response="{{session.user.assessments}}" fetch="all"></assessment-service>
 
               <template id="assessmentsRepeat" is="dom-repeat" items="[[session.user.assessments]]" as="assessment">
                 <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" score="[[assessment.karma]]" comment="[[assessment.comment]]"></comment-box>
               </template>
-            </container-box>
+            </box-container>
           </template>
         </template>
 
