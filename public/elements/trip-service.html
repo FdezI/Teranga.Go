@@ -15,7 +15,6 @@
     </iron-ajax>
 
     <iron-ajax id="loadOne"
-      last-response="{{response}}"
       on-response="tripLoaded">
     </iron-ajax>
     
@@ -102,16 +101,26 @@
         this.data = this.response;
       },
       
-      tripLoaded: function() {
+      tripLoaded: function(e, a, as) {
         console.log('Trip Loaded:');
-        console.log(this.response);
-        // this.data = this.$.loadOne.lastResponse;
-        // this.response = this.data;
-        this.data = this.response;
 
-        var wps = this.data.wps;
-        this.data.origin = wps[0];
-        this.data.destiny = wps[wps.length - 1];
+        var res = this.$.loadOne.lastResponse;
+        var wps = res.wps;
+        if(wps) {
+          var size = wps.length;
+          var cost = 0;
+          res.destiny = wps[size - 1];
+          for(var i = 0; i < size; i++) {
+            var p = wps[i];
+            console.log("cost: " + p.cost);
+            cost += p.cost;
+          }
+          console.log("Coste: " + cost);
+          res.cost = cost;
+        }
+        this.response = res;
+        this.data = this.response;
+        console.log(this.response);
       },
       
       saveData: function() {
@@ -133,7 +142,7 @@
           
           this.$.loadAll.generateRequest();
         } else if(this.fetch !== "") {
-          console.log("fetching");
+          console.log("fetching " + this.fetch);
           this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
           this.$.loadOne.generateRequest();
         }

@@ -8,7 +8,7 @@
 <link rel="import" href="../elements/trip-service.html">
 
 <dom-module name="trip-view">
-  <style>
+  <style>a
     .content-travel-info {
       width: 75%;
       margin-left: 5%;
@@ -109,27 +109,30 @@
       width: 100%;
     }
   </style>
-  <template id="tripsTemplate">
+  <template>
     <trip-service id="ts" fetch="[[idtrip]]" response="{{trip}}"></trip-service>
     <div class="layout horizontal">
       <travel-line>
-        <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
+        <template is="dom-repeat" items="{{trip.wps}}" as="wp">
+          <location-box first$="[[!index]]" stop="[[wp.stop]]" location="[[wp.city]]" day="[[day(wp.date)]]" seats="3" month="[[month(wp.date)]]" hour="[[time(wp.date)]]"></location-box>
+        </template>
+        <!-- <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
         <location-box location="Motril"></location-box>
         <location-box stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
-        <location-box location="Motril"></location-box>
+        <location-box location="Motril"></location-box> -->
       </travel-line>
 
       <div class="layout vertical content-travel-info">
         <div class="layout horizontal">
           <div class="layout vertical principal-travel-info">
-            <p class="title-travel"><span>Granada</span><span> - </span><span>Portos</span></p>
+            <p class="title-travel"><span>[[trip.wps.0.city]]</span><span> - </span><span>[[trip.destiny.city]]</span></p>
             <p class="departure-time"><span>Fecha de salida </span><span>10 Jun</span></p>
-            <p class="departure-time"><span>Hora de salida </span><span>10:30</span></p>
+            <p class="departure-time"><span>Hora de salida </span><span>[[time(trip.wps.0.date)]]</span></p>
           </div>
           <div>
             <div class="travel-info">
               <div class="layout vertical center">
-                <div class="money-travel"><span>10</span><span>€</span></div><span class="per-person-travel"> por persona</span>
+                <div class="money-travel"><span>[[trip.cost]]</span><span>€</span></div><span class="per-person-travel"> por persona</span>
               </div>
               <div class="layout horizontal">
                 <img class="info-image-travel travel-animals-info" src="../images/stop.png">
@@ -161,10 +164,10 @@
             <div class="title-small-container">Coche</div>
             <div class="layout vertical">
               <span>Modelo</span>
-              <span>Matrícula</span>
+              <span>[[trip.car]]</span>
               <div class="layout horizontal center-justified">
                 <img src="../images/seat-icon.png">
-                <span><span>3</span><span> asientos libres</span></span>
+                <span><span>[[trip.seats]]</span> asientos libres</span>
               </div>
             </div>
           </div> 
@@ -246,7 +249,10 @@
       is: "trip-view",
       properties: {
         session: Object,
-        idtrip: Number,
+        idtrip: {
+          type: Number,
+          observer: 'idtripChanged'
+        },
         trip: {
           type: Object,
           value: {}
@@ -259,10 +265,22 @@
 
       ready: function() {
         console.log("trip-view ready!");
-        this.$.ts.reload();
+        // this.$.ts.reload();
       },
       toggle: function() {
         this.$.collapse.toggle();
+      },
+      idtripChanged: function() {
+        this.$.ts.reload();
+      },
+      day: function(date) {
+        return window.Polymer.day(date);
+      },
+      month: function(date) {
+       return window.Polymer.month(date);
+      },
+      time: function(date) {
+        return window.Polymer.time(date);
       }
     });
   </script>

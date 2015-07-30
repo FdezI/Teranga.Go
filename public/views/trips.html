@@ -4,10 +4,10 @@
   <style>
   </style>
   <template>
-    <select selected="{{selected::input}}">
+    <select value="{{selected::input}}">
       <option value="1">1</option>
-      <option value="3">2</option>
-      <option value="2">3</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
     </select>
     <trip-view idtrip="[[selected]]"></trip-view>
   </template>
@@ -18,11 +18,16 @@
       properties: {
         selected: {
           type: Number,
-          value: 0
+          value: 0,
+          observer: 'selectedChanged'
         }
       },
       ready: function() {
         console.log("trips-view ready!");
+      },
+
+      selectedChanged: function() {
+        console.log("CHANGED SELECTED");
       }
     });
   </script>

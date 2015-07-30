@@ -60,7 +60,8 @@ exports.get = function(req, res) {
 			// 						FROM tripPoints AS TP
 			// 							JOIN location AS L ON idlocation = location
 			// 						WHERE trip = 2;')
-				pool.query('SELECT TP.order, address, date, L.city, stop = 1 AS stop,\
+				
+				if(trip) pool.query('SELECT TP.order, address, L.city, stop = 1 AS stop, cost, date,\
 															SUM(CASE WHEN pointA = TP.order THEN 1 ELSE 0 END) as up,\
 															SUM(CASE WHEN pointB = TP.order THEN 1 ELSE 0 END) as down\
 										FROM tripPoints AS TP\
@@ -78,7 +79,9 @@ exports.get = function(req, res) {
 					trip.wps = rows;
 
 					res.json(trip);
+
 				});
+				else res.json({});
 		});
 };
 

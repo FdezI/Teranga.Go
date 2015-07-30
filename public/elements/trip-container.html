@@ -21,21 +21,6 @@
           notify: true
         },
         iduser: Number
-      },
-      day: function(date) {
-        return new Date(Date.parse(date)).getDay();
-      },
-      month: function(date) {
-        var month = new Date(Date.parse(date)).getMonth();
-        
-        if(month >= 1 && month <= 12 )
-          return window.Polymer.month[month - 1].substring(0, 3);
-
-        return month;
-      },
-      reloadTrips: function(event) {
-        this.$$("trip-service").reload();
-        this.$$("#tripsRepeat").render();
       }
     });
   </script>

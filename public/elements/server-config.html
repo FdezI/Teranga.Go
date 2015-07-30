@@ -13,6 +13,29 @@
 	images.user.URL = images.URL + "images/user/";
 	images.user.AVATARS = images.user.URL + "avatar/";
 
-	pol.month = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+	pol.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+
+
+
+
+
+
+  pol.day = function(date) {
+    return new Date(Date.parse(date)).getDay();
+  };
+
+  pol.month = function(date) {
+    var month = new Date(Date.parse(date)).getMonth();
+    
+    if(month >= 1 && month <= 12 )
+      return window.Polymer.months[month - 1].substring(0, 3);
+
+    return month;
+  };
+
+  pol.time = function(date) {
+  	return new Date(Date.parse(date)).toTimeString().substring(0,5);
+  }
 </script>
 </dom-module>
