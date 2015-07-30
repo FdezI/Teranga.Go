@@ -53,8 +53,17 @@
       .small-container {
         width: 240px;
         background: #ccc;
-        margin: 30px 10px 10px 10px;
+        margin: 0px 10px 0px 10px;
         display: inline-block;
+        height: 200px;
+        vertical-align: top;
+      }
+      .smalls-containers {
+        display: table;
+        background: #369;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        width: 100%;
       }
       .title-small-container {
         background: #f00;
@@ -85,15 +94,6 @@
         margin: 5px 5px 5px 0px;
         width: 70%;
 
-      }
-      .smalls-containers {
-        display: table;
-        background: #369;
-        margin: 5px;
-        width: 100%;
-      }
-      .asdf {
-        width: 300px;
       }
     </style>
     <template id="tripsTemplate">
@@ -144,53 +144,13 @@
             </div> 
 
             <div class="small-container">
-              <div class="title-small-container">Conductor</div>
-              <div class="layout horizontal">
-                <div class="pictures-small-container">
-                  <img src="" class="profile-img-small-container">
-                  <div class="stars-small-container"></div>
-                </div>
-                <div class="layout vertical info-small-container">
-                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
-                  <span><span>XX</span> años</span>
-                  <span>email@email.com</span>
-                  <span>666666666</span>
-                </div>
-              </div>
-            </div> 
-
-          </div>
-
-          <div class="smalls-containers asdf">
-
-            <div class="small-container">
-              <div class="title-small-container">Conductor</div>
-              <div class="layout horizontal">
-                <div class="pictures-small-container">
-                  <img src="" class="profile-img-small-container">
-                  <div class="stars-small-container"></div>
-                </div>
-                <div class="layout vertical info-small-container">
-                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
-                  <span><span>XX</span> años</span>
-                  <span>email@email.com</span>
-                  <span>666666666</span>
-                </div>
-              </div>
-            </div> 
-
-            <div class="small-container">
-              <div class="title-small-container">Conductor</div>
-              <div class="layout horizontal">
-                <div class="pictures-small-container">
-                  <img src="" class="profile-img-small-container">
-                  <div class="stars-small-container"></div>
-                </div>
-                <div class="layout vertical info-small-container">
-                  <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
-                  <span><span>XX</span> años</span>
-                  <span>email@email.com</span>
-                  <span>666666666</span>
+              <div class="title-small-container">Coche</div>
+              <div class="layout vertical">
+                <span>Modelo</span>
+                <span>Matrícula</span>
+                <div class="layout horizontal center-justified">
+                  <img src="../images/seat-icon.png">
+                  <span><span>3</span><span> asientos libres</span></span>
                 </div>
               </div>
             </div> 
