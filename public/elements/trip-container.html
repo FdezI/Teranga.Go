@@ -21,6 +21,16 @@
           notify: true
         },
         iduser: Number
+      },
+      day: function(date) {
+        return window.Polymer.day(date);
+      },
+      month: function(date) {
+       return window.Polymer.month(date);
+      },
+      reloadTrips: function(event) {
+        this.$$("trip-service").reload();
+        this.$$("#tripsRepeat").render();
       }
     });
   </script>

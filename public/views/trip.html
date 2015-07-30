@@ -114,7 +114,7 @@
     <div class="layout horizontal">
       <travel-line>
         <template is="dom-repeat" items="{{trip.wps}}" as="wp">
-          <location-box first$="[[!index]]" stop="[[wp.stop]]" location="[[wp.city]]" day="[[day(wp.date)]]" seats="3" month="[[month(wp.date)]]" hour="[[time(wp.date)]]"></location-box>
+          <location-box first="[[!index]]" stop="[[wp.stop]]" location="[[wp.city]]" day="[[day(wp.date)]]" seats="3" month="[[month(wp.date)]]" hour="[[time(wp.date)]]"></location-box>
         </template>
         <!-- <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
         <location-box location="Motril"></location-box>
