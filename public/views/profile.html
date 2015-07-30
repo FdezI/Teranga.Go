@@ -34,12 +34,14 @@
       <template id="profileTemplate" is="dom-if" if="[[session.user]]">
         <div class="margin-block layout horizontal">
           <div class="layout vertical profile-a">
-            <div>
+            <div class="profile-photo-super">
               <img class="profile-photo" src="../images/full-star.png"/>
-              <div class="profile-photo-div"></div>
+              <template is="dom-if" if="[[edit]]">
+                <div class="profile-photo-div"><img src="../images/edit.png"></div>
+              </template>
             </div>
             <template is="dom-if" if="[[showdriver]]">
-              <div class="profile-stars"><stars-rating score="[[session.user.karma]]"></stars-rating></div>
+              <div class="profile-stars" onclick=""><stars-rating score="[[session.user.karma]]"></stars-rating></div>
             </template>
           </div>
 
