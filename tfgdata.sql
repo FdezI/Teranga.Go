@@ -21,9 +21,6 @@
 
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `TFGv2` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-GRANT ALL PRIVILEGES ON TFGv2 . * TO 'tfg'@'localhost' IDENTIFIED BY 'asdfasdf';
-FLUSH PRIVILEGES;
-
 USE `TFGv2`;
 
 --
@@ -36,13 +33,11 @@ DROP TABLE IF EXISTS `assessment`;
 CREATE TABLE `assessment` (
   `trip` int(11) NOT NULL,
   `user` int(11) NOT NULL,
-  `driver` bit(3) NOT NULL,
-  `car` bit(3) NOT NULL,
+  `driver` tinyint(2) NOT NULL,
+  `car` tinyint(2) NOT NULL,
   `comment` tinytext,
   PRIMARY KEY (`user`,`trip`),
-  KEY `fk_assessment_1_idx` (`trip`),
-  CONSTRAINT `fk_assessment_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_assessment_2` FOREIGN KEY (`user`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_assessment_1` FOREIGN KEY (`user`, `trip`) REFERENCES `userTrips` (`user`, `trip`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -52,6 +47,7 @@ CREATE TABLE `assessment` (
 
 LOCK TABLES `assessment` WRITE;
 /*!40000 ALTER TABLE `assessment` DISABLE KEYS */;
+INSERT INTO `assessment` VALUES (2,2,3,4,'Mi comentario es bastante positivo (3 conductor, 4 coche)');
 /*!40000 ALTER TABLE `assessment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,10 +202,10 @@ CREATE TABLE `packageTrips` (
   KEY `fk_packageTrips_3_idx` (`pointA`),
   KEY `fk_packageTrips_3_idx1` (`trip`,`pointA`),
   KEY `fk_packageTrips_4_idx` (`trip`,`pointB`),
-  CONSTRAINT `fk_packageTrips_4` FOREIGN KEY (`trip`, `pointB`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_packageTrips_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_packageTrips_2` FOREIGN KEY (`package`) REFERENCES `package` (`idpackage`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_packageTrips_3` FOREIGN KEY (`trip`, `pointA`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_packageTrips_3` FOREIGN KEY (`trip`, `pointA`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_packageTrips_4` FOREIGN KEY (`trip`, `pointB`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -295,7 +291,7 @@ CREATE TABLE `trip` (
   KEY `fk_trip_2_idx` (`car`),
   CONSTRAINT `fk_trip_1` FOREIGN KEY (`driver`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_trip_2` FOREIGN KEY (`car`) REFERENCES `car` (`idcar`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -304,7 +300,7 @@ CREATE TABLE `trip` (
 
 LOCK TABLES `trip` WRITE;
 /*!40000 ALTER TABLE `trip` DISABLE KEYS */;
-INSERT INTO `trip` VALUES (2,'0000-00-00 00:00:00',1,'M1XS',3,'\0','\0');
+INSERT INTO `trip` VALUES (2,'0000-00-00 00:00:00',1,'M1XS',3,'\0','\0'),(3,'2015-07-28 13:09:57',1,'M1XS',4,'','');
 /*!40000 ALTER TABLE `trip` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,6 +317,8 @@ CREATE TABLE `tripPoints` (
   `location` int(11) NOT NULL,
   `address` varchar(45) NOT NULL,
   `stop` bit(1) NOT NULL DEFAULT b'0',
+  `date` timestamp NULL DEFAULT NULL,
+  `cost` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`trip`,`order`),
   KEY `fk_tripPoints_2_idx` (`location`),
   CONSTRAINT `fk_tripPoints_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -334,6 +332,7 @@ CREATE TABLE `tripPoints` (
 
 LOCK TABLES `tripPoints` WRITE;
 /*!40000 ALTER TABLE `tripPoints` DISABLE KEYS */;
+INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de mÃ¡laga, 115','','2015-09-09 21:00:00',3),(2,1,3,'c/ la piruleta','\0',NULL,4),(2,2,4,'c/ aleatoria de dogo','',NULL,NULL),(2,99,5,'c/ final de ruta','',NULL,NULL),(3,0,4,'c/ inicio de dogo','',NULL,NULL),(3,99,1,'c/ final de granada','',NULL,NULL);
 /*!40000 ALTER TABLE `tripPoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,7 +352,8 @@ CREATE TABLE `user` (
   `carnet` bit(1) NOT NULL DEFAULT b'0',
   `birth` date DEFAULT NULL,
   `password` binary(32) NOT NULL,
-  `karma` bit(4) DEFAULT NULL,
+  `karma` tinyint(2) DEFAULT NULL,
+  `phone` bigint(14) NOT NULL,
   PRIMARY KEY (`iduser`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -364,7 +364,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(2,'Usuario2',NULL,'usuario2@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(3,'Usuario3',NULL,'usuario3@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(4,'Usuario4',NULL,'usuario4@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(5,'Usuario5',NULL,'usuario5@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(6,'Usuario6',NULL,'usuario6@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(7,'Usuario7',NULL,'usuario7@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(8,'Usuario8',NULL,'usuario8@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL),(9,'Usuario9',NULL,'usuario9@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL);
+INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com','avatar1','',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',0,0),(2,'Usuario2',NULL,'usuario2@mail.com','avatar2','\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,999),(3,'Usuario3',NULL,'usuario3@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(4,'Usuario4',NULL,'usuario4@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(5,'Usuario5',NULL,'usuario5@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(6,'Usuario6',NULL,'usuario6@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(7,'Usuario7',NULL,'usuario7@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(8,'Usuario8',NULL,'usuario8@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(9,'Usuario9',NULL,'usuario9@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -388,10 +388,10 @@ CREATE TABLE `userTrips` (
   KEY `fk_userTrips_3_idx` (`pointA`,`pointB`),
   KEY `fk_userTrips_3_idx1` (`trip`,`pointA`),
   KEY `fk_userTrips_4_idx` (`trip`,`pointB`),
-  CONSTRAINT `fk_userTrips_4` FOREIGN KEY (`trip`, `pointB`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userTrips_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_userTrips_2` FOREIGN KEY (`user`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_userTrips_3` FOREIGN KEY (`trip`, `pointA`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_userTrips_3` FOREIGN KEY (`trip`, `pointA`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_userTrips_4` FOREIGN KEY (`trip`, `pointB`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -401,6 +401,7 @@ CREATE TABLE `userTrips` (
 
 LOCK TABLES `userTrips` WRITE;
 /*!40000 ALTER TABLE `userTrips` DISABLE KEYS */;
+INSERT INTO `userTrips` VALUES (2,2,90,'','',1,99),(2,3,150,'que carero!!','',2,99),(2,4,50,'baratuno','',0,2);
 /*!40000 ALTER TABLE `userTrips` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -413,4 +414,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-27 19:30:42
+-- Dump completed on 2015-07-30 21:08:25
