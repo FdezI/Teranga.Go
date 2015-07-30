@@ -121,13 +121,15 @@
       },
 
       reload: function() {
+        console.log("reloading: " + this.fetch);
         if(this.fetch == "all") { 
           if(this.user) {
             this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
           } else this.$.loadAll.url = window.Polymer.restAPI + "trips";
           
           this.$.loadAll.generateRequest();
-        } else if(this.fetch != "") {
+        } else if(this.fetch !== "") {
+          console.log("fetching");
           this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
           this.$.loadOne.generateRequest();
         }
