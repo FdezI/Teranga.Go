@@ -1,0 +1,32 @@
+<dom-module name="package-row">
+  <style>
+  </style>
+  
+  <template>  
+    <tr>
+      <td>
+        <span>[[name]]</span>
+      </td> 
+      <td>
+        <span>[[size]]</span>
+      </td> 
+      <td>
+        <span>[[prize]]</span>€
+      </td> 
+      <td>
+        <button>X</button>
+      </td>
+    </tr>
+  </template>
+
+  <script>
+  Polymer({
+    is: "package-row",
+    properties: {
+      name: String,
+      size: String,
+      price: String
+    }
+  });
+  </script>
+</dom-module>
