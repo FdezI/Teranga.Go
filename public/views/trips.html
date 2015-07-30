@@ -95,6 +95,18 @@
         width: 70%;
 
       }
+      .button-request {
+        margin-top: 30px;
+        width: 20%;
+        height: 40px;
+        background: #f00;
+
+      }
+      .collapse-content-comment {
+        border: 1px solid #ccc;
+        margin: 10px;
+        padding: 10px;
+      }
     </style>
     <template id="tripsTemplate">
       <div class="layout horizontal">
@@ -157,28 +169,23 @@
 
           </div>
 
+          <div class="comment-container">
+            <div class="title-small-container">Comentario del conductor</div>
+            <div><span>Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla</span></div>
+          </div>
+
+          <button on-click="toggle" class="button-request">
+            <span>Pedir</span>
+          </button>
+          <iron-collapse class="content" id="collapse">
+            <div class="collapse-content-comment">
+              hola
+            </div>
+          </iron-collapse>
         </div>
       </div>
       
     </template>
-    
-<!--   </section> -->
-
-<!--<script>
-  var template = document.querySelector('template[id="tripsTemplate"]');
-  template.addEventListener('template-bound', function() {
-    var pages = this.$.tripPages;//querySelector("#tripPages");
-    console.log("PAGES: " + pages);
-    
-    pages.querySelector("trip-list").addEventListener("selected-tap", function(event, detail, sender) {
-      pages.setAttribute("selected", "specific");
-    });
-
-    pages.querySelector("trip-info").addEventListener("back-to-list", function(event, detail, sender) {
-      pages.setAttribute("selected", "list");
-    });
-  });
-</script>-->
 
   <script>
     Polymer({
@@ -193,6 +200,9 @@
 
       ready: function() {
         console.log("trips ready!");
+      },
+      toggle: function() {
+        this.$.collapse.toggle();
       }
     });
   </script>
