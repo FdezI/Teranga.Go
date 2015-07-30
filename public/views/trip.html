@@ -102,6 +102,12 @@
       margin: 10px;
       padding: 10px;
     }
+    .table-request {
+      width: 100%;
+    }
+    .comment-text-area {
+      width: 100%;
+    }
   </style>
   <template id="tripsTemplate">
     <trip-service id="ts" fetch="[[idtrip]]" response="{{trip}}"></trip-service>
@@ -174,8 +180,60 @@
           <span>Pedir</span>
         </button>
         <iron-collapse class="content" id="collapse">
-          <div class="collapse-content-comment">
-            hola
+          <div class="collapse-content-comment layout vertical">
+            
+            <table class="table-request">
+              <tr> 
+                <td>Salida</td> 
+                <td><input list="departures"></td>
+                <td><span>10</span>/<span>Jun</span></td>
+                <td><span>10:30</span></td>
+              </tr>
+              <datalist id="departures">
+                <option value="A">
+                <option value="B">
+                <option value="C">
+              </datalist>
+              <tr>
+                <td colspan="4"><span>C/ bla bla bla</span></td>
+              </tr>
+              <tr> 
+                <td>Llegada</td> 
+                <td><input list="arrivals"></td>
+                <td><span>10</span>/<span>Jun</span></td>
+                <td><span>10:30</span></td>
+              </tr>
+              <datalist id="arrivals">
+                <option value="A">
+                <option value="B">
+                <option value="C">
+              </datalist>
+              <tr>
+                <td colspan="4"><span>C/ bla bla bla</span></td>
+              </tr>
+              <tr>
+                <td>Comentario</td>
+              </tr>
+              <tr>
+                <td colspan="4"><textarea class="comment-text-area" rows="4" name="comment"></textarea></td>
+              </tr>
+              <tr>
+                <td>Asiento</td>
+                <td><input type="checkbox" name="seat"></td>
+                <td>x<span>10</span>€</td>
+              </tr>
+              <tr>
+                <td>Paquetes</td>
+                <td><input type="Number" min="0" max="10"></td>
+                <td>x<span>10</span>€</td>
+              </tr>
+              <tr>
+                <td colspan="2">Precio final</td>
+                <td><span>30</span>€</td>
+                <td><button>Solicitar</button></td>
+              </tr>
+
+            </table>
           </div>
         </iron-collapse>
       </div>
