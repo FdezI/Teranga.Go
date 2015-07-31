@@ -1,0 +1,54 @@
+<dom-module name="your-request-box">
+  <style>
+    .your-request {
+      border: 2px solid #ccc;
+      width: 150px;
+      height: 150px;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .delete-button {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      position: relative;
+      left: 62px;
+      top: -20px;
+      font-size: 25px;
+    }
+  </style>
+  
+  <template>
+    <a id="linkuser" href="[[url]]">
+      <div class="layout vertical center-justified your-request">
+        <div style="height: 0px;"><button class="delete-button">x</button></div>
+        <span>[[departure]]</span>
+        <span>/</span>
+        <span>[[arrival]]</span>
+        <span>[[status]]</span>
+        <div class="layout horizontal">
+          <div class="layout vertical center">
+          <span>[[day]]</span>
+          <span>[[month]]</span>
+          </div>
+          <span>[[hour]]</span>
+        </div>
+      </div>
+    </a>
+  </template>
+
+  <script>
+  Polymer({
+    is: "your-request-box",
+    properties: {
+      departure: String,
+      arrival: String,
+      status: String,
+      day: String,
+      month: String,
+      hour: String
+    }
+  });
+  </script>
+</dom-module>
