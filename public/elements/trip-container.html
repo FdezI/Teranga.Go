@@ -3,9 +3,9 @@
 
 <dom-module name="trip-container">
   <template>
-    <box-container on-reload="reloadTrips" open="{{open}}" name="Viajes">
+    <box-container on-reload="reloadTrips" open="{{open}}" reloading="{{loading}}" name="Viajes">
       <template is="dom-if" if="[[open]]">
-        <trip-service user="[[iduser]]" response="{{trips}}" fetch="all"></trip-service>
+        <trip-service user="[[iduser]]" response="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
       </template>
 
       <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
@@ -24,7 +24,8 @@
           notify: true
         },
         iduser: Number,
-        open: Boolean
+        open: Boolean,
+        loading: Boolean
       },
       day: function(date) {
         return window.Polymer.day(date);
@@ -32,9 +33,13 @@
       month: function(date) {
        return window.Polymer.month(date);
       },
-      reloadTrips: function(event) {
+      reloadTrips: function() {
+        this.loading = true;
         this.$$("trip-service").reload();
         this.$$("#tripsRepeat").render();
+      },
+      loaded: function() {
+        this.loading = false;
       }
     });
   </script>

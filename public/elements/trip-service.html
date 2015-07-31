@@ -99,6 +99,8 @@
         // this.data = this.$.loadAll.lastResponse;
         // this.response = this.data;
         this.data = this.response;
+
+        this.fire('loaded');
       },
       
       tripLoaded: function(e, a, as) {
@@ -108,7 +110,7 @@
         var wps = res.wps;
         if(wps) {
           var size = wps.length;
-          var cost = 0;
+          // var cost = 0;
           var seats = res.seats;
           var free = seats;
 
@@ -116,22 +118,22 @@
           for(var i = 0; i < size; i++) {
             var p = wps[i];
             seats = p.down + p.up;
-            cost += p.cost;
+            // cost += p.cost;
 
             p.seats = seats;
             p.day = window.Polymer.day(p.date);
             p.month = window.Polymer.month(p.date);
             p.time = window.Polymer.time(p.date);
             if(seats < free) free = seats;
-
           }
-          console.log("Coste: " + cost);
-          res.cost = cost;
+          // console.log("Coste: " + cost);
+          res.cost = res.destiny.cost;
           res.free = free;
         }
         this.response = res;
         this.data = this.response;
         console.log(this.response);
+        this.fire('loaded');
       },
       
       saveData: function() {

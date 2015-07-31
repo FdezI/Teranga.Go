@@ -62,7 +62,7 @@ exports.get = function(req, res) {
 			// 							JOIN location AS L ON idlocation = location
 			// 						WHERE trip = 2;')
 				
-				if(trip) pool.query('SELECT TP.order, address, L.city, stop = 1 AS stop, cost, date,\
+				if(trip) pool.query('SELECT TP.order, address, L.city, stop = 1 AS stop, cost, pkcost, date,\
 															SUM(CASE WHEN pointA = TP.order THEN 1 ELSE 0 END) as up,\
 															SUM(CASE WHEN pointB = TP.order THEN 1 ELSE 0 END) as down\
 										FROM tripPoints AS TP\

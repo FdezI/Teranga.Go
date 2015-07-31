@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module name="box-container">
   <style>
@@ -28,7 +29,12 @@
     	<button on-click="toggle" class="container">
         <span>[[name]]</span>
         <template is="dom-if" if="[[reloadable]]">
-          <paper-icon-button icon="refresh" on-click="reload" class="button-inner"></paper-icon-button>
+          <template is="dom-if" if="[[!reloading]]">
+            <paper-icon-button icon="refresh" on-click="reload" class="button-inner"></paper-icon-button>
+          </template>
+          <template is="dom-if" if="[[reloading]]">
+            <paper-spinner alt="Cargando..." active class="button-inner"></paper-spinner>
+          </template>
         </template>
       </button>
       <iron-collapse class="content" id="collapse" opened="[[open]]">
@@ -51,8 +57,11 @@
         type: Boolean,
         // value: false,
         notify: true
+      },
+      reloading: {
+        type: Boolean,
+        value: false
       }
-
     },
     toggle: function() {
       // this.$.collapse.toggle();

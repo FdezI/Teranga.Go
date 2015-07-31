@@ -35,6 +35,7 @@
     "iron-flex-layout": "Polymerelements/iron-flex-layout#^1.0",
     "page": "visionmedia/page.js#~1.6.3",
     "iron-collapse": "PolymerElements/iron-collapse#^1.0",
-    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.5"
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.5",
+    "paper-spinner": "PolymerElements/paper-spinner#~1.0.2"
   }
 }

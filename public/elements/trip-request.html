@@ -26,7 +26,7 @@
           <td>
           	<select value="{{a::input}}">
 		        	<template is="dom-repeat" items="[[trip.wps]]">
-		        		<option value="[[index]]">[[item.city]]</option>
+		        		<option value="[[index]]"><span>[[item.city]]</span> (<span>[[getT(d, index, seat, pkn)]]</span>€)</option>
 		        	</template>
 		        </select>
           </td>
@@ -46,16 +46,16 @@
         <tr>
           <td>Asiento</td>
           <td><paper-checkbox checked="{{seat}}"></paper-checkbox></td>
-          <td>x<span>[[getc(a,d,seat)]]</span>€</td>
+          <td>x<span>[[getc(d,a,seat)]]</span>€</td>
         </tr>
         <tr>
           <td>Paquetes</td>
           <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td>
-          <td>x<span>[[getpkc(a,d,pkn)]]</span>€</td>
+          <td>x<span>[[getpkc(d,a,pkn)]]</span>€</td>
         </tr>
         <tr>
           <td colspan="2">Precio final</td>
-          <td><span>30</span>€</td>
+          <td><span>[[getTotal(d, a, seat, pkn)]]</span>€</td>
           <td><button>Solicitar</button></td>
         </tr>
 
@@ -87,7 +87,9 @@
       	seat: {
       		type: Boolean,
       		value: false
-      	}
+      	},
+      	priceUser: Number,
+      	pricePackages: Number
       },
       // byIndex: function(index) {
       // 	console.log(this.trip);
@@ -116,23 +118,39 @@
       geta: function(i) {
       	if(this.trip && this.trip.wps) return this.trip.wps[i].address;
       },
-      getc: function(a, d, s) {
+      getc: function(d, a, s, unchanged) {
+      	var pu = 0;
+
       	if(s && this.trip && this.trip.wps) {
       		var wps = this.trip.wps;
-      		var cost = wps[a].cost - wps[d].cost
+      		var cost = wps[a].cost - wps[d].cost;
       		
-      		if(cost >= 0) return cost;
-      		else throw "The cost can't be negative";
-      	} return 0;
+      		if(cost >= 0) pu = cost;
+      		// else throw "The cost can't be negative";
+      	} 
+
+      	if(!unchanged) this.priceUser = pu;
+      	return pu;
       },
-      getpkc: function(a, d, pk) {
+      getpkc: function(d, a, pkn, unchanged) {
+      	var pp = 0;
+
       	if(this.trip && this.trip.wps) {
       		var wps = this.trip.wps;
-      		var cost =  wps[a].pkcost - wps[d].pkcost
-      		if(cost >= 0) return cost * this.pkn;
-      		else throw "The package cost can't be negative";
-      	} return 0;
+      		var cost =  wps[a].pkcost - wps[d].pkcost;
+      		if(cost >= 0) pp = cost * pkn;
+      		// else throw "The package cost can't be negative";
+      	}
+
+      	if(!unchanged) this.pricePackages = pp;
+      	return pp;
       },
+      getT: function(d, a, s, pkn) {
+      	return this.getc(d, a, s, true) + this.getpkc(d, a, pkn, true);;
+      },
+      getTotal: function() {
+      	return this.priceUser + this.pricePackages;
+      }
     });
 	</script>
 </dom-module>
