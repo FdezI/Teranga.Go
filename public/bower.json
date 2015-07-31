@@ -34,6 +34,7 @@
     "neon-animation": "PolymerElements/neon-animation#^1.0",
     "iron-flex-layout": "Polymerelements/iron-flex-layout#^1.0",
     "page": "visionmedia/page.js#~1.6.3",
-    "iron-collapse": "PolymerElements/iron-collapse#^1.0"
+    "iron-collapse": "PolymerElements/iron-collapse#^1.0",
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.5"
   }
 }

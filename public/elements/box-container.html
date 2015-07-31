@@ -31,7 +31,7 @@
           <paper-icon-button icon="refresh" on-click="reload" class="button-inner"></paper-icon-button>
         </template>
       </button>
-      <iron-collapse class="content" id="collapse">
+      <iron-collapse class="content" id="collapse" opened="[[open]]">
         <div class="collapse-content">
           <content></content>
         </div>
@@ -46,10 +46,17 @@
       reloadable: {
         type: Boolean,
         value: true
+      },
+      open: {
+        type: Boolean,
+        // value: false,
+        notify: true
       }
+
     },
     toggle: function() {
-      this.$.collapse.toggle();
+      // this.$.collapse.toggle();
+      this.open = !this.open;
     },
     reload: function() {
       event.stopPropagation();

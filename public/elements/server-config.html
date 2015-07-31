@@ -36,6 +36,19 @@
 
   pol.time = function(date) {
   	return new Date(Date.parse(date)).toTimeString().substring(0,5);
+  };
+
+  pol.age = function(date) {
+    var today = new Date();
+    var birthDate = new Date(Date.parse(date));
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
   }
+
+
 </script>
 </dom-module>

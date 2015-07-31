@@ -50,8 +50,9 @@ exports.get = function(req, res) {
 	// 						ON T1.idtrip = trip.idtrip\
 	// 					WHERE trip.idtrip=?', req.params.idtrip, function(err, rows, fields) {
 
-		pool.query('SELECT idtrip, date, driver, car, seats, packages = 1 as packages, animals = 1 as animals\
-								FROM trip WHERE idtrip=?', req.params.idtrip, function(err, rows, fields) {
+			pool.query('SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+									FROM trip AS T, car, user\
+									WHERE idtrip=? AND T.car = idcar AND driver = iduser', req.params.idtrip, function(err, rows, fields) {
 			if(err) throw err;
 			
 			var trip = rows[0];

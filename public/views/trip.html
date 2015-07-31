@@ -6,9 +6,10 @@
 <link rel="import" href="../elements/travel-line.html">
 
 <link rel="import" href="../elements/trip-service.html">
+<link rel="import" href="../elements/trip-request.html">
 
 <dom-module name="trip-view">
-  <style>a
+  <style>
     .content-travel-info {
       width: 75%;
       margin-left: 5%;
@@ -114,7 +115,7 @@
     <div class="layout horizontal">
       <travel-line>
         <template is="dom-repeat" items="{{trip.wps}}" as="wp">
-          <location-box first="[[!index]]" stop="[[wp.stop]]" location="[[wp.city]]" day="[[day(wp.date)]]" seats="3" month="[[month(wp.date)]]" hour="[[time(wp.date)]]"></location-box>
+          <location-box first="[[!index]]" stop="[[wp.stop]]" location="[[wp.city]]" day="[[day(wp.date)]]" seats="[[wp.seats]]" month="[[month(wp.date)]]" hour="[[time(wp.date)]]"></location-box>
         </template>
         <!-- <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
         <location-box location="Motril"></location-box>
@@ -126,7 +127,7 @@
         <div class="layout horizontal">
           <div class="layout vertical principal-travel-info">
             <p class="title-travel"><span>[[trip.wps.0.city]]</span><span> - </span><span>[[trip.destiny.city]]</span></p>
-            <p class="departure-time"><span>Fecha de salida </span><span>10 Jun</span></p>
+            <p class="departure-time"><span>Fecha de salida </span><span>[[day(trip.wps.0.date)]]</span> <span>[[month(trip.wps.0.date)]]</span></p>
             <p class="departure-time"><span>Hora de salida </span><span>[[time(trip.wps.0.date)]]</span></p>
           </div>
           <div>
@@ -152,8 +153,8 @@
                 <div class="stars-small-container"></div>
               </div>
               <div class="layout vertical info-small-container">
-                <span><span>Nombre</span> <span>Apellidos apellidos apellidos</span></span>
-                <span><span>XX</span> años</span>
+                <span><span>[[trip.driver]]</span> <span>[[trip.driversn]]</span></span>
+                <span><span>[[age(trip.birth)]]</span> años</span>
                 <span>email@email.com</span>
                 <span>666666666</span>
               </div>
@@ -163,11 +164,11 @@
           <div class="small-container">
             <div class="title-small-container">Coche</div>
             <div class="layout vertical">
-              <span>Modelo</span>
+              <span>[[trip.model]]</span>
               <span>[[trip.car]]</span>
               <div class="layout horizontal center-justified">
                 <img src="../images/seat-icon.png">
-                <span><span>[[trip.seats]]</span> asientos libres</span>
+                <span><span>[[trip.free]]</span> asientos libres</span>
               </div>
             </div>
           </div> 
@@ -176,68 +177,16 @@
 
         <div class="comment-container">
           <div class="title-small-container">Comentario del conductor</div>
-          <div><span>Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla</span></div>
+          <div><span>[[trip.comment]]</span></div>
         </div>
 
         <button on-click="toggle" class="button-request">
           <span>Pedir</span>
         </button>
         <iron-collapse class="content" id="collapse">
-          <div class="collapse-content-comment layout vertical">
-            
-            <table class="table-request">
-              <tr> 
-                <td>Salida</td> 
-                <td><input list="departures"></td>
-                <td><span>10</span>/<span>Jun</span></td>
-                <td><span>10:30</span></td>
-              </tr>
-              <datalist id="departures">
-                <option value="A">
-                <option value="B">
-                <option value="C">
-              </datalist>
-              <tr>
-                <td colspan="4"><span>C/ bla bla bla</span></td>
-              </tr>
-              <tr> 
-                <td>Llegada</td> 
-                <td><input list="arrivals"></td>
-                <td><span>10</span>/<span>Jun</span></td>
-                <td><span>10:30</span></td>
-              </tr>
-              <datalist id="arrivals">
-                <option value="A">
-                <option value="B">
-                <option value="C">
-              </datalist>
-              <tr>
-                <td colspan="4"><span>C/ bla bla bla</span></td>
-              </tr>
-              <tr>
-                <td>Comentario</td>
-              </tr>
-              <tr>
-                <td colspan="4"><textarea class="comment-text-area" rows="4" name="comment"></textarea></td>
-              </tr>
-              <tr>
-                <td>Asiento</td>
-                <td><input type="checkbox" name="seat"></td>
-                <td>x<span>10</span>€</td>
-              </tr>
-              <tr>
-                <td>Paquetes</td>
-                <td><input type="Number" min="0" max="10"></td>
-                <td>x<span>10</span>€</td>
-              </tr>
-              <tr>
-                <td colspan="2">Precio final</td>
-                <td><span>30</span>€</td>
-                <td><button>Solicitar</button></td>
-              </tr>
-
-            </table>
-          </div>
+          <!-- <template is="dom-if" if="[[request]]"> -->
+            <trip-request trip="[[trip]]"></trip-request>
+          <!-- </template> -->
         </iron-collapse>
       </div>
     </div>
@@ -261,6 +210,7 @@
           type: String,
           value: "main"
         }
+        // request: Boolean
       },
 
       ready: function() {
@@ -268,7 +218,9 @@
         // this.$.ts.reload();
       },
       toggle: function() {
+        // console.log("ASD");
         this.$.collapse.toggle();
+        this.request = !this.request;
       },
       idtripChanged: function() {
         this.$.ts.reload();
@@ -281,6 +233,9 @@
       },
       time: function(date) {
         return window.Polymer.time(date);
+      },
+      age: function(date) {
+        return window.Polymer.age(date);
       }
     });
   </script>

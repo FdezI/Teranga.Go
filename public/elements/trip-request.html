@@ -1,0 +1,138 @@
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+
+<dom-module name="trip-request">
+	<style>
+	</style>
+	<template>
+		<div class="collapse-content-comment layout vertical">
+      <table class="table-request">
+        <tr> 
+          <td>Salida</td> 
+          <td>
+          	<select value="{{d::input}}">
+		        	<template is="dom-repeat" items="[[trip.wps]]">
+		        		<option value="[[index]]">[[item.city]]</option>
+		        	</template>
+		        </select>
+          </td>
+          <td><span>[[getd(d)]]</span>/<span>[[getm(d)]]</span></td>
+          <td><span>[[gett(d)</span></td>
+        </tr>
+        <tr>
+          <td colspan="4"><span>[[geta(d)]]</span></td>
+        </tr>
+        <tr> 
+          <td>Llegada</td> 
+          <td>
+          	<select value="{{a::input}}">
+		        	<template is="dom-repeat" items="[[trip.wps]]">
+		        		<option value="[[index]]">[[item.city]]</option>
+		        	</template>
+		        </select>
+          </td>
+          <td><span>[[getd(a)]]</span>/<span>[[getm(a)]]</span></td>
+          <td><span>[[gett(a)]]</span></td>
+        </tr>
+        <tr>
+          <td colspan="4"><span>[[geta(a)]]</span></td>
+        </tr>
+
+        <tr>
+          <td>Comentario</td>
+        </tr>
+        <tr>
+          <td colspan="4"><textarea class="comment-text-area" rows="4" name="comment"></textarea></td>
+        </tr>
+        <tr>
+          <td>Asiento</td>
+          <td><paper-checkbox checked="{{seat}}"></paper-checkbox></td>
+          <td>x<span>[[getc(a,d,seat)]]</span>€</td>
+        </tr>
+        <tr>
+          <td>Paquetes</td>
+          <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td>
+          <td>x<span>[[getpkc(a,d,pkn)]]</span>€</td>
+        </tr>
+        <tr>
+          <td colspan="2">Precio final</td>
+          <td><span>30</span>€</td>
+          <td><button>Solicitar</button></td>
+        </tr>
+
+      </table>
+    </div>
+	</template>
+	<script>
+		Polymer({
+      is: "trip-request",
+      properties: {
+      	trip: {
+      		type: Object,
+      		value: {}
+      	},
+      	d: {
+      		type: Number,
+      		value: 0
+      		// observer: 'dChanged'
+      	},
+      	a: {
+      		type: Number,
+      		value: 0
+      		// observer: 'aChanged'
+      	},
+      	pkn: {
+      		type: Number,
+      		value: 0
+      	},
+      	seat: {
+      		type: Boolean,
+      		value: false
+      	}
+      },
+      // byIndex: function(index) {
+      // 	console.log(this.trip);
+    		// if(this.trip && this.trip.wps) {
+    		// 	console.log("month: " + this.trip.wps[index].month);
+    		// 	return this.trip.wps[index];
+    		// }
+      // }
+      // dChanged: function() {
+      	// this.request.d = this.trip.wps[this.d];
+      	// rd = this.trip.wps[this.d].day;
+      	// console.log("d: " + this.d + ", day:" + this.request.d.day + ", month:" + this.request.d.month);
+      // },
+      // aChanged: function() {
+      	// this.request.a = this.trip.wps[this.a];
+      // },
+      getd: function(i) {
+      	if(this.trip && this.trip.wps) return this.trip.wps[i].day;
+      },
+      getm: function(i) {
+      	if(this.trip && this.trip.wps) return this.trip.wps[i].month;
+      },
+      gett: function(i) {
+      	if(this.trip && this.trip.wps) return this.trip.wps[i].time;
+      },
+      geta: function(i) {
+      	if(this.trip && this.trip.wps) return this.trip.wps[i].address;
+      },
+      getc: function(a, d, s) {
+      	if(s && this.trip && this.trip.wps) {
+      		var wps = this.trip.wps;
+      		var cost = wps[a].cost - wps[d].cost
+      		
+      		if(cost >= 0) return cost;
+      		else throw "The cost can't be negative";
+      	} return 0;
+      },
+      getpkc: function(a, d, pk) {
+      	if(this.trip && this.trip.wps) {
+      		var wps = this.trip.wps;
+      		var cost =  wps[a].pkcost - wps[d].pkcost
+      		if(cost >= 0) return cost * this.pkn;
+      		else throw "The package cost can't be negative";
+      	} return 0;
+      },
+    });
+	</script>
+</dom-module>

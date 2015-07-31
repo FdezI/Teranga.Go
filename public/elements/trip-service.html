@@ -109,14 +109,25 @@
         if(wps) {
           var size = wps.length;
           var cost = 0;
+          var seats = res.seats;
+          var free = seats;
+
           res.destiny = wps[size - 1];
           for(var i = 0; i < size; i++) {
             var p = wps[i];
-            console.log("cost: " + p.cost);
+            seats = p.down + p.up;
             cost += p.cost;
+
+            p.seats = seats;
+            p.day = window.Polymer.day(p.date);
+            p.month = window.Polymer.month(p.date);
+            p.time = window.Polymer.time(p.date);
+            if(seats < free) free = seats;
+
           }
           console.log("Coste: " + cost);
           res.cost = cost;
+          res.free = free;
         }
         this.response = res;
         this.data = this.response;

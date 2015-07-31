@@ -3,8 +3,10 @@
 
 <dom-module name="assessment-container">
   <template>
-    <box-container name="Opiniones">
-      <assessment-service user="[[iduser]]" response="{{assessments}}" fetch="all"></assessment-service>
+    <box-container name="Opiniones" open="{{open}}">
+      <template is="dom-if" if="[[open]]">
+        <assessment-service user="[[iduser]]" response="{{assessments}}" fetch="all"></assessment-service>
+      </template>
 
       <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
         <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" score="[[assessment.karma]]" comment="[[assessment.comment]]"></comment-box>
@@ -20,7 +22,8 @@
           type: Object,
           notify: true
         },
-        iduser: Number
+        iduser: Number,
+        open: Boolean
       },
       getImageUrl: function(name) {
         return window.Polymer.image.user.AVATARS + name;
