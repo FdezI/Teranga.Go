@@ -1,0 +1,36 @@
+<dom-module name="pop-up">
+  <style>
+    .background-pop-up {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 5;
+      text-align: center;
+    }
+
+    .div-pop-up {
+      box-shadow: 2px 2px 10px #999;
+      padding: 15px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+  
+  <template>
+    <div class="background-pop-up hide">
+      <div class="div-pop-up"><content></content></div>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "pop-up"
+  });
+  </script>
+</dom-module>
