@@ -31,13 +31,36 @@
     .comment-box-stars {
       width: 87px;
     }
+
+    .comment-box-img {
+      width: 20px;
+      height: 20px;
+    }
   </style>
   
   <template>
     <div class="layout vertical center comment">
       <div class="comment-box-user layout horizontal left-justified">
         <a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a>
-        <div class="layout vertical center-justified comment-box-stars"><stars-rating score="{{score}}"></stars-rating></div>
+        <table>
+          <tr>
+            <td>
+              <img class="comment-box-img" src="../images/user.png">
+            </td>
+            <td>
+              <stars-rating score="{{driver}}"></stars-rating>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img class="comment-box-img" src="../images/car.png">
+            </td>
+            <td>
+              <stars-rating score="{{car}}"></stars-rating>
+            </td>
+          </tr>
+        </table>
+        <!-- <div class="layout vertical center-justified comment-box-stars"><stars-rating score="{{score}}"></stars-rating></div> -->
       </div>
       <div class="comment-box-opinion">[[comment]]</div>
     </div>
@@ -48,7 +71,8 @@
     is: "comment-box",
     properties: {
       image: String,
-      score: Number,
+      car: Number,
+      driver: Number,
       profileurl: String,
       comment: String
     }
