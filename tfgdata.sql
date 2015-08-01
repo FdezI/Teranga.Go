@@ -21,6 +21,9 @@
 
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `TFGv2` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
+GRANT ALL PRIVILEGES ON TFG . * TO 'tfg'@'localhost' IDENTIFIED BY 'asdfasdf';
+FLUSH PRIVILEGES;
+
 USE `TFGv2`;
 
 --
@@ -284,8 +287,10 @@ CREATE TABLE `trip` (
   `driver` int(11) NOT NULL,
   `car` varchar(10) NOT NULL,
   `seats` tinyint(4) NOT NULL,
-  `packages` bit(1) NOT NULL DEFAULT b'0',
-  `animals` bit(1) NOT NULL DEFAULT b'0',
+  `packages` bit(1) DEFAULT NULL,
+  `animals` bit(1) DEFAULT NULL,
+  `comment` text,
+  `tripcol` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idtrip`),
   KEY `fk_trip_1_idx` (`driver`),
   KEY `fk_trip_2_idx` (`car`),
@@ -300,7 +305,7 @@ CREATE TABLE `trip` (
 
 LOCK TABLES `trip` WRITE;
 /*!40000 ALTER TABLE `trip` DISABLE KEYS */;
-INSERT INTO `trip` VALUES (2,'0000-00-00 00:00:00',1,'M1XS',3,'\0','\0'),(3,'2015-07-28 13:09:57',1,'M1XS',4,'','');
+INSERT INTO `trip` VALUES (2,'2015-07-30 21:20:53',1,'M1XS',3,'\0','\0','El conductor comenta que.... blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabl.... y eso es todo',NULL),(3,'2015-08-01 09:10:41',1,'M1XS',4,NULL,'',NULL,NULL);
 /*!40000 ALTER TABLE `trip` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -319,6 +324,7 @@ CREATE TABLE `tripPoints` (
   `stop` bit(1) NOT NULL DEFAULT b'0',
   `date` timestamp NULL DEFAULT NULL,
   `cost` tinyint(4) DEFAULT NULL,
+  `pkcost` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`trip`,`order`),
   KEY `fk_tripPoints_2_idx` (`location`),
   CONSTRAINT `fk_tripPoints_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -332,7 +338,7 @@ CREATE TABLE `tripPoints` (
 
 LOCK TABLES `tripPoints` WRITE;
 /*!40000 ALTER TABLE `tripPoints` DISABLE KEYS */;
-INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de mÃ¡laga, 115','','2015-09-09 21:00:00',3),(2,1,3,'c/ la piruleta','\0',NULL,4),(2,2,4,'c/ aleatoria de dogo','',NULL,NULL),(2,99,5,'c/ final de ruta','',NULL,NULL),(3,0,4,'c/ inicio de dogo','',NULL,NULL),(3,99,1,'c/ final de granada','',NULL,NULL);
+INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de mÃ¡laga, 115','','2015-09-09 21:00:00',0,0),(2,1,3,'c/ la piruleta','\0',NULL,4,2),(2,2,4,'c/ aleatoria de dogo','',NULL,4,3),(2,99,5,'c/ final de ruta','',NULL,8,5),(3,0,4,'c/ inicio de dogo','',NULL,NULL,NULL),(3,99,1,'c/ final de granada','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tripPoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,7 +370,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com','avatar1','',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',0,0),(2,'Usuario2',NULL,'usuario2@mail.com','avatar2','\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,999),(3,'Usuario3',NULL,'usuario3@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(4,'Usuario4',NULL,'usuario4@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(5,'Usuario5',NULL,'usuario5@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(6,'Usuario6',NULL,'usuario6@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(7,'Usuario7',NULL,'usuario7@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(8,'Usuario8',NULL,'usuario8@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(9,'Usuario9',NULL,'usuario9@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0);
+INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com','avatar1','','1990-10-02','$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',0,0),(2,'Usuario2',NULL,'usuario2@mail.com','avatar2','\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,999),(3,'Usuario3',NULL,'usuario3@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(4,'Usuario4',NULL,'usuario4@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(5,'Usuario5',NULL,'usuario5@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(6,'Usuario6',NULL,'usuario6@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(7,'Usuario7',NULL,'usuario7@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(8,'Usuario8',NULL,'usuario8@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(9,'Usuario9',NULL,'usuario9@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -414,4 +420,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-30 21:08:25
+-- Dump completed on 2015-08-01 10:13:29
