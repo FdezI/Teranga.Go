@@ -127,13 +127,13 @@
 	<div id="body-content">
 	  <neon-animated-pages id="pages" attr-for-selected="hash" selected="{{route}}" entry-animation="slide-up-animation" exit-animation="slide-down-animation">
 	    <neon-animatable hash="home">
-	      <home-view session="{{session}}"></home-view>
+	      <home-view session="{{session}}" route="{{route}}"></home-view>
 	    </neon-animatable>
 	    <neon-animatable hash="profile">
-	      <profile-view session="{{session}}"></profile-view>
+	      <profile-view session="{{session}}" route="{{route}}"></profile-view>
 	    </neon-animatable>
 	    <neon-animatable hash="trips">
-	      <trips-view session="{{session}}"></trips-view>
+	      <trips-view session="{{session}}" route="{{route}}"></trips-view>
 	    </neon-animatable>
 	  </neon-animated-pages>
 	</div>

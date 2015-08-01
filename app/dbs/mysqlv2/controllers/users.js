@@ -87,7 +87,7 @@ exports.getTrips = function(req, res) {
 	// FIRST METHOD
 
 	var user = req.params.iduser;
-	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, false as driving\
+	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, false as driving, accepted = true as accepted\
 											FROM userTrips\
 												LEFT JOIN tripPoints AS PA ON userTrips.trip = PA.trip AND pointA = PA.order\
 												LEFT JOIN tripPoints AS PB ON userTrips.trip = PB.trip AND pointB = PB.order\
@@ -95,7 +95,7 @@ exports.getTrips = function(req, res) {
 												INNER JOIN location AS LB ON LB.idlocation = PB.location\
 											WHERE user=? AND accepted=1)\
 											UNION DISTINCT\
-											(SELECT LA.city, LB.city, trip.date, true\
+											(SELECT LA.city, LB.city, trip.date, true, true\
 											FROM trip\
 												LEFT JOIN tripPoints AS PA ON PA.order = 0 AND idtrip = PA.trip \
 												LEFT JOIN tripPoints AS PB ON PB.order = 99 AND idtrip = PB.trip\
