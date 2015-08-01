@@ -21,11 +21,13 @@
       <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
         <car-box car="[[car]]"></car-box>
       </template>
-      <car-box newcar="true"></car-box>
+      <car-box newcar="true" on-click="showpopup"></car-box>
     </div>
 
     <!-- <iron-overlay-backdrop> -->
-      <!-- <pop-up><car-edit newcar="true"></car-edit></pop-up> -->
+      <pop-up id="backdrop" with-backdrop>
+        <car-edit newcar="true"></car-edit>
+      </pop-up>
     <!-- </iron-overlay-backdrop> -->
   </template>
 
@@ -47,7 +49,7 @@
         this.$.carsRepeat.render();
       },
       showpopup: function() {
-        this.$$("pop-up").show();
+        this.$.backdrop.open();
       },
       hidepopup: function() {
         this.$$("pop-up").show();
