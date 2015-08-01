@@ -64,13 +64,13 @@
             </td>
           </tr>
           <tr>
-            <template is="dom-if" if="true">
+            <template is="dom-if" if="[[judge]]">
               <td colspan="4">
                 <button class="travel-box-button">Opinar</button>
               </td>
             </template>
 
-            <template is="dom-if" if="false">
+            <template is="dom-if" if="[[!judge]]">
               <td colspan="2">
                 <div class="layout vertical">
                   <span>[[day]]</span>
@@ -96,7 +96,8 @@
       day: String,
       month: String,
       driver: String,
-      travelurl: String
+      travelurl: String,
+      judge: Boolean
     }
   });
   </script>

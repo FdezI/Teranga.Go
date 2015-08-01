@@ -11,7 +11,7 @@
       </template>
 
       <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
-        <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/"></travel-box>
+        <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" hour="[[time(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/" judge="[[judge(trip)]]"></travel-box>
       </template>
       
     </box-container>
@@ -35,6 +35,9 @@
       month: function(date) {
        return window.Polymer.month(date);
       },
+      time: function(date) {
+        return window.Polymer.time(date);
+      },
       reloadTrips: function() {
         this.loading = true;
         this.$$("trip-service").reload();
@@ -42,6 +45,9 @@
       },
       loaded: function() {
         this.loading = false;
+      },
+      judge: function(trip) {
+        return trip.accepted && !trip.driving;
       }
     });
   </script>
