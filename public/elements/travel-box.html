@@ -31,7 +31,32 @@
   <template>
     <a id="linktravel" href="[[travelurl]]">
       <div class="layout vertical center-justified travel">
-      	<span class="points-travel-box">[[departure]]</span>
+        <table>
+          <tr>
+            <td colspan="4">
+              <span>[[departure]]</span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <span>/</span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <span>[[arrival]]</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img src="../images/driverIcon.png">
+            </td>
+            <td colspan="3">
+              <span>[[driver]]</span>
+            </td>
+          </tr>
+        </table>
+      	<!-- <span class="points-travel-box">[[departure]]</span>
         <span class="points-travel-box">/</span>
         <span class="points-travel-box">[[arrival]]</span>
         <div class="space"></div>
@@ -42,7 +67,7 @@
           </template>
           <!-- <div class="layout vertical center-justified"><img src="../images/driverIcon.jpg"/></div>
           <div class="layout vertical center"><p>[[driver]]</p></div> -->
-        </div>
+        </div> -->
       </div>
     </a>
   </template>
