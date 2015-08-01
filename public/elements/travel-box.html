@@ -18,6 +18,10 @@
       cursor: pointer;
     }
 
+    .travel > table {
+      width: 100%;
+    }
+
     .travel-box-driver > img {
       width: 35px;
       height: 35px;
@@ -25,6 +29,10 @@
 
     .points-travel-box {
       font-weight: bold;
+    }
+
+    .travel-box-button {
+      width: 100%;
     }
   </style>
   
@@ -49,25 +57,32 @@
           </tr>
           <tr>
             <td>
-              <img src="../images/driverIcon.png">
+              <img src="../images/driverIcon.jpg">
             </td>
             <td colspan="3">
               <span>[[driver]]</span>
             </td>
           </tr>
+          <tr>
+            <template is="dom-if" if="true">
+              <td colspan="4">
+                <button class="travel-box-button">Opinar</button>
+              </td>
+            </template>
+
+            <template is="dom-if" if="false">
+              <td colspan="2">
+                <div class="layout vertical">
+                  <span>[[day]]</span>
+                  <span>[[month]]</span>
+                </div>
+              </td>
+              <td colspan="2">
+                <span>[[hour]]</span>
+              </td>
+            </template>
+          </tr>
         </table>
-      	<!-- <span class="points-travel-box">[[departure]]</span>
-        <span class="points-travel-box">/</span>
-        <span class="points-travel-box">[[arrival]]</span>
-        <div class="space"></div>
-        <div class="travel-box-date"><span>[[day]]</span> <span>[[month]]</span></div>
-        <div class="travel-box-driver layout horizontal center-justified">
-          <template is="dom-if" if="[[driver]]">
-            <img src="../images/driverIcon.jpg"/>
-          </template>
-          <!-- <div class="layout vertical center-justified"><img src="../images/driverIcon.jpg"/></div>
-          <div class="layout vertical center"><p>[[driver]]</p></div> -->
-        </div> -->
       </div>
     </a>
   </template>
