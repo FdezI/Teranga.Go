@@ -1,4 +1,4 @@
-var mysql = require('mysql');
+var pool = require('mysql').pool;
 
 // REGISTERED
 exports.create = function(req, res) {
@@ -6,17 +6,73 @@ exports.create = function(req, res) {
 	// Body must be: {iduser:ID, name:NAME, model:MODEL, cvv:XXX, seats:X}
 	console.log("BODY: ");
 	console.log(req.body);
-	if(!req.body.iduser && req.params.iduser) req.body.iduser = req.params.iduser;
+	var user = req.body.iduser;
+
+	if(!user) user = req.params.iduser;
+	else delete req.body.iduser;
+
+	if(!user) return;
+
+	// if(!req.body.iduser && req.params.iduser) req.body.iduser = req.params.iduser;
 	
-	mysql.pool.query('INSERT INTO car SET ?', req.body, function(err, result) {
-		if(err) throw err;
-		
-		res.json({id:result.insertId});
+	pool.getConnection(function(err, connection) {
+		connection.beginTransaction(function(err) {
+			connection.query('INSERT INTO car SET ?', req.body, function(err, result) {
+				if (err) {
+		      return connection.rollback(function() {
+		      	connection.release();
+		        throw err;
+		      });
+		    }
+
+		    connection.query('INSERT INTO owners SET `car`=?, `owner`=?', [req.body.idcar, user], function(err, result) {
+					if (err) {
+			      return connection.rollback(function() {
+			      	connection.release();
+			        throw err;
+			      });
+			    }
+
+		 			connection.commit(function(err) {
+		        if (err) {
+		          return connection.rollback(function() {
+		          	connection.release();
+		            throw err;
+		          });
+		        }
+
+		        console.log('success!');
+		      });
+
+					
+		 			
+		 			connection.query('SELECT COUNT(car) AS owners FROM owners WHERE car=?', req.body.idcar, function(err, rows, fields) {
+		 				if(err) {
+		 					connection.release();
+		 					throw err;
+		 				}
+		 				
+		 				res.json(rows[0]);
+		 				
+		 				connection.release();
+		 			});
+		    });
+			});
+		});
 	});
+	
+	// pool.query('START TRANSACTION;\
+	// 										INSERT INTO car SET ?;\
+	// 										INSERT INTO owners SET `car`=?, `owner`=?;\
+	// 									COMMIT;', [req.body, req.body.idcar, user], function(err, result) {
+	// 	if(err) throw err;
+		
+	// 	res.json({id:result.insertId});
+	// });
 };
 
 exports.getAll = function(req, res) {
-	mysql.pool.query('SELECT * FROM car', function(err, rows, fields) {
+	pool.query('SELECT * FROM car', function(err, rows, fields) {
 		if(err) throw err;
 		
 		res.json(rows);
@@ -24,7 +80,7 @@ exports.getAll = function(req, res) {
 };
 
 exports.get = function(req, res) {
-	mysql.pool.query('SELECT * FROM car WHERE idcar=?', req.params.idcar, function(err, rows, fields) {
+	pool.query('SELECT * FROM car WHERE idcar=?', req.params.idcar, function(err, rows, fields) {
 		if(err) throw err;
 		
 		res.json(rows[0]);
@@ -34,7 +90,7 @@ exports.get = function(req, res) {
 
 // AUTHENTICATED
 exports.update = function(req, res) {
-	mysql.pool.query('UPDATE car SET ? WHERE idcar=?', req.body, req.params.idcar, function(err, result) {
+	pool.query('UPDATE car SET ? WHERE idcar=?', req.body, req.params.idcar, function(err, result) {
 		if(err) throw err;
 		
 		res.json({changed:result.changedRows});
@@ -42,7 +98,7 @@ exports.update = function(req, res) {
 };
 
 exports.delete = function(req, res) {
-	mysql.pool.query('DELETE FROM car WHERE idcar=?', req.params.idcar, function(err, result) {
+	pool.query('DELETE FROM car WHERE idcar=?', req.params.idcar, function(err, result) {
 		if(err) throw err;
 		
 		res.json({deleted:result.affectedRows});

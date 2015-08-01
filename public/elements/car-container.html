@@ -4,6 +4,8 @@
 <link rel="import" href="car-service.html">
 <link rel="import" href="pop-up.html">
 
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
 <dom-module name="car-container">
   <template>
     <!-- <box-container on-reload="reloadCars" open="{{open}}" reloading="{{loading}}" name="Coches">
@@ -17,17 +19,19 @@
       
     </box-container> -->
     <div class="car-container">
-      <car-service user="[[iduser]]" response="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
+      <car-service user="[[iduser]]" data="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
       <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
-        <car-box car="[[car]]"></car-box>
+        <car-box car="[[car]]" on-click="editCar(car)"></car-box>
       </template>
-      <car-box newcar="true" on-click="showpopup"></car-box>
+      <car-box newcar="true" on-click="showPopup"></car-box>
     </div>
 
     <!-- <iron-overlay-backdrop> -->
-      <pop-up id="backdrop" with-backdrop>
-        <car-edit newcar="true"></car-edit>
-      </pop-up>
+    <paper-dialog id="dialog" with-backdrop>
+      <!-- <pop-up id="backdrop" with-backdrop> -->
+        <car-edit iduser="[[iduser]]" on-newcar="carCreated" on-discard="hidePopup"></car-edit>
+      <!-- </pop-up> -->
+    <paper-dialog>
     <!-- </iron-overlay-backdrop> -->
   </template>
 
@@ -48,14 +52,22 @@
         this.$$("car-service").reload();
         this.$.carsRepeat.render();
       },
-      showpopup: function() {
-        this.$.backdrop.open();
+      showPopup: function() {
+        this.$.dialog.open();
       },
-      hidepopup: function() {
-        this.$$("pop-up").show();
+      hidePopup: function() {
+        this.$.dialog.close();
       },
       loaded: function() {
         this.loading = false;
+      },
+      editCar: function(car) {
+        console.log("ESTO AL MENOS FUNCIONA: ");
+        console.log(car);
+      },
+      carCreated: function(e, car) {
+        this.push('cars', car);
+        this.hidePopup();
       }
     });
   </script>
