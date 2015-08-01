@@ -19,6 +19,7 @@
 <link rel="import" href="../elements/travel-box.html">
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/stars-rating.html">
+<link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../elements/car-box.html">
 <link rel="import" href="../elements/car-edit.html">
 <link rel="import" href="../elements/package-box.html">
@@ -117,19 +118,7 @@
         </template>
 
         <template is="dom-if" if="[[edit]]">
-          <div class="car-container">
-            <car-box newcar="true"></car-box> 
-            <car-box newcar="true"></car-box> 
-            <car-box newcar="true"></car-box> 
-            <car-box newcar="true"></car-box> 
-            <car-box newcar="true"></car-box> 
-            <car-box newcar="true"></car-box> 
-            <car-box newcar="true"></car-box> 
-          </div>
-
-          <!-- <iron-overlay-backdrop> -->
-            <car-edit newcar="true"></car-edit>
-          <!-- </iron-overlay-backdrop> -->
+          <car-container iduser="[[session.user.iduser]]" cars="{{session.user.cars}}"></car-container>
         </template>
       </template>
 

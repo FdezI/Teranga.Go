@@ -47,16 +47,12 @@
         	type: Number,
         	observer: 'userChanged'
         },
-        ready: {
-          type: Boolean,
-          value: false
-        },
         update: String
       },
       
       ready: function() {
         console.log("trip-service ready! for: " + this.fetch);
-        this._ready = true;
+        // this._ready = true;
       },
 
       userChanged: function() {

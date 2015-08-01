@@ -9,98 +9,107 @@
   </style>
   
   <template>
-    <iron-ajax id="ajaxAll"
+    <iron-ajax id="loadAll"
       last-response="{{response}}"
       on-response="carsLoaded">
     </iron-ajax>
 
-    <iron-ajax id="ajax"
+    <iron-ajax id="loadOne"
       last-response="{{response}}"
       on-response="carLoaded">
     </iron-ajax>
     
-    <iron-ajax id="add"
+    <iron-ajax id="create"
       body="{{update}}"
       last-response="{{response}}"
-      on-response="addedResponse"
+      on-response="createdResponse"
       content-type="application/json"
       method="POST">
     </iron-ajax>
     
   </template>
   <script>
-  Polymer({
-    is: "car-service",
-    properties: {
-      data: {
-        type: Object,
-        notify: true
+    Polymer({
+      is: "car-service",
+      properties: {
+        data: {
+          type: Object,
+          notify: true
+        },
+        fetch: {
+        	type: String
+        	// observer: 'fetchChanged'
+        },
+        response: {
+          type: Object,
+          notify: true
+        },
+        user: {
+        	type: Number,
+        	observer: 'userChanged'
+        },
+        update: String
       },
-      fetch: {
-      	type: String,
-      	observer: 'fetchChanged'
+  //     ready: function() {
+  //       if(this.fetch == "all") {
+  // 	if(this.user) this.$.loadAll.url="http://localhost:8080/api/v1/" + this.user + "/cars";
+  //       }
+  //       
+  //       this.$.loadAll.go();
+  //     },
+      
+      userChanged: function() {
+        this.reload();
       },
-      user: {
-      	type: Object,
-      	observer: 'userChanged'
+      
+      // fetchChanged: function() {
+      //   if(this.fetch != "all" && this.fetch != "") {
+      //   	if(this.user) this.$.loadOne.url = window.Polymer.restAPI + "users/" + this.user + "/cars/" + this.fetch;
+      //   }
+      // },
+      
+      carsLoaded: function() {
+        console.log("carSloaded");
+  //      this.data = this.$.loadAll.lastResponse;
+  //      this.response = this.data;
+        this.data = this.response;
       },
-      response: {
-        type: Object,
-        notify: true
+      
+      carLoaded: function() {
+        console.log("carLoaded");
+  //      this.data = this.$.loadOne.lastResponse;
+  //      this.response = this.data;
+        this.data = this.response;
       },
-      update: String
-    },
-//     ready: function() {
-//       if(this.fetch == "all") {
-// 	if(this.user) this.$.ajaxAll.url="http://localhost:8080/api/v1/" + this.user + "/cars";
-//       }
-//       
-//       this.$.ajaxAll.go();
-//     },
-    
-    userChanged: function() {
-      if(this.fetch == "all") {
-      	if(this.user) {
-      	  this.$.ajaxAll.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
-      	  console.log("Cars Loaded!");
-      	} else this.$.ajaxAll.url = window.Polymer.restAPI + "cars";
-      	console.log("Cars loaded with: " + this.$.ajaxAll.url);
-      	this.$.ajaxAll.generateRequest();
+      
+      saveData: function() {
+        console.log("BODY TO SEND:");
+        this.$.create.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
+        this.$.create.generateRequest();
+      },
+
+      createdResponse: function() {
+        console.log("CREATED RESPONSE");
+  //      this.response = this.$.create.lastResponse;
+        this.data.id = this.response.id;
+      },
+
+      reload: function() {
+        if(this.fetch == "all") {
+          if(this.user) {
+            this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
+            console.log("Cars Loaded!");
+          } else this.$.loadAll.url = window.Polymer.restAPI + "cars";
+          console.log("Cars loaded with: " + this.$.loadAll.url);
+          this.$.loadAll.generateRequest();
+        } else if(this.fetch !== "") {
+          console.log("fetching " + this.fetch);
+          this.$.loadOne.url = window.Polymer.restAPI + "cars/" + this.fetch;
+          this.$.loadOne.generateRequest();
+        }
       }
-    },
-    
-    fetchChanged: function() {
-      if(this.fetch != "all" && this.fetch != "") {
-      	if(this.user) this.$.ajax.url = window.Polymer.restAPI + "users/" + this.user + "/cars/" + this.fetch;
-      }
-    },
-    
-    carsLoaded: function() {
-      console.log("carSloaded");
-//      this.data = this.$.ajaxAll.lastResponse;
-//      this.response = this.data;
-      this.data = this.response;
-    },
-    
-    carLoaded: function() {
-      console.log("carLoaded");
-//      this.data = this.$.ajax.lastResponse;
-//      this.response = this.data;
-      this.data = this.response;
-    },
-    
-    saveData: function() {
-      console.log("BODY TO SEND:");
-      this.$.add.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
-      this.$.add.generateRequest();
-    },
-    
-    addedResponse: function() {
-      console.log("ADDED RESPONSE");
-//      this.response = this.$.add.lastResponse;
-      this.data.id = this.response.id;
-    }
-    
-  });
+      
+      
+    });
   </script>
 </dom-module>
