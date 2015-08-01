@@ -8,11 +8,39 @@
       padding: 10px;
       text-align: center;
     }
+    .request > table {
+      width: 100%;
+    }
+    .request-box-img {
+      width: 20px;
+      height: 20px;
+    }
+    .request-box-button {
+      width: 100%;
+    }
   </style>
   
   <template>  
     <div class="layout vertical center-justified request">
-        <div>
+        <table>
+          <tr>
+            <td colspan="4">[[departure]]</td>
+          </tr>
+          <tr>
+            <td colspan="4">/</td>
+          </tr>
+          <tr>
+            <td colspan="4">[[arrival]]</td>
+          </tr>
+          <tr>
+            <td><img class="request-box-img" src="../images/user.png"></td>
+            <td><span>[[seats]]</span></td>
+            <td><img class="request-box-img" src="../images/package-allow.png"></td>
+            <td><span>[[packages]]</span></td>
+          </tr>
+          <tr><td colspan="4"><button class="request-box-button" on-click="redirect">Ver</button></td></tr>
+        </table>
+        <!-- <div>
           <img src="../images/seat-icon.png">
           <img src="../images/package-allow.png">
           <span>[[userName]]</span>  
@@ -22,7 +50,7 @@
           <span>/</span>
           <span>[[arrival]]</span>
         </div>
-        <button>Ver</button>
+        <button>Ver</button> -->
       </div>
   </template>
 
@@ -30,9 +58,14 @@
   Polymer({
     is: "request-box",
     properties: {
-      username: String,
+      url: String,
+      seats: Number,
+      packages: Number,
       departure: String,
       arrival: String
+    },
+    redirect: function() {
+      window.location='/';
     }
   });
   </script>
