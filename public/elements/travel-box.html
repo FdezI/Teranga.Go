@@ -42,7 +42,7 @@
         <table>
           <tr>
             <td colspan="4">
-              <span>[[departure]]</span>
+              <span>[[trip.departure]]</span>
             </td>
           </tr>
           <tr>
@@ -52,7 +52,7 @@
           </tr>
           <tr>
             <td colspan="4">
-              <span>[[arrival]]</span>
+              <span>[[trip.arrival]]</span>
             </td>
           </tr>
           <tr>
@@ -64,21 +64,21 @@
             </td>
           </tr>
           <tr>
-            <template is="dom-if" if="[[judge]]">
+            <template is="dom-if" if="[[done(trip)]]">
               <td colspan="4">
-                <button class="travel-box-button">Opinar</button>
+                <button class="travel-box-button">[[text(trip)]]</button>
               </td>
             </template>
 
-            <template is="dom-if" if="[[!judge]]">
+            <template is="dom-if" if="[[!done(trip)]]">
               <td colspan="2">
                 <div class="layout vertical">
-                  <span>[[day]]</span>
-                  <span>[[month]]</span>
+                  <span>[[day(trip)]]</span>
+                  <span>[[month(trip)]]</span>
                 </div>
               </td>
               <td colspan="2">
-                <span>[[hour]]</span>
+                <span>[[[[time(trip)]]]]</span>
               </td>
             </template>
           </tr>
@@ -91,13 +91,26 @@
   Polymer({
     is: "travel-box",
     properties: {
-      departure: String,
-      arrival: String,
-      day: String,
-      month: String,
+      trip: {
+        type: Object
+      },
       driver: String,
-      travelurl: String,
-      judge: Boolean
+      travelurl: String
+    },
+    day: function(trip) {
+        return window.Polymer.day(trip.dtime);
+    },
+    month: function(trip) {
+     return window.Polymer.month(trip.dtime);
+    },
+    time: function(trip) {
+      return window.Polymer.time(trip.dtime);
+    },
+    done: function(trip) {
+      return new Date() > new Date(Date.parse(trip.dtime));
+    },
+    text: function(trip) {
+      return new Date() < new Date(Date.parse(trip.atime)) ? "En curso" : (trip.driving ? "Hecho" : "Opinar");
     }
   });
   </script>
