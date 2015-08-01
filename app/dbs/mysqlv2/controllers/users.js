@@ -120,7 +120,19 @@ exports.getAssessments = function(req, res) {
 
 		res.json(rows);
 	});
-}
+};
+
+exports.getCars = function(req, res) {
+	pool.query('SELECT car.*, COUNT(O2.car) as owners\
+							FROM owners AS O\
+								JOIN car ON idcar = O.car\
+								JOIN owners AS O2 ON O2.car = idcar\
+							WHERE O.owner = ? GROUP BY idcar', req.params.iduser, function(err, rows, result) {
+		if(err) throw err;
+
+		res.json(rows);
+	});
+};
 
 
 // AUTHENTICATED

@@ -9,7 +9,7 @@
       </template>
 
       <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
-        <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" score="[[assessment.karma]]" comment="[[assessment.comment]]"></comment-box>
+        <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
       </template>
     </box-container>
   </template>

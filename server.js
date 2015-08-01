@@ -101,7 +101,8 @@ apiRouter.route('/users/:iduser')
 	
 apiRouter.route('/users/:iduser/cars')
 	.post(db.carController.create)
-	.get(db.carController.getAll);
+	.get(db.userController.getCars);
+	// .get(db.carController.getAll);
 apiRouter.route('/users/:iduser/cars/:idcar') // Maybe should this be deleted and use unlinked instead
 	.get(db.carController.get)
 	.put(db.carController.update)
