@@ -107,6 +107,14 @@ body {
 	margin: 20px 5% 20px 5%;
 }
 
+.horizontal-separator {
+	width: 4px;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0px 1px 0px 1px;
+	margin: 2% 10px 2% 10px;
+}
+
 .primary-button {
 	background: #f00;
 	width:100%;

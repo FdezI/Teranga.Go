@@ -1,0 +1,36 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../elements/map-searcher.html">
+
+<dom-module name="search-view">
+  
+  <style>
+    google-map {
+      height: 60%;
+      width: 70%;
+    }
+    .center {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <template>
+<!--   <section layout center-center fit> -->
+    <article class="center">
+      <map-searcher></map-searcher>
+      <div class="vertical-separator"></div>
+      
+    </article>
+  </template>
+<!--   </section> -->
+
+  <script>
+    Polymer({
+      is:"search-view",
+      properties: {
+        session: Object
+      }
+
+    });
+  </script>
+</dom-module>
