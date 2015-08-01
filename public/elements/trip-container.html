@@ -1,9 +1,11 @@
 <link rel="import" href="box-container.html">
+<link rel="import" href="travel-box.html">
+
 <link rel="import" href="trip-service.html">
 
 <dom-module name="trip-container">
   <template>
-    <box-container on-reload="reloadTrips" open="{{open}}" reloading="{{loading}}" name="Viajes">
+    <box-container name="Viajes" on-reload="reloadTrips" open="{{open}}" reloading="{{loading}}">
       <template is="dom-if" if="[[open]]">
         <trip-service user="[[iduser]]" response="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
       </template>
@@ -36,7 +38,7 @@
       reloadTrips: function() {
         this.loading = true;
         this.$$("trip-service").reload();
-        this.$$("#tripsRepeat").render();
+        this.$.tripsRepeat.render();
       },
       loaded: function() {
         this.loading = false;

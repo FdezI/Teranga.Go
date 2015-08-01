@@ -1,11 +1,13 @@
 <link rel="import" href="box-container.html">
+<link rel="import" href="comment-box.html">
+
 <link rel="import" href="assessment-service.html">
 
 <dom-module name="assessment-container">
   <template>
-    <box-container name="Opiniones" open="{{open}}">
+    <box-container name="Opiniones" on-reload="reloadAssessments" open="{{open}}" reloading="{{loading}}">
       <template is="dom-if" if="[[open]]">
-        <assessment-service user="[[iduser]]" response="{{assessments}}" fetch="all"></assessment-service>
+        <assessment-service user="[[iduser]]" response="{{assessments}}" on-loaded="loaded" fetch="all"></assessment-service>
       </template>
 
       <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
@@ -23,10 +25,19 @@
           notify: true
         },
         iduser: Number,
-        open: Boolean
+        open: Boolean,
+        loading: Boolean
       },
       getImageUrl: function(name) {
         return window.Polymer.image.user.AVATARS + name;
+      },
+      reloadAssessments: function() {
+        this.loading = true;
+        this.$$("assessment-service").reload();
+        this.$.assessmentsRepeat.render();
+      },
+      loaded: function() {
+        this.loading = false;
       }
     });
   </script>

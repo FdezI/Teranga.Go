@@ -97,6 +97,8 @@
         // this.data = this.$.loadAll.lastResponse;
         // this.response = this.data;
         this.data = this.response;
+
+        this.fire('loaded');
       },
       
       assessmentLoaded: function() {
@@ -105,6 +107,8 @@
         // this.data = this.$.loadOne.lastResponse;
         // this.response = this.data;
         this.data = this.response;
+
+        this.fire('loaded');
       },
       
       saveData: function() {

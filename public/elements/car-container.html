@@ -1,0 +1,53 @@
+<link rel="import" href="car-box.html">
+<link rel="import" href="car-edit.html">
+
+<link rel="import" href="car-service.html">
+
+<dom-module name="car-container">
+  <template>
+    <!-- <box-container on-reload="reloadCars" open="{{open}}" reloading="{{loading}}" name="Coches">
+      <template is="dom-if" if="[[open]]">
+        <car-service user="[[iduser]]" response="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
+      </template>
+
+      <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
+        <travel-box departure="[[car.departure]]" arrival="[[car.arrival]]" day="[[day(car.dtime)]]" month="[[month(car.dtime)]]" driver="[[car.driving]]" travelurl="/"></travel-box>
+      </template>
+      
+    </box-container> -->
+    <div class="car-container">
+      <car-service user="[[iduser]]" response="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
+      <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
+        <car-box car="[[car]]"></car-box>
+      </template>
+      <car-box newcar="true"></car-box>
+    </div>
+
+    <!-- <iron-overlay-backdrop> -->
+      <car-edit newcar="true"></car-edit>
+    <!-- </iron-overlay-backdrop> -->
+  </template>
+
+  <script>
+    Polymer({
+      is: "car-container",
+      properties: {
+        cars: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number,
+        open: Boolean,
+        loading: Boolean
+      },
+      reloadCars: function() {
+        this.loading = true;
+        this.$$("car-service").reload();
+        this.$.carsRepeat.render();
+      },
+      loaded: function() {
+        this.loading = false;
+      }
+    });
+  </script>
+</dom-module>
