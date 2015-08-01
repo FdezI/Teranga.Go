@@ -1,0 +1,39 @@
+<dom-module name="trip-table">
+  <style>
+  </style>
+  
+  <template>
+    <div>Viajes de <span>[[departure]]</span> a <span>[[arrival]]</span></div>
+
+    <div>
+      <div>
+        <span>Ordenar por:</span>
+        <select value="Precio descendente">
+          <option>Precio ascendente</option>
+          <option>Precio descendente</option>
+          <option>Estrellas</option>
+          <option>Fecha y hora</option>
+        </select>
+      </div>
+
+      <div>
+        
+      </div>
+    </div>
+
+    <div>
+      <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
+
+      <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="unknown" packages="allow"></trip-card>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "trip-table",
+    properties: {
+      image: String
+    }
+  });
+  </script>
+</dom-module>

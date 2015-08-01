@@ -1,15 +1,29 @@
 <link rel="import" href="trip.html">
+<link rel="import" href="../elements/trip-table.html">
 
 <dom-module name="trips-view">
   <style>
   </style>
   <template>
-    <select value="{{selected::input}}">
+    <table>
+      <tr>
+        <td colspan="4">Encuentra el viaje que necesitas</td>
+      </tr>
+      <tr>
+        <td><input type="text" value="De"></td>
+        <td><input type="text" value="A"></td>
+        <td><input type="date"></td>
+        <td><button>Buscar</button></td>
+      </tr>
+    </table>
+
+    <trip-table departure="Granada" arrival="Dogo"></trip-table>
+    <!-- <select value="{{selected::input}}">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
     </select>
-    <trip-view idtrip="[[selected]]"></trip-view>
+    <trip-view idtrip="[[selected]]"></trip-view> -->
   </template>
 
   <script>
