@@ -4,69 +4,19 @@
 
 <dom-module name="trip-list">
   <style>
-      /*:host {
-	display: block;
-	width: 100%;
-      }*/
-      trip-card {
-        margin-bottom: 30px;
-      }
   </style>
     
   <template>
+    <div>
+      <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
 
-    <trip-service data="{{trips}}" fetch="all"></trip-service>
-    
-    <div class="layout vertical center">
-      <template is="dom-repeat" items="{{trips}}" as="trip">
-        <trip-card
-          selected="{{selectedtrip}}"
-          tripId="[[trip.idtrip]]"
-          on-selected-tap="handleSelected"
-          hidden?="[[show == 'selecteds' && !trip.selected]]"
-          packages="[[trip.packages]]">
-          <img src="[[trip.avatar]]" width="70" height="70">
-          <h2>{{trip.destiny}}</h2>
-          <h3>{{trip.origin}}</h3>
-          <p>Comentario del conductor</p>
-          <free>{{trip.free}}</free>
-
-        </trip-card>
-      </template>
+      <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="unknown" packages="allow"></trip-card>
     </div>
   </template>
 
   <script>
     Polymer({
-      is: "trip-list",
-      properties: {
-        show: String,
-        selected: {
-          type: String,
-          notify: true
-        },
-        selectedtrip: {
-          type: String,
-          notify: true
-        },
-        trips: Array
-      },
-
-      ready: function() {
-        console.log("trip-list ready!");
-      },
-      
-      handleSelected: function(event, detail, sender) {
-        console.log("SELECTED A TRIP");
-  //       this.fire('selected-tap');
-        this.selected = "specific";
-        // event.target.templateInstance.model.selected = "specific";
-  //       var trip = sender.templateInstance.model.trip;
-  //       this.$.service.setSelected(trip.uid, trip.selected);
-  //       document.write(this.selectedTrip);
-  //       console.log("Selected: " + this.selectedTrip);
-        
-      }
+      is: "trip-list"
     });
   </script>
 </dom-module>
