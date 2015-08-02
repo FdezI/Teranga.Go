@@ -7,7 +7,7 @@
   <template>
     <box-container name="Viajes" on-reload="reloadTrips" open="{{open}}" reloading="{{loading}}">
       <template is="dom-if" if="[[open]]">
-        <trip-service user="[[iduser]]" response="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
+        <trip-service user="[[iduser]]" data="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
       </template>
 
       <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
