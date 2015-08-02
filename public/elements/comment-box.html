@@ -4,15 +4,16 @@
   <style>
     .comment {
       border: 2px solid #ccc;
-      width: 150px;
-      height: 150px;
+      width: 94%;
       margin: 10px;
       padding: 10px;
       text-align: center;
+      display: inline-block;
+      vertical-align: top;
     }
 
     .comment-box-user {
-      width: 100%;
+      width: 100px;
     }
 
     .image-user-comment-box {
@@ -33,13 +34,105 @@
     }
 
     .comment-box-img {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
   </style>
   
   <template>
-    <div class="layout vertical center comment">
+    <div class="comment">
+      <!-- <div class="layout horizontal">
+        <table class="comment-box-user">
+          <tr>
+            <td colspan="2"><a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a></td>
+          </tr>
+          <tr>
+            <td>
+              <img class="comment-box-img" src="../images/user.png">
+            </td>
+            <td>
+              <stars-rating score="{{driver}}"></stars-rating>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img class="comment-box-img" src="../images/car.png">
+            </td>
+            <td>
+              <stars-rating score="{{car}}"></stars-rating>
+            </td>
+          </tr>
+        </table>
+        <div class="horizontal-separator"></div>
+        <span class="comment-box-opinion">[[comment]]</span>
+      </div> -->
+
+      <table>
+        <tr>
+          <td>
+            <table class="comment-box-user">
+              <tr>
+                <td colspan="2"><a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a></td>
+              </tr>
+              <tr>
+                <td>
+                  <img class="comment-box-img" src="../images/user.png">
+                </td>
+                <td>
+                  <stars-rating score="{{driver}}"></stars-rating>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <img class="comment-box-img" src="../images/car.png">
+                </td>
+                <td>
+                  <stars-rating score="{{car}}"></stars-rating>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <div class="horizontal-separator" style="height:115px;"></div>
+          </td>
+          <td>
+            <span class="comment-box-opinion">[[comment]]</span>
+          </td>
+        </tr>
+      </table>
+
+
+
+
+
+      <!-- <table class="comment-box-user">
+        <tr>
+          <td colspan="2"><a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a></td>
+        </tr>
+        <tr>
+          <td>
+            <img class="comment-box-img" src="../images/user.png">
+          </td>
+          <td>
+            <stars-rating score="{{driver}}"></stars-rating>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img class="comment-box-img" src="../images/car.png">
+          </td>
+          <td>
+            <stars-rating score="{{car}}"></stars-rating>
+          </td>
+        </tr>
+      </table>
+
+      <div class="horizontal-separator"></div>
+      <span class="comment-box-opinion">[[comment]]</span> -->
+      <!-- <div>
+        <a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a>
+
+      </div>
       <div class="comment-box-user layout horizontal left-justified">
         <a href="[[profileurl]]"><img class="image-user-comment-box" src="[[image]]"/></a>
         <table>
@@ -60,9 +153,8 @@
             </td>
           </tr>
         </table>
-        <!-- <div class="layout vertical center-justified comment-box-stars"><stars-rating score="{{score}}"></stars-rating></div> -->
       </div>
-      <div class="comment-box-opinion">[[comment]]</div>
+      <div class="comment-box-opinion">[[comment]]</div> -->
     </div>
   </template>
 

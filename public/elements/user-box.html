@@ -12,7 +12,9 @@
       height: 150px;
       margin: 10px;
       padding: 10px;
-      /*text-align: center;*/
+      display: inline-block;
+      vertical-align: top;
+      text-align: center;
     }
 
     .user:hover {
@@ -21,14 +23,14 @@
     }
 
     .user-box-img {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
     }
   </style>
   
   <template>
     <a id="linkuser" href="[[url]]">
-      <div class="layout vertical center user">
+      <div class="user">
         <img class="user-box-img" src="[[img]]">
         <stars-rating score="[[score]]"></stars-rating>
         <span>[[name]]</span>

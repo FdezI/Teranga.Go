@@ -7,21 +7,24 @@
       margin: 10px;
       padding: 10px;
       text-align: center;
+      display: inline-block;
+      vertical-align: top;
     }
     .delete-button {
-      width: 35px;
-      height: 35px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       position: relative;
       left: 62px;
-      top: -20px;
-      font-size: 25px;
+      top: -5px;
+      font-size: 23px;
+      padding: 0px;
     }
   </style>
   
   <template>
     <a id="linkuser" href="[[url]]">
-      <div class="layout vertical center-justified your-request">
+      <div class="your-request">
         <div style="height: 0px;"><button class="delete-button">x</button></div>
         <span>[[departure]]</span>
         <span>/</span>
