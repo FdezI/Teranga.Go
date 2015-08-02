@@ -115,7 +115,7 @@
           res.destiny = wps[size - 1];
           for(var i = 0; i < size; i++) {
             var p = wps[i];
-            seats = p.down + p.up;
+            seats += p.down - p.up;
             // cost += p.cost;
 
             p.seats = seats;
