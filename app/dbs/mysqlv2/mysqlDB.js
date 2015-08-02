@@ -32,3 +32,5 @@ exports.requestController = require('./controllers/requests');
 
 exports.carUnlinkedController = require('./controllers/cars');
 exports.tripUnlinkedController = require('./controllers/trips');
+
+exports.locationController = require('./controllers/locations');

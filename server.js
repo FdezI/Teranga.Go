@@ -160,6 +160,10 @@ apiRouter.route('/request/packet')
 	.get(db.requestController.getAllPacket)
 	.post(db.requestController.requestPacket);
 
+apiRouter.route('/location')
+	.get(db.locationController.getAll);
+apiRouter.route('/location/:idlocation')
+	.get(db.locationController.get);
 	
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

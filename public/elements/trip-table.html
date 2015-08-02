@@ -1,4 +1,7 @@
 <link rel="import" href="trip-list.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="in-array-validator.html">
 
 <dom-module name="trip-table">
   <style>
@@ -24,15 +27,26 @@
   </style>
   
   <template>
+    <in-array-validator array="[[locs]]"></in-array-validator>
     <table>
       <tr>
         <td colspan="4">Encuentra el viaje que necesitas</td>
       </tr>
       <tr>
+        <datalist id="asdf">
+          <option value="asdf">
+          <option value="asf">
+          <option value="asdfghj">
+          <option value="asdpl">
+        </datalist>
         <td>De: </td>
-        <td><input type="text" placeholder="De" value="{{filters.origin::input}}"></td>
+        <td>
+          <paper-input autocomplete="on" type="text" label="De:" placeholder="Origen" list="asdf" value="{{filters.origin::input}}" validator="in-array-validator" auto-validate></paper-input>
+        </td>
         <td>A: </td>
-        <td> <input type="text" placeholder="A" value="{{filters.destination::input}}"></td>
+        <td>
+          <paper-input type="text" label="A:" placeholder="Destino" list="asdf" value="{{filters.destination::input}}"></paper-input>
+        </td>
         
       </tr>
       <tr>
@@ -83,11 +97,15 @@
     is: "trip-table",
     properties: {
       image: String,
-      trips: Object,
+      trips: Array,
       filters: {
         type: Object,
         value: {},
         notify: true
+      },
+      locs: {
+        type: Array,
+        value: ["asdf", "fff"]
       }
     },
 
@@ -119,6 +137,10 @@
     today: function() {
       return new Date().toISOString().substring(0, 10);
     }
+    // locValidator: function() {
+    //   console.log("ALSKJFASFAAAAAAAAA");
+    //   return locs.indexOf(value) >= 0;
+    // }
   });
   </script>
 </dom-module>

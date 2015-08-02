@@ -1,0 +1,19 @@
+<link rel="import" href="../bower_components/iron-validator-behavior/iron-validator-behavior.html">
+
+<script>
+  Polymer({
+    is: 'in-array-validator',
+    properties: {
+    	array: Array
+    },
+    behaviors: [
+      Polymer.IronValidatorBehavior
+    ],
+    validate: function(value) {
+    	// console.log("ALSKJFASFAAAAAAAAA");
+      return this.array.indexOf(value) >= 0;
+      return false;
+      // return !value || value.match(/^[a-zA-Z]*$/) !== null;
+    }
+  });
+</script>
