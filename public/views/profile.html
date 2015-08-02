@@ -14,6 +14,7 @@
 <link rel="import" href="../elements/package-container.html">
 <link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../elements/user-container.html">
+<link rel="import" href="../elements/request-container.html">
 
 <link rel="import" href="../elements/stars-rating.html">
 <link rel="import" href="../elements/car-edit.html">
@@ -112,11 +113,11 @@
 
         <template id="moreInfo" is="dom-if" if="[[!edit]]">
           <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
+          <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
           <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}"></package-container>
           <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
           
           <template is="dom-if" if="[[showdriver]]">
-            <request-container iduser="[[session.user.iduser]]" trips="{{session.user.requests}}"></request-container>
             <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container>
           </template>
         </template>
