@@ -73,7 +73,7 @@
 
     <trip-list>
       <template is="dom-repeat" items="{{trips}}" as="trip">
-        <trip-card  username="[[trip.driverName]]" score="3" start="[[departure(trip)]]" cities="[[trip.cities]]"departure="[[trip.departure]]" arrival="[[trip.arrival]]" end="" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
+        <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]"departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
       </template>
     </trip-list>
   </template>
