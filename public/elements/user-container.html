@@ -1,0 +1,41 @@
+<link rel="import" href="box-container.html">
+<link rel="import" href="user-box.html">
+
+<!-- <link rel="import" href="package-service.html"> -->
+
+<dom-module name="user-container">
+  <template>
+    <box-container name="Usuarios favoritos" on-reload="reloadUsers" open="{{open}}" reloading="{{loading}}">
+      <!-- <template is="dom-if" if="[[open]]">
+        <package-service user="[[iduser]]" response="{{packages}}" on-loaded="loaded" fetch="all"></package-service>
+      </template> -->
+
+      <template id="usersRepeat" is="dom-repeat" items="[[users]]" as="user">
+        <user-box user="[[user]]"></user-box>
+      </template>
+      
+    </box-container>
+  </template>
+
+  <script>
+    Polymer({
+      is: "user-container",
+      properties: {
+        user: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number,
+        loading: Boolean
+      },
+      reloadUsers: function() {
+        this.loading = true;
+        this.$$("user-service").reload();
+        this.$.usersRepeat.render();
+      },
+      loaded: function() {
+        this.loading = false;
+      }
+    });
+  </script>
+</dom-module>
