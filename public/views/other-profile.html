@@ -1,0 +1,119 @@
+<dom-module name="other-profile">
+  <style>
+    .profile-div {
+      display: table;
+      width: 100%;
+    }
+    .profile-center {
+      display: table-cell;
+    }
+    .profile-aside {
+      vertical-align: top;
+      width: 200px;
+      display: table-cell;
+      background: #f00;
+    }
+    .profile-basic-info {
+      display: table;
+    }
+    .other-profile-a {
+      display: table-cell;
+      width: 100px;
+    }
+    .other-profile-b {
+      display: table-cell;
+      margin-left: 15px;
+    }
+    .other-profile-c {
+      display: table-cell;
+    }
+  </style>
+
+  <template>
+    <div class="profile-div">
+      <div class="profile-center">
+        <div class="profile-basic-info">
+            <div class="other-profile-a">
+              <img class="profile-photo" src="../images/full-star.png"/>
+              <template is="dom-if" if="[[showdriver]]">
+                <div class="profile-stars" onclick=""><stars-rating score="[[user.karma]]"></stars-rating></div>
+              </template>
+            </div>
+
+            <div class="layout vertical other-profile-b">
+                <div class="profile-name"><span>[[user.name]]</span> <span>[[user.surnames]]</span></div>
+                <div class="profile-age"><span>XX</span> años</div>
+            </div>
+
+            <template is="dom-if" if="[[!showdriver]]">
+              <div class="other-profile-c">
+                <template is="dom-if" if="[[!favourite]]">
+                  <button class="primary-button">Añadir favorito</button>
+                </template>
+                <template is="dom-if" if="[[favourite]]">
+                  <button class="primary-button">Eliminar favorito</button>
+                </template>
+              </div>
+            </template>
+          </div>
+
+          <div class="vertical-separator"></div>
+
+          <div class="profile-extra-info">
+            <template is="dom-if" if="[[showdriver]]">
+              <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
+                <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
+              </template>
+              <div class="profile-no-driver">
+                BLA BLA BLA BLA BLA BLA BLA
+              </div>
+            </template>
+            <template is="dom-if" if="[[!showdriver]]">
+              <div class="profile-no-driver">
+                Este usuario no es conductor, por lo que no podrá crear viajes por ahora.
+              </div>
+            </template>
+          </div>
+      </div>
+      <template is="dom-if" if="[[showdriver]]">
+        <div class="profile-aside">
+          <div>
+            <template is="dom-if" if="[[!favourite]]">
+              <button class="primary-button">Añadir favorito</button>
+            </template>
+            <template is="dom-if" if="[[favourite]]">
+              <button class="primary-button">Eliminar favorito</button>
+            </template>
+          </div>
+          <div>
+            <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}" open="true"></trip-container>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "other-profile",
+      properties: {
+      	user: {
+      	  type: Object
+      	},
+        favourite: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        trips: {
+          type: Object,
+          value: []
+        },
+        showdriver: {
+          type: Boolean,
+          value: false
+        }
+      }
+    });
+  </script>
+</dom-module>
