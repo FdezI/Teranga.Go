@@ -1,15 +1,19 @@
 <link rel="import" href="box-container.html">
 <link rel="import" href="request-box.html">
 
+<!-- <link rel="import" href="package-service.html"> -->
+
 <dom-module name="request-container">
   <template>
-    <box-container on-reload="reloadRequest" name="Solicitudes">
-      
+    <box-container name="Solicitudes" on-reload="reloadRequests" open="{{open}}" reloading="{{loading}}">
+      <!-- <template is="dom-if" if="[[open]]">
+        <package-service user="[[iduser]]" response="{{packages}}" on-loaded="loaded" fetch="all"></package-service>
+      </template> -->
 
-      <template id="requestRepeat" is="dom-repeat" items="[[requests]]" as="request">
-        <!-- <travel-box departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip.dtime)]]" month="[[month(trip.dtime)]]" driver="[[trip.driving]]" travelurl="/"></travel-box> -->
-        <request-box username="" departure="Granada" arrival="Portos"></request-box> 
+      <template id="requestsRepeat" is="dom-repeat" items="[[requests]]" as="request">
+        <request-box request="[[request]]"></request-box>
       </template>
+      
     </box-container>
   </template>
 
@@ -17,15 +21,20 @@
     Polymer({
       is: "request-container",
       properties: {
-        requests: {
+        request: {
           type: Object,
           notify: true
         },
-        iduser: Number
+        iduser: Number,
+        loading: Boolean
       },
-      reloadRequests: function(event) {
+      reloadRequests: function() {
+        this.loading = true;
         this.$$("request-service").reload();
-        this.$$("#requestsRepeat").render();
+        this.$.requestsRepeat.render();
+      },
+      loaded: function() {
+        this.loading = false;
       }
     });
   </script>
