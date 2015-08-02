@@ -128,7 +128,11 @@ exports.search = function(req, res) {
 		if(offset || offset === 0) delete req.query.offset;
 
 		Object.keys(req.query).forEach(function(key) {
-      where += "AND" + pool.escapeId(key) + "=" + pool.escape(req.query[key]);
+			where += " AND ";
+			if(key == 'from') where += "TP.date >= ";
+			else if(key == 'to') where += "TP.date <= ";
+      else where +=  pool.escapeId(key) + " = ";
+      where += pool.escape(req.query[key]);
     });
     // where = where.substring(0, where.length - 3);
 		// var values = keys.map(function(k) { return req.query[k]; });
@@ -145,7 +149,7 @@ exports.search = function(req, res) {
 		if(err) throw err;
 
 		if(rows.length == 0) {
-			res.json({});
+			res.json([]);
 			return;
 		}
 

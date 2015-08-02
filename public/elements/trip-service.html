@@ -151,10 +151,13 @@
             this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
           } else this.$.loadAll.url = window.Polymer.restAPI + "trips";
           
+          console.log(this.$.loadAll.params);
           this.$.loadAll.generateRequest();
         } else if(this.fetch !== "") {
           console.log("fetching " + this.fetch);
           this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
+
+          console.log(this.$.loadOne.url);
           this.$.loadOne.generateRequest();
         }
       }
