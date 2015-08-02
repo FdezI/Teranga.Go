@@ -42,10 +42,10 @@
         <td colspan="4">Cuando lo necesitas</td>
       </tr>
       <tr>
-        <td>Desde:  </td>
-        <td><input type="date" placeholder="De"></td>
-        <td>Hasta:  </td>
-        <td><input type="date" placeholder="A"></td>
+        <td>Entre:  </td>
+        <td><input type="date" placeholder="De" value="{{filters.from::input}}" min="[[today()]]"></td>
+        <td>Y:  </td>
+        <td><input type="date" placeholder="A" value="{{filters.to::input}}" min="[[today()]]"></td>
       </tr>
     </table>
 
@@ -91,6 +91,8 @@
       }
     },
 
+    observers: ['fromChanged(filters.from)', 'toChanged(filters.to)'],
+
     day: function(trip) {
       return window.Polymer.day(trip.date);
     },
@@ -105,13 +107,18 @@
     },
     allow: function(attrib) {
       return attrib ? "allow" : ((attrib == false || attrib == 0) ? "deny" : "unknown");
+    },
+    fromChanged: function(from) {
+      var to = this.filters.to;
+      if(!to || from > to) this.set('filters.to', from);
+    },
+    toChanged: function(to) {
+      var from = this.filters.from;
+      if(!from || from > to) this.set('filters.from', to);
+    },
+    today: function() {
+      return new Date().toISOString().substring(0, 10);
     }
-    // departure: function(trip) {
-    //   return this.trip.cities[this.trip.departure];
-    // },
-    // arrival: function(trip) {
-    //   return this.trip.cities[this.trip.arrival];
-    // }
   });
   </script>
 </dom-module>
