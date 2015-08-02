@@ -10,18 +10,17 @@
   
   <template>
     <iron-ajax id="loadAll"
-      last-response="{{response}}"
+      last-response="{{data}}"
       on-response="carsLoaded">
     </iron-ajax>
 
     <iron-ajax id="loadOne"
-      last-response="{{response}}"
+      last-response="{{data}}"
       on-response="carLoaded">
     </iron-ajax>
     
     <iron-ajax id="create"
-      body="{{update}}"
-      last-response="{{response}}"
+      last-response="{{data}}"
       on-response="createdResponse"
       content-type="application/json"
       method="POST">
@@ -40,15 +39,11 @@
         	type: String
         	// observer: 'fetchChanged'
         },
-        response: {
-          type: Object,
-          notify: true
-        },
         user: {
         	type: Number,
         	observer: 'userChanged'
         },
-        update: String
+        update: Object
       },
   //     ready: function() {
   //       if(this.fetch == "all") {
@@ -72,26 +67,35 @@
         console.log("carSloaded");
   //      this.data = this.$.loadAll.lastResponse;
   //      this.response = this.data;
-        this.data = this.response;
+        // this.data = this.response;
+        this.fire('loaded');
       },
       
       carLoaded: function() {
         console.log("carLoaded");
   //      this.data = this.$.loadOne.lastResponse;
   //      this.response = this.data;
-        this.data = this.response;
+        // this.data = this.response;
+        this.fire('loaded');
       },
       
       saveData: function() {
+        if(!this.update) return;
+
         console.log("BODY TO SEND:");
+        console.log(this.update);
+        
         this.$.create.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
+        this.$.create.body = JSON.stringify(this.update);
+        console.log(this.$.create.body);
         this.$.create.generateRequest();
       },
 
       createdResponse: function() {
         console.log("CREATED RESPONSE");
+        this.fire('created', this.data);
   //      this.response = this.$.create.lastResponse;
-        this.data.id = this.response.id;
+        // this.data.id = this.response.id;
       },
 
       reload: function() {

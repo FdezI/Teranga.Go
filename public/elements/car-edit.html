@@ -1,3 +1,5 @@
+<link rel="import" href="car-service.html">
+
 <dom-module name="car-edit">
   <style>
     .line {
@@ -51,7 +53,9 @@
     }
   </style>
   
-  <template>  
+  <template>
+    <car-service id="cs" user="[[iduser]]" update="[[update]]" on-created="saved"></car-service>
+
     <div class="container-car-edit layout vertical center-justified">
       <template is="dom-if" if="[[newcar]]">
         <span class="car-edit-title">Nuevo coche</span>
@@ -64,43 +68,43 @@
       <table class="car-edit-table">
         <tr>
           <td class="column1">Modelo</td>
-          <template is="dom-if" if="[[newcar]]">
-            <td class="column2"><input type="text" name="model"></td>
-          </template>
-          <template is="dom-if" if="[[!newcar]]">
+          <!-- <template is="dom-if" if="[[newcar]]"> -->
+            <td class="column2"><input type="text" name="model" value="{{update.model::input}}"></td>
+          <!-- </template> -->
+          <!-- <template is="dom-if" if="[[!newcar]]">
             <td class="column2"><input type="text" name="model" value="[[car.model]]"></td>
-          </template>
+          </template> -->
         <tr> 
         <tr>
           <td class="column1">Matrícula</td>
-          <template is="dom-if" if="[[newcar]]">
-            <td class="column2"><input type="text" name="idcar"></td>
-          </template>
-          <template is="dom-if" if="[[!newcar]]">
+          <!-- <template is="dom-if" if="[[newcar]]"> -->
+            <td class="column2"><input type="text" name="idcar" value="{{update.idcar::input}}"></td>
+          <!-- </template> -->
+          <!-- <template is="dom-if" if="[[!newcar]]">
             <td class="column2"><input type="text" name="idcar" value="[[car.idcar]]"></td>
-          </template>
+          </template> -->
         <tr> 
         <tr>
           <td class="column1">Asientos</td>
-          <template is="dom-if" if="[[newcar]]">
-            <td class="column2"><input type="number" name="seats" min="1" value="4"></td>
-          </template>
-          <template is="dom-if" if="[[!newcar]]">
+          <!-- <template is="dom-if" if="[[newcar]]"> -->
+            <td class="column2"><input type="number" name="seats" min="1" value="{{update.seats::input}}"></td>
+          <!-- </template> -->
+          <!-- <template is="dom-if" if="[[!newcar]]">
             <td class="column2"><input type="number" name="seats" min="1" value="[[car.seats]]"></td>
-          </template>
+          </template> -->
         <tr> 
         <tr>
           <td class="column1">Caballos</td>
-          <template is="dom-if" if="[[newcar]]">
-            <td class="column2"><input type="number" name="hp" min="1" value="0"></td>
-          </template>
-          <template is="dom-if" if="[[!newcar]]">
+          <!-- <template is="dom-if" if="[[newcar]]"> -->
+            <td class="column2"><input type="number" name="hp" min="1" value="{{update.hp::input}}"></td>
+          <!-- </template> -->
+<!--           <template is="dom-if" if="[[!newcar]]">
             <td class="column2"><input type="number" name="hp" min="1" value="[[car.hp]]"></td>
-          </template>
+          </template> -->
         <tr> 
       </table>
-      <button class="primary-button-car-edit">Crear</button>
-      <button class="secondary-button-car-edit">Cancelar</button>
+      <button class="primary-button-car-edit" on-click="saveData">Crear</button>
+      <button class="secondary-button-car-edit" on-click="discardData">Cancelar</button>
     </div>
   </template>
 
@@ -108,11 +112,46 @@
   Polymer({
     is: "car-edit",
     properties: {
-      car: Object,
+      car: {
+        type: Object,
+        value: {}
+      },
+      update: {
+        type: Object,
+        value: {}
+      },
+      iduser: Number,
       newcar: {
         type: Boolean,
         value: false
       }
+    },
+    ready: function() {
+      if(!car) this.newcar = true;
+      else {
+        var car = this.car;
+        var u = this.update;
+        Object.keys(car).forEach(function(key) {
+          u[key] = car[key];
+        });
+      }
+    },
+    saveData: function() {
+      this.$.cs.saveData();
+    },
+    discardData: function() {
+      this.fire('discard');
+    },
+    saved: function(e, data) {
+      var car = this.car;
+      var u = this.update;
+      Object.keys(u).forEach(function(key) {
+        car[key] = u[key];
+      });
+
+      car.owners = data.owners;
+      console.log("PERSONAS: " + car.owners);
+      if(this.newcar) this.fire('newcar', car);
     }
   });
   </script>
