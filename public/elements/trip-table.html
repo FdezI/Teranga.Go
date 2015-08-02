@@ -1,23 +1,46 @@
 <dom-module name="trip-table">
   <style>
+  .trip-table-img {
+    width: 30px;
+    height: 30px;
+  }
+  .trip-table-filters {
+    display: flex;
+    width: 100%;
+  }
+  .trip-table-right {
+    margin-left: auto;
+    /*margin-right: 30px;*/
+  }
+  .trip-table-header {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #ccc;
+    border-radius: 6px 6px 0px 0px;
+    margin-top: 20px;
+  }
   </style>
   
   <template>
-    <div>Viajes de <span>[[departure]]</span> a <span>[[arrival]]</span></div>
+    <div class="trip-table-header layout horizontal">
+      <div class="layout vertical">
+        <div>Viajes de <span>[[departure]]</span> a <span>[[arrival]]</span></div>
 
-    <div>
-      <div>
-        <span>Ordenar por:</span>
-        <select value="Precio descendente">
-          <option>Precio ascendente</option>
-          <option>Precio descendente</option>
-          <option>Estrellas</option>
-          <option>Fecha y hora</option>
-        </select>
+        <div class="trip-table-filters">
+          <span>Ordenar por:</span>
+          <select value="Precio descendente">
+            <option>Precio ascendente</option>
+            <option>Precio descendente</option>
+            <option>Estrellas</option>
+            <option>Fecha y hora</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        
+      <div class="trip-table-right">
+        <button><img class="trip-table-img" src="../images/pet-allow.png"></button>
+
+        <button><img class="trip-table-img" src="../images/package-allow.png"></button>
       </div>
     </div>
 
