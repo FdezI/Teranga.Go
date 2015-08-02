@@ -138,7 +138,7 @@ apiRouter.route('/routes/:idroute')
 
 apiRouter.route('/trips')
 	.post(db.tripUnlinkedController.create)
-	.get(db.tripUnlinkedController.getAll);
+	.get(db.tripUnlinkedController.search);
 apiRouter.route('/trips/:idtrip')
 	.get(db.tripUnlinkedController.get)
 // 	.post(db.tripUnlinkedController.update)

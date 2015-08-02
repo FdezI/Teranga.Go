@@ -86,6 +86,25 @@ exports.get = function(req, res) {
 		});
 };
 
+exports.search = function(req, res) {
+	if(req.query && Object.keys(req.query).length > 0) {
+		var offset = Number(req.query.offset);
+		if(offset || offset === 0) delete req.query.offset;
+
+		var where = " WHERE ";
+		Object.keys(req.query).forEach(function(key) {
+      where += pool.escapeId(key) + "=" + pool.escape(req.query[key]) + "AND";
+    });
+    where = where.substring(0, where.length - 3);
+		// var values = keys.map(function(k) { return req.query[k]; });
+	} else where = "";
+
+	pool.query('SELECT * FROM trip' + where + 'LIMIT ?,10', offset ? offset : 0, function(err, rows, fields) {
+		if(err) throw err;
+
+		res.json(rows);
+	});
+};
 
 // AUTHENTICATED
 exports.delete = function(req, res) {
