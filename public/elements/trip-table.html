@@ -30,11 +30,14 @@
       </tr>
       <tr>
         <td>De: </td>
-        <td><input type="text" placeholder="De" value="{{filters.}}"></td>
+        <td><input type="text" placeholder="De" value="{{filters.origin::input}}"></td>
         <td>A: </td>
-        <td> <input type="text" placeholder="A"></td>
+        <td> <input type="text" placeholder="A" value="{{filters.destination::input}}"></td>
         
       </tr>
+      <tr>
+        <td><button on-click="search">Buscar</button></td>
+      <tr>
       <tr>
         <td colspan="4">Cuando lo necesitas</td>
       </tr>
@@ -68,7 +71,11 @@
       </div>
     </div>
 
-    <trip-list></trip-list>
+    <trip-list>
+      <template is="dom-repeat" items="{{trips}}" as="trip">
+        <trip-card  username="[[trip.driverName]]" score="3" start="[[departure(trip)]]" cities="[[trip.cities]]"departure="[[trip.departure]]" arrival="[[trip.arrival]]" end="" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
+      </template>
+    </trip-list>
   </template>
 
   <script>
@@ -79,9 +86,32 @@
       trips: Object,
       filters: {
         type: Object,
-        value: {}
+        value: {},
+        notify: true
       }
+    },
+
+    day: function(trip) {
+      return window.Polymer.day(trip.date);
+    },
+    month: function(trip) {
+     return window.Polymer.month(trip.date);
+    },
+    time: function(trip) {
+      return window.Polymer.time(trip.date);
+    },
+    search: function() {
+      this.fire('search');
+    },
+    allow: function(attrib) {
+      return attrib ? "allow" : ((attrib == false || attrib == 0) ? "deny" : "unknown");
     }
+    // departure: function(trip) {
+    //   return this.trip.cities[this.trip.departure];
+    // },
+    // arrival: function(trip) {
+    //   return this.trip.cities[this.trip.arrival];
+    // }
   });
   </script>
 </dom-module>

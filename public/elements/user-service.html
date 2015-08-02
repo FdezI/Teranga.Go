@@ -10,6 +10,7 @@
     
   <template>
     <iron-ajax id="loadAll"
+      last-response="{{data}}"
       on-response="usersLoaded">
     </iron-ajax>
     <iron-ajax id="loadOne"
@@ -65,7 +66,7 @@
     usersLoaded: function() {
       console.log("usersLoaded");
 //       this.data = this.$.loadAll.response.slice(0);
-      this.data = this.$.loadAll.lastResponse;
+      // this.data = this.$.loadAll.lastResponse;
     },
     
     userLoaded: function() {

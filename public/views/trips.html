@@ -6,7 +6,7 @@
   <style>
   </style>
   <template>
-    <trip-service id="ts" fetch="all" filters="[[filters]]"></trip-service>
+    <trip-service id="ts" fetch="all" filters="[[filters]]" data="{{trips}}"></trip-service>
     <trip-table trips="{{trips}}" filters="{{filters}}" on-search="search"></trip-table>
     <!-- <select value="{{selected::input}}">
       <option value="1">1</option>
