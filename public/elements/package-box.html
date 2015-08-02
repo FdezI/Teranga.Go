@@ -41,7 +41,7 @@
               <img class="package-box-img" src="../images/package-allow.png">
             </td>
             <td>
-              <span>[[name]]</span>
+              <span>[[package.name]]</span>
             </td>
           </tr>
           <tr>
@@ -49,17 +49,17 @@
               <span>ID</span>
             </td>
             <td>
-              <span>[[idpackage]]</span>
+              <span>[[package.idpackage]]</span>
             </td>
           </tr>
           <tr>
             <td colspan="2">
-              <span>[[size]]</span>
+              <span>[[package.size]]</span>
             </td>
           </tr>
           <tr>
             <td colspan="2">
-              <span>[[status]]</span>
+              <span>[[package.status]]</span>
             </td>
           </tr>
         </table>
@@ -71,11 +71,14 @@
   Polymer({
     is: "package-box",
     properties: {
-      name: String,
-      idpackage: String,
-      size: String,
-      status: String,
-      url: String
+      package: {
+        type: Object
+      }
+      // name: String,
+      // idpackage: String,
+      // size: String,
+      // status: String,
+      // url: String
     }
   });
   </script>

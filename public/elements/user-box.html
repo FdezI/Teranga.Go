@@ -29,11 +29,11 @@
   </style>
   
   <template>
-    <a id="linkuser" href="[[url]]">
+    <a id="linkuser" href="[[user.url]]">
       <div class="user">
-        <img class="user-box-img" src="[[img]]">
-        <stars-rating score="[[score]]"></stars-rating>
-        <span>[[name]]</span>
+        <img class="user-box-img" src="[[user.img]]">
+        <stars-rating score="[[user.score]]"></stars-rating>
+        <span>[[user.name]]</span>
       </div>
     </a>
   </template>
@@ -42,10 +42,13 @@
   Polymer({
     is: "user-box",
     properties: {
-      name: String,
-      img: String,
-      score: String,
-      url: String
+      user: {
+        type: Object
+      }
+      // name: String,
+      // img: String,
+      // score: String,
+      // url: String
     }
   });
   </script>

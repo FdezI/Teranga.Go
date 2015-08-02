@@ -12,7 +12,7 @@
       width: 100%;
       height: 50px;
       text-align: left;
-      padding: 10px;
+      /*padding: 10px;*/
     }
     .collapse-content {
       border: 1px solid #dedede;
@@ -20,23 +20,27 @@
       /*overflow-x: auto;*/
     }
     .button-inner {
-      position: absolute;
-      right: 0;
+      position: relative;
+      /*right: 0;*/
+      margin-left: auto;
     }
   </style>
   
   <template>
     	<button on-click="toggle" class="container">
-        <span>[[name]]</span>
-        <template is="dom-if" if="[[reloadable]]">
-          <template is="dom-if" if="[[!reloading]]">
-            <paper-icon-button icon="refresh" on-click="reload" class="button-inner"></paper-icon-button>
+        <div style="display: flex;">
+          <span class="layout horizontal center">[[name]]</span>
+          <template is="dom-if" if="[[reloadable]]">
+            <template is="dom-if" if="[[!reloading]]">
+              <paper-icon-button icon="refresh" on-click="reload" class="button-inner"></paper-icon-button>
+            </template>
+            <template is="dom-if" if="[[reloading]]">
+              <paper-spinner alt="Cargando..." active class="button-inner"></paper-spinner>
+            </template>
           </template>
-          <template is="dom-if" if="[[reloading]]">
-            <paper-spinner alt="Cargando..." active class="button-inner"></paper-spinner>
-          </template>
-        </template>
+        </div>
       </button>
+
       <iron-collapse class="content" id="collapse" opened="[[open]]">
         <div class="collapse-content">
           <content></content>
