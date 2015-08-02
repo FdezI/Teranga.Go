@@ -201,10 +201,12 @@ exports.search = function(req, res) {
 				if(order === last.oA) {
 					stretch = true;
 					aCost = value.cost;
+					last.departure = last.cities.length - 1;
 				} else if (order === last.oB) {
 					stretch = false;
 					last.free = lesserFree;
 					last.cost = value.cost - aCost;
+					last.arrival = last.cities.length - 1;
 					delete last.oA;
 					delete last.oB;
 				}

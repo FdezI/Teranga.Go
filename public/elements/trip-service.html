@@ -10,8 +10,8 @@
   
   <template>
     <iron-ajax id="loadAll"
-      parameters="[[filters]]"
-      last-response="{{response}}"
+      params="[[filters]]"
+      last-response="{{data}}"
       on-response="tripsLoaded">
     </iron-ajax>
 
@@ -21,7 +21,7 @@
     
     <iron-ajax id="create"
       body="{{update}}"
-      last-response="{{response}}"
+      last-response="{{data}}"
       on-response="createdResponse"
       content-type="application/json"
       method="POST">
@@ -40,10 +40,10 @@
         	type: String
         	// observer: 'fetchChanged'
         },
-        response: {
-          type: Object,
-          notify: true
-        },
+        // response: {
+        //   type: Object,
+        //   notify: true
+        // },
         user: {
         	type: Number,
         	observer: 'userChanged'
@@ -92,11 +92,11 @@
       tripsLoaded: function() {
         // Make a copy of the loaded data
         console.log('Trips loaded:');
-        console.log(this.response);
+        // console.log(this.response);
   //       this.data = this.$.loadAll.response.slice(0);
         // this.data = this.$.loadAll.lastResponse;
         // this.response = this.data;
-        this.data = this.response;
+        // this.data = this.response;
 
         this.fire('loaded');
       },
@@ -128,9 +128,9 @@
           res.cost = res.destiny.cost;
           res.free = free;
         }
-        this.response = res;
-        this.data = this.response;
-        console.log(this.response);
+        // this.response = res;
+        this.data = res;
+        // console.log(this.response);
         this.fire('loaded');
       },
       

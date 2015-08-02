@@ -171,13 +171,13 @@
 
       // console.log("PET: " + pet);
       // return window.Polymer.image.URL + "pet-" + (pet ? "allow" : ((pet == false || pet == 0) ? "deny" : "unknown")) + ".png";
-      return "../images/pet-" + trip + ".png";
+      return window.Polymer.image.URL + "pet-" + trip + ".png";
     },
     packagef: function(trip) {
       // var pck = trip.packages;
 
       // return window.Polymer.image.URL + "package-" + (pck ? "allow" : ((pck == false || pck == 0) ? "deny" : "unknown")) + ".png";
-      return "../images/package-" + trip + ".png";
+      return window.Polymer.image.URL + "package-" + trip + ".png";
     }
 //     publish: {
 //       selected: {
