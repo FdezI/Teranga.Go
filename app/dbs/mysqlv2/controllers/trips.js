@@ -99,7 +99,8 @@ exports.search = function(req, res) {
 		// var values = keys.map(function(k) { return req.query[k]; });
 	} else where = "";
 
-	pool.query('SELECT * FROM trip' + where + 'LIMIT ?,10', offset ? offset : 0, function(err, rows, fields) {
+	pool.query('SELECT idtrip, driver, car, seats, packages = 1 as packages, animals = 1 as animals\
+							FROM trip' + where + 'LIMIT ?,10', offset ? offset : 0, function(err, rows, fields) {
 		if(err) throw err;
 
 		res.json(rows);

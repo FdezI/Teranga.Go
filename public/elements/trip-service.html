@@ -10,6 +10,7 @@
   
   <template>
     <iron-ajax id="loadAll"
+      parameters="[[filters]]"
       last-response="{{response}}"
       on-response="tripsLoaded">
     </iron-ajax>
@@ -47,7 +48,8 @@
         	type: Number,
         	observer: 'userChanged'
         },
-        update: String
+        update: Object,
+        filters: Object
       },
       
       ready: function() {

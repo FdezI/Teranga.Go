@@ -1,11 +1,13 @@
 <link rel="import" href="trip.html">
 <link rel="import" href="../elements/trip-table.html">
+<link rel="import" href="../elements/trip-service.html">
 
 <dom-module name="trips-view">
   <style>
   </style>
   <template>
-    <trip-table></trip-table>
+    <trip-service id="ts" fetch="all" filters="[[filters]]"></trip-service>
+    <trip-table trips="{{trips}}" filters="{{filters}}" on-search="search"></trip-table>
     <!-- <select value="{{selected::input}}">
       <option value="1">1</option>
       <option value="2">2</option>
@@ -26,7 +28,8 @@
         route: {
           type: String,
           notify: true
-        }
+        },
+        filters: Object
       },
       ready: function() {
         console.log("trips-view ready!");
@@ -34,6 +37,10 @@
 
       selectedChanged: function() {
         console.log("CHANGED SELECTED");
+      },
+
+      search: function() {
+        this.$.ts.reload();
       }
     });
   </script>

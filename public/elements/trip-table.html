@@ -30,7 +30,7 @@
       </tr>
       <tr>
         <td>De: </td>
-        <td><input type="text" placeholder="De"></td>
+        <td><input type="text" placeholder="De" value="{{filters.}}"></td>
         <td>A: </td>
         <td> <input type="text" placeholder="A"></td>
         
@@ -75,7 +75,12 @@
   Polymer({
     is: "trip-table",
     properties: {
-      image: String
+      image: String,
+      trips: Object,
+      filters: {
+        type: Object,
+        value: {}
+      }
     }
   });
   </script>

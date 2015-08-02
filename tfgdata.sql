@@ -76,7 +76,7 @@ CREATE TABLE `car` (
 
 LOCK TABLES `car` WRITE;
 /*!40000 ALTER TABLE `car` DISABLE KEYS */;
-INSERT INTO `car` VALUES ('M1XS',4,'Model1',100),('M2XS',4,'Model2',200),('M3XS',4,'Model3',300),('M4XS',4,'Model4',400),('M5XS',4,'Model5',500);
+INSERT INTO `car` VALUES ('5555',2,'asdf',3),('aaaa',1,'asdf',1),('aasd',1,'asdf',1),('asdfaww',2,'asdf',2),('asdfyyy',1,'asdf',1),('ccc',1,'aas',1),('cccd',1,'aas',1),('ew4',2,'asdg',3),('LKDP',4,'asdfkkkk',6),('M1XS',4,'Model1',100),('M2XS',4,'Model2',200),('M3XS',4,'Model3',300),('M4XS',4,'Model4',400),('M5XS',4,'Model5',500),('mmmmm',2,'assggghhhmmm',2),('rtur667',2,'asdg',3),('ttt',1,'as',1),('vvvv',1,'aaaa',1),('ww',1,'aas',1),('X123',2,'asdf',1),('XJSK766',1,'Modelo 1',2),('yuoylj',4,'fjjuy',4),('yuoyo',1,'asdf',1);
 /*!40000 ALTER TABLE `car` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `owners` (
 
 LOCK TABLES `owners` WRITE;
 /*!40000 ALTER TABLE `owners` DISABLE KEYS */;
-INSERT INTO `owners` VALUES ('M1XS',1,'Coche1'),('M1XS',2,'Coche1'),('M2XS',1,'Coche2'),('M3XS',3,'Coche1');
+INSERT INTO `owners` VALUES ('5555',1,''),('aaaa',1,''),('aasd',1,''),('asdfaww',1,''),('asdfyyy',1,''),('ccc',1,''),('cccd',1,''),('ew4',1,''),('LKDP',2,''),('M1XS',1,'Coche1'),('M1XS',2,'Coche1'),('M2XS',1,'Coche2'),('M3XS',3,'Coche1'),('mmmmm',1,''),('rtur667',1,''),('ttt',1,''),('vvvv',1,''),('ww',1,''),('X123',1,''),('XJSK766',1,''),('yuoylj',1,''),('yuoyo',1,'');
 /*!40000 ALTER TABLE `owners` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +283,6 @@ DROP TABLE IF EXISTS `trip`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `trip` (
   `idtrip` int(11) NOT NULL AUTO_INCREMENT,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `driver` int(11) NOT NULL,
   `car` varchar(10) NOT NULL,
   `seats` tinyint(4) NOT NULL,
@@ -296,7 +295,7 @@ CREATE TABLE `trip` (
   KEY `fk_trip_2_idx` (`car`),
   CONSTRAINT `fk_trip_1` FOREIGN KEY (`driver`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_trip_2` FOREIGN KEY (`car`) REFERENCES `car` (`idcar`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,7 +304,7 @@ CREATE TABLE `trip` (
 
 LOCK TABLES `trip` WRITE;
 /*!40000 ALTER TABLE `trip` DISABLE KEYS */;
-INSERT INTO `trip` VALUES (2,'2015-07-30 21:20:53',1,'M1XS',3,'\0','\0','El conductor comenta que.... blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabl.... y eso es todo',NULL),(3,'2015-08-01 09:10:41',1,'M1XS',4,NULL,'',NULL,NULL);
+INSERT INTO `trip` VALUES (2,1,'M1XS',3,'\0','\0','El conductor comenta que.... blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabl.... y eso es todo',NULL),(3,1,'M1XS',4,NULL,'',NULL,NULL),(4,1,'M1XS',4,'','\0','El conductor comenta que....12 blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabl.... y eso es todo',NULL),(5,1,'M1XS',4,'\0','',NULL,NULL),(6,1,'M1XS',3,'','','asdf iwerOOOOO mentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabla Comentario blablabl.... y eso es todo',NULL);
 /*!40000 ALTER TABLE `trip` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,7 +321,7 @@ CREATE TABLE `tripPoints` (
   `location` int(11) NOT NULL,
   `address` varchar(45) NOT NULL,
   `stop` bit(1) NOT NULL DEFAULT b'0',
-  `date` timestamp NULL DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `cost` tinyint(4) DEFAULT NULL,
   `pkcost` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`trip`,`order`),
@@ -338,7 +337,7 @@ CREATE TABLE `tripPoints` (
 
 LOCK TABLES `tripPoints` WRITE;
 /*!40000 ALTER TABLE `tripPoints` DISABLE KEYS */;
-INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de mÃ¡laga, 115','','2015-09-09 21:00:00',0,0),(2,1,3,'c/ la piruleta','\0',NULL,4,2),(2,2,4,'c/ aleatoria de dogo','',NULL,4,3),(2,99,5,'c/ final de ruta','',NULL,8,5),(3,0,4,'c/ inicio de dogo','',NULL,NULL,NULL),(3,99,1,'c/ final de granada','',NULL,NULL,NULL);
+INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de mÃ¡laga, 115','','2015-09-09 21:00:00',0,0),(2,1,3,'c/ la piruleta','\0','2015-08-01 12:50:38',4,2),(2,2,4,'c/ aleatoria de dogo','','2015-08-01 12:50:38',4,3),(2,99,5,'c/ final de ruta','','2015-09-10 07:30:00',8,5),(3,0,4,'c/ inicio de dogo','','2014-09-10 07:30:00',NULL,NULL),(3,99,1,'c/ final de granada','','2014-09-15 07:30:00',NULL,NULL),(4,0,1,'c/ Sin fin','','0000-00-00 00:00:00',89,5),(4,99,3,'c/ algo con fin','','0000-00-00 00:00:00',23,6),(5,0,4,'c/ Inicio','','0000-00-00 00:00:00',23,24),(5,99,5,'c/ el fin','','0000-00-00 00:00:00',24,45),(6,0,4,'c/ africana','','0000-00-00 00:00:00',23,56),(6,99,2,'c/ espaÃ±ola','','0000-00-00 00:00:00',98,8);
 /*!40000 ALTER TABLE `tripPoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -370,7 +369,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com','avatar1','','1990-10-02','$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',0,0),(2,'Usuario2',NULL,'usuario2@mail.com','avatar2','\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,999),(3,'Usuario3',NULL,'usuario3@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(4,'Usuario4',NULL,'usuario4@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(5,'Usuario5',NULL,'usuario5@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(6,'Usuario6',NULL,'usuario6@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(7,'Usuario7',NULL,'usuario7@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(8,'Usuario8',NULL,'usuario8@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(9,'Usuario9',NULL,'usuario9@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0);
+INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com','avatar1','','1990-10-02','$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',0,111),(2,'Usuario2',NULL,'usuario2@mail.com','avatar2','\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,999),(3,'Usuario3',NULL,'usuario3@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(4,'Usuario4',NULL,'usuario4@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(5,'Usuario5',NULL,'usuario5@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(6,'Usuario6',NULL,'usuario6@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(7,'Usuario7',NULL,'usuario7@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(8,'Usuario8',NULL,'usuario8@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0),(9,'Usuario9',NULL,'usuario9@mail.com',NULL,'\0',NULL,'$û7	°Y9ðLòé/}—ü%–ù­Šž¨UÇ¿ëªè’',NULL,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -386,7 +385,7 @@ CREATE TABLE `userTrips` (
   `user` int(11) NOT NULL,
   `cost` int(4) DEFAULT NULL,
   `comment` varchar(45) DEFAULT NULL,
-  `accepted` bit(1) NOT NULL DEFAULT b'0',
+  `accepted` bit(1) DEFAULT NULL,
   `pointA` tinyint(3) NOT NULL,
   `pointB` tinyint(3) NOT NULL,
   PRIMARY KEY (`trip`,`user`),
@@ -407,7 +406,7 @@ CREATE TABLE `userTrips` (
 
 LOCK TABLES `userTrips` WRITE;
 /*!40000 ALTER TABLE `userTrips` DISABLE KEYS */;
-INSERT INTO `userTrips` VALUES (2,2,90,'','',1,99),(2,3,150,'que carero!!','',2,99),(2,4,50,'baratuno','',0,2);
+INSERT INTO `userTrips` VALUES (2,2,90,'','',1,99),(2,3,150,'que carero!!','',2,99),(2,4,50,'baratuno','',0,2),(3,2,60,'Aham!, hecho!','',0,99);
 /*!40000 ALTER TABLE `userTrips` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -420,4 +419,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-01 10:13:29
+-- Dump completed on 2015-08-02 12:15:25
