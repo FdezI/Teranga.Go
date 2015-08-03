@@ -1,0 +1,43 @@
+<link rel="import" href="box-container.html">
+<link rel="import" href="travel-box.html">
+
+<link rel="import" href="trip-service.html">
+
+<dom-module name="other-trip-container">
+  <template>
+    <box-container name="[[titlename()]]" open="{{open}}">
+      <trip-service user="[[iduser]]" data="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
+      
+      <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
+        <travel-box trip="[[trip]]"></travel-box>
+      </template>
+      
+    </box-container>
+  </template>
+
+  <script>
+    Polymer({
+      is: "other-trip-container",
+      properties: {
+        trips: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number,
+        open: Boolean,
+        loading: Boolean
+      },
+      reloadTrips: function() {
+        this.loading = true;
+        this.$$("trip-service").reload();
+        this.$.tripsRepeat.render();
+      },
+      titlename: function() {
+        return "Este usuario tiene " + "3" + " viajes programados";
+      },
+      loaded: function() {
+        this.loading = false;
+      }
+    });
+  </script>
+</dom-module>

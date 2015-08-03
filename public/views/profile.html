@@ -116,8 +116,15 @@
         <div class="vertical-separator"></div>
 
         <template id="moreInfo" is="dom-if" if="[[!edit]]">
-          <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
-          <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
+          <div>
+            <div class="profile-container-half">
+              <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
+            </div>
+            <div class="profile-container-half" style="float: right;">
+              <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
+            </div>
+          </div>
+
           <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}"></package-container>
           <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
           

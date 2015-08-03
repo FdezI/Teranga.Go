@@ -1,3 +1,5 @@
+<link rel="import" href="../elements/other-trip-container.html">
+
 <dom-module name="other-profile">
   <style>
     .profile-div {
@@ -61,12 +63,17 @@
 
           <div class="profile-extra-info">
             <template is="dom-if" if="[[showdriver]]">
+              <!-- <template is="dom-if" if="[[assessments]]"> -->
+                <div class="profile-no-driver">
+                  Este usuario no tiene ningún comentario sobre sus viajes todavía.
+                </div>
+              <!-- </template> -->
               <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
                 <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
               </template>
-              <div class="profile-no-driver">
+             <!--  <div class="profile-no-driver">
                 BLA BLA BLA BLA BLA BLA BLA
-              </div>
+              </div> -->
             </template>
             <template is="dom-if" if="[[!showdriver]]">
               <div class="profile-no-driver">
@@ -86,7 +93,7 @@
             </template>
           </div>
           <div>
-            <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}" open="true"></trip-container>
+            <other-trip-container iduser="[[user.iduser]]" trips="{{user.trips}}" open="true"></other-trip-container>
           </div>
         </div>
       </template>
