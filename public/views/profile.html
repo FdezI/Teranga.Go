@@ -33,6 +33,7 @@
 <link rel="import" href="../elements/assessment-service.html">
 
 <link rel="import" href="./other-profile.html">
+<link rel="import" href="./create-trip.html">
 
 <dom-module name="profile-view">
 
@@ -41,7 +42,8 @@
       <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service>
 
       <template id="profileTemplate" is="dom-if" if="[[session.user]]">
-        <other-profile showdriver="true"></other-profile>
+        <!-- <other-profile showdriver="true"></other-profile> -->
+        <create-trip></create-trip>
         <!-- <user-box name="Carmen" score="3" url="/"></user-box> -->
         <!-- <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
         <trip-card  username="Carmen" score="3" start="Granada" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card> -->

@@ -1,0 +1,73 @@
+<link rel="import" href="trip.html">
+<link rel="import" href="../elements/trip-table.html">
+<link rel="import" href="../elements/trip-service.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<dom-module name="create-trip">
+  <style>
+    :host {
+      display: flex;
+    }
+    .create-trip-map {
+      background: #369;
+      width: 30%;
+      margin: 10px 2% 10px 0px;
+      height: 200px;
+      align-self: center;
+      display: inline-block;
+    }
+    .create-trip-area {
+      display: inline-block;
+      width: 65%;
+      min-width: 200px;
+    }
+    .create-trip-input {
+      min-width: 160px;
+      width: 27%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .create-trip-input-extra {
+      min-width: 50px;
+      display: inline-block;
+      width: 68%;
+      padding: 10px 0 10px 1%;
+    }
+  </style>
+  <template>
+    <div class="create-trip-map">
+      
+    </div>
+
+    <div class="create-trip-area">
+      <div>
+        <paper-input label="Ruta"></paper-input>
+      </div>
+      <div>
+        <paper-input class="create-trip-input" label="De:" placeholder="Salida"></paper-input>
+        <input class="create-trip-input-extra" type="text" placeholder="Direccion">
+      </div>
+      <div>
+        <paper-input class="create-trip-input"  label="A:" placeholder="Llegada"></paper-input>
+        <input class="create-trip-input-extra" type="text" placeholder="Direccion">
+      </div>
+      <div>
+        <paper-input class="create-trip-input" label="Coche" always-float-label></paper-input>
+        <paper-input class="create-trip-input" label="Asientos" always-float-label></paper-input>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "create-trip",
+      properties: {
+        user: Object,
+        filters: Object
+      },
+      ready: function() {
+        console.log("create-trip ready!");
+      }
+    });
+  </script>
+</dom-module>
