@@ -82,11 +82,14 @@
 
       <div class="layout vertical trip-card-2">
         <div>
-          <span>[[start]]</span><span> - </span>
+          <template id="citiesRepeat" is="dom-repeat" items="[[cities]]" as="city">
+            <span strong$="[[isSearched(index)]]">[[city]]</span><span>[[dash(index, cities)]]</span>
+          </template>
+          <!-- <span>[[cities.departure]]</span><span> - </span>
           <template is="dom-if" if="[[departure]]">
             <span>[[departure]]</span><span> - </span>
           </template>
-          <span>[[arrival]]</span>
+          <span>[[cities.arrival]]</span> -->
         </div>
         <div class="layout horizontal center">
           <div class="layout vertical center">
@@ -150,9 +153,9 @@
       username: String,
       userurl: String,
       score: Number,
-      start: String,
-      departure: String,
-      arrival: String,
+      cities: Array,
+      departure: Number,
+      arrival: Number,
       day: String,
       month: String,
       hour: String,
@@ -178,7 +181,16 @@
 
       // return window.Polymer.image.URL + "package-" + (pck ? "allow" : ((pck == false || pck == 0) ? "deny" : "unknown")) + ".png";
       return window.Polymer.image.URL + "package-" + trip + ".png";
+    },
+    isSearched: function(i) {
+      return i == this.departure || i == this.arrival;
+    },
+    dash: function(i) {
+      console.log(this.cities);
+      console.log("Length: " + this.cities.length + ", Index: " + i);
+      return i < this.cities.length - 1 ? " - " : "";
     }
+
 //     publish: {
 //       selected: {
 //         value: "",

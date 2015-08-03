@@ -160,9 +160,9 @@ apiRouter.route('/request/packet')
 	.get(db.requestController.getAllPacket)
 	.post(db.requestController.requestPacket);
 
-apiRouter.route('/location')
+apiRouter.route('/locations')
 	.get(db.locationController.getAll);
-apiRouter.route('/location/:idlocation')
+apiRouter.route('/locations/:idlocation')
 	.get(db.locationController.get);
 	
 // REGISTER OUR ROUTES -------------------------------

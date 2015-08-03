@@ -4,16 +4,26 @@
   Polymer({
     is: 'in-array-validator',
     properties: {
-    	array: Array
+    	items: Array,
+    	attrib: String,
+    	asdf: String,
+    	difff: String,
+    	diffs: String
     },
     behaviors: [
       Polymer.IronValidatorBehavior
     ],
+
     validate: function(value) {
-    	// console.log("ALSKJFASFAAAAAAAAA");
-      return this.array.indexOf(value) >= 0;
-      return false;
-      // return !value || value.match(/^[a-zA-Z]*$/) !== null;
+    	if(this.difff == this.diffs) return false;
+
+    	var items = this.items;
+    	var attrib = this.attrib;
+    	if(this.attrib) {
+    		var length = items.length;
+    		for(var i = 0; i < length; i++)
+    			if(items[i][attrib] == value) return true;
+    	} else return items.indexOf(value) >= 0;
     }
   });
 </script>
