@@ -14,7 +14,7 @@ body {
 }
 
 #body-content {
-  width: 800px;
+  width: 900px;
   margin-left: auto;
 	margin-right: auto;
 	margin-top: 15px;
@@ -26,6 +26,12 @@ body {
 
 .margin-block {
 	margin: 15px;
+}
+
+.profile-container-half {
+	width: 49%;
+	min-width: 200px;
+	display: inline-block;
 }
 
 .profile-a {
