@@ -82,8 +82,8 @@
 
       <div class="layout vertical trip-card-2">
         <div>
-          <template is="dom-repeat" items="[[cities]]" as="city">
-            <span strong$="[[isSearched(index)]]">[[city]]</span><span>[[dash(index)]]</span>
+          <template id="citiesRepeat" is="dom-repeat" items="[[cities]]" as="city">
+            <span strong$="[[isSearched(index)]]">[[city]]</span><span>[[dash(index, cities)]]</span>
           </template>
           <!-- <span>[[cities.departure]]</span><span> - </span>
           <template is="dom-if" if="[[departure]]">
@@ -186,8 +186,11 @@
       return i == this.departure || i == this.arrival;
     },
     dash: function(i) {
+      console.log(this.cities);
+      console.log("Length: " + this.cities.length + ", Index: " + i);
       return i < this.cities.length - 1 ? " - " : "";
     }
+
 //     publish: {
 //       selected: {
 //         value: "",
