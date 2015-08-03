@@ -1,5 +1,8 @@
 <link rel="import" href="trip-list.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="location-service.html">
 
 <link rel="import" href="in-array-validator.html">
 
@@ -27,30 +30,30 @@
   </style>
   
   <template>
-    <in-array-validator array="[[locs]]"></in-array-validator>
+    <location-service id="ls" fetch="list" data="{{locs}}"></location-service>
+    <in-array-validator items="[[locs]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></in-array-validator>
     <table>
       <tr>
         <td colspan="4">Encuentra el viaje que necesitas</td>
       </tr>
       <tr>
-        <datalist id="asdf">
-          <option value="asdf">
-          <option value="asf">
-          <option value="asdfghj">
-          <option value="asdpl">
+        <datalist id="locs">
+          <template id="asdf" is="dom-repeat" items="[[locs]]">
+            <option id="[[index]]" value="[[item.city]]">
+          </template>
         </datalist>
         <td>De: </td>
         <td>
-          <paper-input autocomplete="on" type="text" label="De:" placeholder="Origen" list="asdf" value="{{filters.origin::input}}" validator="in-array-validator" auto-validate></paper-input>
+          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="locs" value="{{fakefilters.origin}}" validator="in-array-validator" required></paper-input>
         </td>
         <td>A: </td>
         <td>
-          <paper-input type="text" label="A:" placeholder="Destino" list="asdf" value="{{filters.destination::input}}"></paper-input>
+          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="locs" value="{{fakefilters.destination}}" validator="in-array-validator" required></paper-input>
         </td>
         
       </tr>
       <tr>
-        <td><button on-click="search">Buscar</button></td>
+        <td><paper-button raised on-click="search">Buscar</paper-button></td>
       <tr>
       <tr>
         <td colspan="4">Cuando lo necesitas</td>
@@ -87,7 +90,7 @@
 
     <trip-list>
       <template is="dom-repeat" items="{{trips}}" as="trip">
-        <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]"departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
+        <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]" departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
       </template>
     </trip-list>
   </template>
@@ -103,14 +106,22 @@
         value: {},
         notify: true
       },
+      fakefilters: {
+        type: Object,
+        value: {},
+        readOnly: true
+      },
       locs: {
         type: Array,
-        value: ["asdf", "fff"]
+        value: [{idlocation:0, city:"City1"}, {idlocation:1, city:"City2"}]
       }
     },
 
-    observers: ['fromChanged(filters.from)', 'toChanged(filters.to)'],
+    observers: ['fromChanged(filters.from)', 'toChanged(filters.to)', 'validate(fakefilters.origin)', 'validate(fakefilters.destination)'],
 
+    ready: function() {
+      this.$.ls.reload();
+    },
     day: function(trip) {
       return window.Polymer.day(trip.date);
     },
@@ -121,6 +132,18 @@
       return window.Polymer.time(trip.date);
     },
     search: function() {
+      var locs = this.locs,
+          length = locs.length,
+          f = this.filters,
+          ff = this.fakefilters;
+          
+      Object.keys(ff).forEach(function(key) {
+        var i = -1;
+        delete f[key];
+        while(++i < length && !f[key])
+          if(locs[i].city == ff[key]) f[key] = locs[i].idlocation;
+      });
+
       this.fire('search');
     },
     allow: function(attrib) {
@@ -136,11 +159,11 @@
     },
     today: function() {
       return new Date().toISOString().substring(0, 10);
+    },
+    validate: function() {
+        this.$.origin.validate();
+        this.$.destination.validate();
     }
-    // locValidator: function() {
-    //   console.log("ALSKJFASFAAAAAAAAA");
-    //   return locs.indexOf(value) >= 0;
-    // }
   });
   </script>
 </dom-module>

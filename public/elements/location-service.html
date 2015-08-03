@@ -1,0 +1,92 @@
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module name="location-service">
+  <style>
+    :host {
+      display: none;
+    }
+  </style>
+  
+  <template>
+  	<iron-ajax id="loadOne"
+      on-response="locationLoaded">
+    </iron-ajax>
+
+    <iron-ajax id="loadAll"
+      last-response="{{data}}"
+      on-response="locationsLoaded">
+    </iron-ajax>
+    
+    <!-- <iron-ajax id="create"
+      body="{{update}}"
+      last-response="{{data}}"
+      on-response="createdResponse"
+      content-type="application/json"
+      method="POST">
+    </iron-ajax> -->
+    
+  </template>
+  <script>
+    Polymer({
+      is: "location-service",
+      properties: {
+        data: {
+          type: Object,
+          notify: true
+        },
+        fetch: String,
+        update: Object
+      },
+      
+      ready: function() {
+        console.log("location-service ready! for: " + this.fetch);
+      },
+      
+      locationsLoaded: function() {
+        // Make a copy of the loaded data
+        console.log('locations loaded:');
+        // console.log(this.response);
+  //       this.data = this.$.loadAll.response.slice(0);
+        // this.data = this.$.loadAll.lastResponse;
+        // this.response = this.data;
+        // this.data = this.response;
+
+        this.fire('loaded');
+      },
+      
+      locationLoaded: function(e, a, as) {
+        this.fire('loaded');
+      },
+      
+      saveData: function() {
+        // console.log('SAVING location');
+        // this.$.create.url = window.Polymer.restAPI + "locations";
+        // this.$.create.generateRequest();
+      },
+      
+      createdResponse: function() {
+      },
+
+      reload: function() {
+      	var fetch = this.fetch;
+      	var api = window.Polymer.restAPI;
+      	var item = "locations/";
+        
+        console.log("reloading: " + fetch);
+        
+        if(fetch == "all" || fetch == "list") {
+        	var req = this.$.loadAll;
+        	req.url = api + item;
+          if(fetch == "list") req.url += "?list";
+          
+          req.generateRequest();
+        } else if(fetch !== "") {
+          req = this.$.loadOne;
+          req.url = api + item + fetch;
+
+          req.generateRequest();
+        }
+      }
+    });
+  </script>
+</dom-module>
