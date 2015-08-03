@@ -21,9 +21,11 @@
     <div class="car-container">
       <car-service user="[[iduser]]" data="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
       <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
-        <car-box car="[[car]]" on-click="editCar(car)"></car-box>
+        <car-box car="[[car]]" on-click="carSelect"></car-box>
       </template>
-      <car-box newcar="true" on-click="showPopup"></car-box>
+      <template is="dom-if" if="[[addAllow]]">
+        <car-box newcar="true" on-click="showPopup"></car-box>
+      </template>
     </div>
 
     <!-- <iron-overlay-backdrop> -->
@@ -46,7 +48,7 @@
         iduser: Number,
         open: Boolean,
         loading: Boolean,
-        edit: Boolean
+        addAllow: Boolean
       },
       reloadCars: function() {
         this.loading = true;
@@ -62,9 +64,8 @@
       loaded: function() {
         this.loading = false;
       },
-      editCar: function(car) {
-        console.log("ESTO AL MENOS FUNCIONA: ");
-        console.log(car);
+      carSelect: function(e) {
+        this.fire('select', e.model.car);
       },
       carCreated: function(e, car) {
         this.push('cars', car);
