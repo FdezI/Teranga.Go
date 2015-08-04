@@ -31,6 +31,7 @@
 <link rel="import" href="home.html">
 <link rel="import" href="trips.html">
 <link rel="import" href="profile.html">
+<link rel="import" href="tracking.html">
 
 <link rel="import" href="../elements/pop-up.html">
 
@@ -141,6 +142,11 @@
 				      	<trips-view session="{{session}}" route="{{route}}"></trips-view>
 				      <!-- </template> -->
 				    </section>
+				    <section hash="tracking">
+				    	<!-- <template> -->
+				      	<tracking-view session="{{session}}" route="{{route}}"></tracking-view>
+				      <!-- </template> -->
+				    </section>
 				  </iron-pages>
 				</div>
 			      
@@ -173,7 +179,7 @@
 				    {name: 'Viajes', hash: 'trips', url: '/trips'},
 				    {name: 'Perfil', hash: 'profile', url: '/profile'},
 				    {name: 'Register', hash: 'register', url: '/register'},
-				    {name: 'Tracking', hash: 'three', url: '/views/profile.html'}
+				    {name: 'Tracking', hash: 'tracking', url: '/tracking'}
 				  ]
 				},
 				session: {
