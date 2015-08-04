@@ -9,11 +9,14 @@
   
   <template>
   	<iron-ajax id="loadOne"
+  		last-response="{{data}}"
+  		params="[[filters]]"
       on-response="locationLoaded">
     </iron-ajax>
 
     <iron-ajax id="loadAll"
       last-response="{{data}}"
+      params="[[filters]]"
       on-response="locationsLoaded">
     </iron-ajax>
     
@@ -35,7 +38,8 @@
           notify: true
         },
         fetch: String,
-        update: Object
+        update: Object,
+        filters: Object
       },
       
       ready: function() {

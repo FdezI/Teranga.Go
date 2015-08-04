@@ -41,6 +41,6 @@
     "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#~1.0.6",
     "paper-dialog": "PolymerElements/paper-dialog#~1.0.1",
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#~1.0.1",
-    "paper-slider": "PolymerElements/paper-slider#~1.0.3"
+    "paper-slider": "PolymerElements/paper-slider#~1.0.3",
   }
 }

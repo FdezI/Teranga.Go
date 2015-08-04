@@ -8,7 +8,7 @@ exports.getAll = function(req, res) {
 	else select = "*";
 
 	if(req.query.route) {
-		var sql = 'SELECT ' + select + ', type, RP.order\
+		var sql = 'SELECT ' + select + ', RP.order\
 								FROM location, routePoints RP\
 								WHERE route=' + pool.escape(req.query.route) + ' AND location=idlocation\
 								ORDER BY RP.order ASC';

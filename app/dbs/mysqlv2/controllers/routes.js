@@ -21,7 +21,16 @@ exports.get = function(req, res) {
 	pool.query('SELECT * FROM route WHERE idroute=?', req.params.idroute, function(err, rows, fields) {
 		if(err) throw err;
 		
-		res.json(rows[0]);
+		var route = rows[0];
+		if(route) pool.query('SELECT city, country, RP.order\
+													FROM route, location, routePoints RP\
+													WHERE route=? AND idroute=route AND location=idlocation\
+													ORDER BY RP.order ASC', req.params.idroute, function(err, rows, fields) {
+			if(err) throw err;
+
+			route.locs = rows;
+			res.json(route);
+		}); else res.json({});
 	});
 };
 

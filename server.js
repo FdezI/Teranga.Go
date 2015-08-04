@@ -131,7 +131,8 @@ apiRouter.route('/routes')
 	.post(db.routeController.create)
 	.get(db.routeController.getAll);
 apiRouter.route('/routes/:idroute')
-	.get(db.tripUnlinkedController.get)
+	.get(db.routeController.get)
+	// .get(db.tripUnlinkedController.get)
 // 	.post(db.routeController.update)
 	.delete(db.routeController.delete)
 	.put(db.routeController.addWaypoint);	
