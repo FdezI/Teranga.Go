@@ -1,0 +1,39 @@
+<dom-module name="location-line">
+  <style>
+
+  </style>
+  <template>
+  <div>
+    <div>
+      <span>Localizacion</span>
+      <img src="../images/stop.png">
+    </div>
+
+    <div>
+      <input type="text">
+      <div>
+        <span>Retardo</span>
+        <input type="time">
+      </div>
+      <div>
+        <span>Salida</span>
+        <div>
+          <span>10</span>
+          <span>Jun</span>
+        </div>
+        <span>10:30</span>
+      </div>
+    </div>
+  </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "location-line",
+      properties: {
+        user: Object,
+        filters: Object
+      }
+    });
+  </script>
+</dom-module>

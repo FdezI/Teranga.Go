@@ -8,24 +8,62 @@
 
 <dom-module name="trip-table">
   <style>
-  .trip-table-img {
-    width: 30px;
-    height: 30px;
+  .selector {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #ddd;
+    text-align: center;
+    margin: 5px;
   }
-  .trip-table-filters {
-    display: flex;
-    width: 100%;
+  .selector input{
+    margin: 0;
+    padding: 0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
   }
-  .trip-table-right {
-    margin-left: auto;
-    /*margin-right: 30px;*/
+
+  .selector input:active +.radio-img{opacity: .9;}
+  .selector input:checked +.radio-img{
+    border: 3px solid #999;
+    box-shadow: 2px 2px 10px #999;
+  }
+  .radio-img {
+    padding: 3px;
+    border: 1px solid #333;
+    cursor:pointer;
+    display:inline-block;
+  }
+  .radio-img:hover{
+    -webkit-filter: brightness(1.2);
+       -moz-filter: brightness(1.2);
+            filter: brightness(1.2);
+    box-shadow: 2px 2px 10px #999;
+  }
+  .img-size {
+    width: 40px;
+  }
+  .options-selector {
+    border: 1px solid #ccc;
+    background: #ddd;
+    text-align: center;
+    padding: 5px;
+  }
+  .search-td {
+    text-align: right;
+    vertical-align: bottom;
+  }
+  .search-button {
+    width: 96%;
+    margin: 2%;
   }
   .trip-table-header {
-    border: 1px solid #ccc;
-    padding: 10px;
     background: #ccc;
-    border-radius: 6px 6px 0px 0px;
-    margin-top: 20px;
+    border-radius: 30px 30px 0 0;
+    padding: 15px;
+  }
+  .trip-table-content {
+    border: 1px solid #ccc;
   }
   </style>
   
@@ -35,7 +73,7 @@
     
     <table>
       <tr>
-        <td colspan="4">Encuentra el viaje que necesitas</td>
+        <td colspan="2">Encuentra el viaje que necesitas</td>
       </tr>
       <tr>
         <datalist id="locs">
@@ -43,27 +81,50 @@
             <option id="[[index]]" value="[[item.city]]">
           </template>
         </datalist>
-        <td>De: </td>
         <td>
           <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="locs" value="{{fakefilters.origin}}" validator="in-array-validator" required></paper-input>
         </td>
-        <td>A: </td>
         <td>
           <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="locs" value="{{fakefilters.destination}}" validator="in-array-validator" required></paper-input>
         </td>
-        
       </tr>
       <tr>
-        <td><paper-button raised on-click="search">Buscar</paper-button></td>
-      <tr>
-      <tr>
-        <td colspan="4">Cuando lo necesitas</td>
+        <td colspan="2">Cuando lo necesitas</td>
       </tr>
       <tr>
-        <td>Entre:  </td>
-        <td><input type="date" placeholder="De" value="{{filters.from::input}}" min="[[today()]]"></td>
-        <td>Y:  </td>
-        <td><input type="date" placeholder="A" value="{{filters.to::input}}" min="[[today()]]"></td>
+        <td>Desde: <input type="date" placeholder="Desde" value="{{filters.from::input}}" min="[[today()]]"></td>
+        <td>Hasta: <input type="date" placeholder="Hasta" value="{{filters.to::input}}" min="[[today()]]"></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="selector">
+            <input id="pet-allow" type="radio" name="pets" value="allow" />
+            <label class="radio-img" for="pet-allow"><img class="img-size" src="../images/pet-allow.png"></label>
+
+            <input id="pet-unknown" type="radio" name="pets" value="unknown" checked />
+            <label class="radio-img mastercard"for="pet-unknown"><img class="img-size" src="../images/pet-unknown.png"></label>
+
+            <input id="pet-deny" type="radio" name="pets" value="deny" />
+            <label class="radio-img mastercard"for="pet-deny"><img class="img-size" src="../images/pet-deny.png"></label>
+          </div>
+        </td>
+        <td>
+            <div class="selector">
+              <input id="package-allow" type="radio" name="packages" value="allow" />
+              <label class="radio-img" for="package-allow"><img class="img-size" src="../images/package-allow.png"></label>
+
+              <input id="package-unknown" type="radio" name="packages" value="unknown" checked />
+              <label class="radio-img mastercard"for="package-unknown"><img class="img-size" src="../images/package-unknown.png"></label>
+
+              <input id="package-deny" type="radio" name="packages" value="deny" />
+              <label class="radio-img mastercard"for="package-deny"><img class="img-size" src="../images/package-deny.png"></label>
+            </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="search-td" colspan="2">
+          <paper-button class="search-button" raised on-click="search">Buscar</paper-button>
+        </td>
       </tr>
     </table>
 
@@ -81,19 +142,14 @@
           </select>
         </div>
       </div>
-
-      <div class="trip-table-right">
-        <button><img class="trip-table-img" src="../images/pet-allow.png"></button>
-
-        <button><img class="trip-table-img" src="../images/package-allow.png"></button>
-      </div>
     </div>
-
-    <trip-list>
-      <template is="dom-repeat" items="{{trips}}" as="trip">
-        <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]" departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
-      </template>
-    </trip-list>
+    <div class="trip-table-content">
+      <trip-list>
+        <template is="dom-repeat" items="{{trips}}" as="trip">
+          <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]" departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
+        </template>
+      </trip-list>
+    </div>
   </template>
 
   <script>
