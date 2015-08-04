@@ -159,6 +159,8 @@
 
     ready: function() {
       this.$.ls.reload();
+      this.set('filters.from', this.today());
+      this.set('filters.to', this.today());
     },
     day: function(trip) {
       return Teranga.day(trip.date);
@@ -181,6 +183,9 @@
         while(++i < length && !f[key])
           if(wps[i].city == ff[key]) f[key] = wps[i].idlocation;
       });
+
+      if(!this.filters.from) this.set('filters.from', this.today());
+      if(!this.filters.to) this.set('filters.to', this.today());
 
       this.fire('search');
     },

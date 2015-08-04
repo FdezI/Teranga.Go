@@ -25,8 +25,8 @@ exports.getAll = function(req, res) {
 	pool.query('SELECT idtrip, driver, car, seats, packages = 1 as packages, animals = 1 as animals,\
 											TP.order as oA, TP2.order as oB\
 							FROM trip AS T\
-								JOIN tripPoints AS TP ON location = 1 AND TP.stop = true AND TP.order != 99\
-								JOIN tripPoints AS TP2 ON TP2.trip = TP.trip AND (TP2.location = 5 OR TP2.location = 3) AND TP2.stop = true AND TP2.order != 0\
+								JOIN tripPoints AS TP ON TP.stop = true AND TP.order != 99\
+								JOIN tripPoints AS TP2 ON TP2.trip = TP.trip AND TP2.stop = true AND TP2.order != 0\
 							WHERE idtrip = TP.trip ORDER BY idtrip ASC', function(err, rows, fields) {
 		if(err) throw err;
 
@@ -122,6 +122,11 @@ exports.get = function(req, res) {
 exports.search = function(req, res) {
 	var l1 = req.query.origin; delete req.query.origin;
 	var l2 = req.query.destination; delete req.query.destination;
+
+	if(!l1 && !l2) {
+		//TODO and return
+	}
+
 	var where = "";
 	if(req.query && Object.keys(req.query).length > 0) {
 		var offset = Number(req.query.offset);
@@ -130,17 +135,20 @@ exports.search = function(req, res) {
 		Object.keys(req.query).forEach(function(key) {
 			var value = pool.escape(req.query[key]);
 
-			if(value != "'undefined'" && value.length > 2) {
+			if(value != 'undefined' && value.length > 2) {
 				console.log("VALUE: " + value);
 				where += " AND ";
-				if(key == 'from') where += "TP.date >= ";
-				else if(key == 'to') where += "TP.date <= ";
-	      else where +=  pool.escapeId(key) + " = ";
-	      
-	      where += value;
+
+				if(value != "'null'") {
+					if(key == 'from') where += "TP.date >= ";
+					else if(key == 'to') where += "TP.date <= ";
+	    		else where +=  pool.escapeId(key) + " = ";
+
+	    		where += value;
+				} else where += pool.escapeId(key) + " IS null";
 	    }
     });
-    // console.log("WHERE: " + where);
+    console.log("WHERE: " + where);
     // where = where.substring(0, where.length - 3);
 		// var values = keys.map(function(k) { return req.query[k]; });
 	}

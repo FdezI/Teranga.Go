@@ -5,7 +5,7 @@
 
 <dom-module name="trip-container">
   <template>
-    <box-container name="Viajes" on-reload="reloadTrips" open="{{open}}" reloading="{{loading}}">
+    <box-container name="Viajes" on-reload="reloadTrips" open="{{open}}" reloading="{{loading}}" reloadable>
       <template is="dom-if" if="[[open]]">
         <trip-service user="[[iduser]]" data="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
       </template>

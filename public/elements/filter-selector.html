@@ -48,7 +48,7 @@
 		<div class="selector">
 			<iron-selector attr-for-selected="value" selected="{{selected}}" on-iron-select="select">
 		    	<img value="1" class="radio-img img-size" src="[[img(type, 'allow')]]">
-		    	<img value="null" class="radio-img img-size" src="[[img(type, 'unknown')]]">
+		    	<img value="" class="radio-img img-size" src="[[img(type, 'unknown')]]">
 		    	<img value="0" class="radio-img img-size" src="[[img(type, 'deny')]]">
 	  	</iron-selector>
 	  </div>
@@ -61,9 +61,11 @@
 				type: String,
 				selected: {
 					type: String,
-					value: "null",
 					notify: true
 				}
+			},
+			ready: function() {
+				this.set('selected', "");
 			},
 			img: function(type, mode) {
 				return Teranga.image.URL + type + "-" + mode + ".png";
