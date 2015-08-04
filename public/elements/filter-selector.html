@@ -1,0 +1,76 @@
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<dom-module name="filter-selector">
+	<style>
+		.selector {
+	    padding: 10px;
+	    border: 1px solid #ccc;
+	    background: #ddd;
+	    text-align: center;
+	    margin: 5px;
+	  }
+	  .selector input{
+	    margin: 0;
+	    padding: 0;
+	    -webkit-appearance:none;
+	       -moz-appearance:none;
+	            appearance:none;
+	  }
+
+	  .selector input:active +.radio-img{opacity: .9;}
+	  .selector input:checked +.radio-img{
+	    border: 3px solid #999;
+	    box-shadow: 2px 2px 10px #999;
+	  }
+	  .radio-img {
+	    padding: 3px;
+	    border: 1px solid #333;
+	    cursor:pointer;
+	    display:inline-block;
+	  }
+	  .radio-img:hover{
+	    -webkit-filter: brightness(1.2);
+	       -moz-filter: brightness(1.2);
+	            filter: brightness(1.2);
+	    box-shadow: 2px 2px 10px #999;
+	  }
+	  .img-size {
+	    width: 40px;
+	  }
+	  .iron-selected {
+      border: 3px solid #999;
+	    box-shadow: 2px 2px 10px #999;
+    }
+
+	</style>
+
+	<template>
+		<div class="selector">
+			<iron-selector attr-for-selected="value" selected="{{selected}}" on-iron-select="select">
+		    	<img value="1" class="radio-img img-size" src="[[img(type, 'allow')]]">
+		    	<img value="null" class="radio-img img-size" src="[[img(type, 'unknown')]]">
+		    	<img value="0" class="radio-img img-size" src="[[img(type, 'deny')]]">
+	  	</iron-selector>
+	  </div>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'filter-selector',
+			properties: {
+				type: String,
+				selected: {
+					type: String,
+					value: "null",
+					notify: true
+				}
+			},
+			img: function(type, mode) {
+				return Teranga.image.URL + type + "-" + mode + ".png";
+			},
+			select: function() {
+				this.fire('selected', this.selected);
+			}
+		});
+	</script>
+</dom-module>
