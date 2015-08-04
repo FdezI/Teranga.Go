@@ -1,7 +1,10 @@
 <link rel="import" href="trip.html">
 <link rel="import" href="../elements/trip-table.html">
 <link rel="import" href="../elements/trip-service.html">
+<link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
 <dom-module name="create-trip">
   <style>
@@ -52,10 +55,16 @@
         <input class="create-trip-input-extra" type="text" placeholder="Direccion">
       </div>
       <div>
-        <paper-input class="create-trip-input" label="Coche" always-float-label></paper-input>
-        <paper-input class="create-trip-input" label="Asientos" always-float-label></paper-input>
+        <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input>
+        <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
       </div>
     </div>
+
+
+    <paper-dialog id="car_select" with-backdrop>
+      <car-container iduser="[[user.iduser]]" cars="[[user.cars]]" on-select="selectCar"></car-container>
+    </paper-dialog>
+
   </template>
 
   <script>
@@ -63,10 +72,18 @@
       is: "create-trip",
       properties: {
         user: Object,
-        filters: Object
+        filters: Object,
+        idcar: Number
       },
       ready: function() {
         console.log("create-trip ready!");
+      },
+      hideCarSelect: function() {
+        this.$.car_select.close();
+      },
+      selectCar: function(e, car) {
+        this.idcar = car.idcar;
+        this.hideCarSelect();
       }
     });
   </script>
