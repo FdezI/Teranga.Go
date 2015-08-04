@@ -34,6 +34,7 @@
 
 <link rel="import" href="./other-profile.html">
 <link rel="import" href="./create-trip.html">
+<link rel="import" href="./tracking.html">
 
 <dom-module name="profile-view">
 
@@ -43,7 +44,8 @@
 
       <template id="profileTemplate" is="dom-if" if="[[session.user]]">
         <!-- <other-profile showdriver="true"></other-profile> -->
-        <create-trip user="{{session.user}}"></create-trip>
+        <!-- <create-trip user="{{session.user}}"></create-trip> -->
+        <!-- <tracking-package></tracking-package> -->
         <!-- <user-box name="Carmen" score="3" url="/"></user-box> -->
         <!-- <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
         <trip-card  username="Carmen" score="3" start="Granada" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card> -->

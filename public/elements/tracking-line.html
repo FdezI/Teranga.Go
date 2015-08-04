@@ -1,0 +1,79 @@
+<dom-module name="tracking-line">
+  <style>
+    .breadcrumb { 
+      list-style: none; 
+      overflow: hidden; 
+      font: 18px Helvetica, Arial, Sans-Serif;
+      padding: 0px;
+    }
+    .breadcrumb li { 
+      /*float: left; */
+      display: table;
+    }
+    .breadcrumb li span {
+      color: white;
+      text-decoration: none;
+      padding: 50px 0 20px 0px;
+      background: hsla(34,85%,35%,1);
+      position: relative;
+      display: block;
+      width: 140px;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .breadcrumb li span:after { 
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 70px solid transparent;
+      border-right: 70px solid transparent;
+      border-top: 35px solid hsla(34,85%,35%,1);
+      position: absolute;
+      bottom: -35px;
+      left: 0%;
+      z-index: 2;
+    }
+    .breadcrumb li span:before { 
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 70px solid transparent;
+      border-right: 70px solid transparent;
+      border-top: 35px solid white;
+      position: absolute;
+      margin-bottom: 1px;
+      left: 0%;
+      z-index: 1; 
+      bottom: -46px;
+    }
+    .breadcrumb li:first-child span {
+      padding-bottom: 10px;
+    }
+    .here {
+      background: #0f0!important;
+    }
+    .here:after {
+      border-top: 35px solid #0f0!important;
+    }
+  </style>
+  <template>
+    <ul class="breadcrumb">
+      <li><span>Granada</span></li>
+      <li><span>Gibraltar</span></li>
+      <li><span class="here">Motril</span></li>
+      <li><span>Portos</span></li>
+      <li><span>Dogo</span></li>
+    </ul>
+  </template>
+
+  <script>
+    Polymer({
+      is: "tracking-line",
+      properties: {
+        user: Object
+      }
+    });
+  </script>
+</dom-module>
