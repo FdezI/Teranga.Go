@@ -1,0 +1,274 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<!-- <link rel="import" href="../bower_components/iron-icon-button/iron-icon-button.html"> -->
+
+<!-- <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html"> -->
+<!-- <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-behavior.html"> -->
+<!-- <link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-backdrop.html"> -->
+
+<link rel="import" href="../elements/user-info.html">
+<link rel="import" href="../elements/car-info.html">
+<link rel="import" href="../elements/trip-info.html">
+
+<link rel="import" href="../elements/trip-container.html">
+<link rel="import" href="../elements/assessment-container.html">
+<link rel="import" href="../elements/package-container.html">
+<link rel="import" href="../elements/car-container.html">
+<link rel="import" href="../elements/user-container.html">
+<link rel="import" href="../elements/request-container.html">
+
+<link rel="import" href="../elements/stars-rating.html">
+<link rel="import" href="../elements/car-edit.html">
+<link rel="import" href="../elements/trip-card.html">
+
+<link rel="import" href="../elements/travel-box.html">
+<link rel="import" href="../elements/comment-box.html">
+<link rel="import" href="../elements/car-box.html">
+<link rel="import" href="../elements/package-box.html">
+<link rel="import" href="../elements/user-box.html">
+<link rel="import" href="../elements/comment-box.html">
+<link rel="import" href="../elements/your-request-box.html">
+<link rel="import" href="../elements/request-box.html">
+
+<link rel="import" href="../elements/trip-service.html">
+<link rel="import" href="../elements/assessment-service.html">
+
+<link rel="import" href="./other-profile.html">
+<link rel="import" href="./create-trip.html">
+
+<dom-module name="profile-view">
+
+  <template>
+
+      <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service>
+
+      <template id="profileTemplate" is="dom-if" if="[[session.user]]">
+        <!-- <other-profile showdriver="true"></other-profile> -->
+        <create-trip></create-trip>
+        <!-- <user-box name="Carmen" score="3" url="/"></user-box> -->
+        <!-- <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
+        <trip-card  username="Carmen" score="3" start="Granada" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card> -->
+        <!-- <travel-box departure="Granada" arrival="Dogo" driver="Carmen" day="20" month="Jun" hour="10:30"></travel-box>
+        <package-box name="Paquete" idpackage="23542795647" status="Inactivo" size="Mediano" url="/"></package-box>
+        <user-box name="Carmen" score="3" url="/"></user-box>
+        <your-request-box departure="Granada" arrival="Dogo" status="Pendiente" day="20" month="Jun" hour="10:30"></your-request-box>
+        <comment-box image="" car="3" driver="6" profileurl="/" comment="bla bla bla bla bla bla bla bla bla bla bla"></comment-box>
+        <request-box departure="Granada" arrival="Dogo" seats="1" packages="3" url="/"></request-box>
+ -->
+
+
+        <div class="margin-block layout horizontal">
+          <div class="layout vertical profile-a">
+            <div class="profile-photo-super">
+              <img class="profile-photo" src="../images/full-star.png"/>
+              <template is="dom-if" if="[[edit]]">
+                <div class="profile-photo-div"><img src="../images/edit.png"></div>
+              </template>
+            </div>
+            <template is="dom-if" if="[[showdriver]]">
+              <div class="profile-stars" onclick=""><stars-rating score="[[session.user.karma]]"></stars-rating></div>
+            </template>
+          </div>
+
+          <div class="layout vertical profile-b">
+            <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
+            <div class="profile-age"><span>XX</span> años</div>
+            <template is="dom-if" if="[[edit]]">
+              <form>
+                <table style="width:100%">
+                  <tr>
+                    <td>E-mail:</td>
+                    <td><input type="text" name="email" value="{{update.email::input}}"></td>
+                  <tr> 
+                    <td>Teléfono:</td> 
+                    <td><input type="text" name="phone" value="{{update.phone::input}}"></td>
+                  </tr>
+                  <tr> 
+                    <td>Contraseña:</td>
+                    <td><input type="password" name="pass"></td>
+                  </tr>
+                  <tr> 
+                    <td>Repetir contraseña:</td>
+                    <td><input type="password" name="pass2" value="{{update.password::input}}"></td>
+                  </tr>
+                  <tr> 
+                    <td>Carnet de conducir:</td>
+                    <td><input type="checkbox" name="carnet" value="{{update.carnet::input}}"></td> 
+                  </tr>
+                </table>
+              </form>
+            </template>
+          </div>
+          <div class="profile-c layout self-end profile-buttons">
+
+            <template is="dom-if" if="[[!edit]]">
+              <button class="primary-button">Crear viaje</button>
+              <div class="space"></div>
+              <button class="secondary-button" on-click="editProfile">Editar perfil</button>
+            </template>
+
+            <template is="dom-if" if="[[edit]]">
+              <button class="primary-button" on-click="saveProfile">Guardar cambios</button>
+              <div class="space"></div>
+              <button class="secondary-button" on-click="cancelEdit">Cancelar</button>
+            </template>
+
+          </div>
+        </div>
+
+        <div class="vertical-separator"></div>
+
+        <template id="moreInfo" is="dom-if" if="[[!edit]]">
+          <div>
+            <div class="profile-container-half">
+              <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
+            </div>
+            <div class="profile-container-half" style="float: right;">
+              <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
+            </div>
+          </div>
+
+          <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}"></package-container>
+          <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
+          
+          <template is="dom-if" if="[[showdriver]]">
+            <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container>
+          </template>
+        </template>
+
+        <template is="dom-if" if="[[edit]]">
+          <car-container iduser="[[session.user.iduser]]" cars="{{session.user.cars}}" add-allow></car-container>
+        </template>
+      </template>
+
+      <template is="dom-if" if="[[!session.user]]">
+	      <p>Please, log-in</p>
+      </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: "profile-view",
+      properties: {
+      	session: {
+      	  type: Object,
+      	  notify: true
+          // observer: 'sessionChanged'
+      	},
+      	selected: {
+      	  type: String,
+      	  value: "main"
+      	},
+        edit: {
+          type: Boolean,
+          value: false,
+          observer: 'updateShow'
+        },
+        trips: {
+          type: Object,
+          value: []
+        },
+        showdriver: {
+          type: Boolean,
+          value: false
+        },
+        update: {
+          type: Object,
+          value: {}
+        },
+        route: {
+          type: String,
+          notify: true
+        }
+      },
+
+      observers: ['tripsUpdated(session.user.trips)', 'updateShow(session.user)'],
+
+      editProfile: function() {
+
+        var update = {};
+        var user = this.session.user;
+        var modifiables = ["email", "phone", "carnet"];
+        for(var i in modifiables) {
+          var value = modifiables[i];
+          update[value] = user[value];
+        }
+      //  Object.keys(modifiables).forEach(function(key) {
+      //    dataBackup[key] = user[key];
+      //  });
+        this.update = update;
+
+        this.edit = true;
+      },
+      cancelEdit: function() {
+        this.edit = false;
+      },
+      saveProfile: function() {
+        console.log("saveChanges");
+        var user = this.session.user;
+        var update = this.update;
+        //TODO only do this if the change has been really made
+        Object.keys(update).forEach(function(key) {
+          user[key] = update[key];
+        });
+        
+
+        this.$$("user-service").saveData();
+        this.edit = false;
+      },
+      updateShow: function() {
+        if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;
+        else this.showdriver = false;
+      }
+    });
+  </script>
+</dom-module>
+
+
+<!--<script>
+  var template = document.querySelector('template[id="profileTemplate"]');
+  
+  template.addEventListener('polymer-ready', function() {
+    console.log("LAKIJSDASD");
+    this.injectBoundHTML('<user-info selectedUser="{{session.id}}" selected="{{selected}}"></user-info>', document.querySelector("article"));
+  });
+  
+  template.addEventListener('Polymer-ready', function() {
+    console.log("AQUI NO LLEGA");
+    var pages = this.$.profilePages;//querySelector("#tripPages");
+    
+    pages.querySelector("car-info").addEventListener("back-to-user", function(event, detail, sender) {
+      pages.setAttribute("selected", "info");
+    });
+    
+    pages.querySelector("user-info").addEventListener("create-car", function(event, detail, sender) {
+      pages.setAttribute("selected", "cars");
+    });
+  });
+</script>-->
+
+
+
+<!--<script>
+  var template = document.querySelector('template[id="profileTemplate"]');
+//   template.model.selected = "cars";
+  template.addEventListener('template-bound', function() {
+//     var pages = this.$.profilePages;
+//     
+//     pages.querySelector("user-info").addEventListener("selected-selected", function(event, detail, sender) {
+//       pages.setAttribute("selected", "{{selected}}");
+//     });
+  });
+
+
+
+//   console.log("{{loged}}");
+//   var template = document.querySelector('template[id="profileTemplate"]');
+  
+//   template.addEventListener('template-bound', function() {
+//     this.appendChild("{{loged}}");
+//   });
+  
+//   template.model.loged = "{{loged}}";
+  
+</script>-->
+
