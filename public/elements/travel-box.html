@@ -100,13 +100,13 @@
       travelurl: String
     },
     day: function(trip) {
-        return window.Polymer.day(trip.dtime);
+        return Teranga.day(trip.dtime);
     },
     month: function(trip) {
-     return window.Polymer.month(trip.dtime);
+     return Teranga.month(trip.dtime);
     },
     time: function(trip) {
-      return window.Polymer.time(trip.dtime);
+      return Teranga.time(trip.dtime);
     },
     done: function(trip) {
       return new Date() > new Date(Date.parse(trip.dtime));

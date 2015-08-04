@@ -28,7 +28,7 @@ exports.get = function(req, res) {
 													ORDER BY RP.order ASC', req.params.idroute, function(err, rows, fields) {
 			if(err) throw err;
 
-			route.locs = rows;
+			route.wps = rows;
 			res.json(route);
 		}); else res.json({});
 	});

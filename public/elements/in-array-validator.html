@@ -1,29 +1,31 @@
 <link rel="import" href="../bower_components/iron-validator-behavior/iron-validator-behavior.html">
 
 <script>
-  Polymer({
-    is: 'in-array-validator',
+  // Polymer({
+    // is: 'in-array-validator',
+  Teranga.InArrayValidatorImpl = {
     properties: {
     	items: Array,
     	attrib: String,
-    	asdf: String,
     	difff: String,
     	diffs: String
     },
-    behaviors: [
-      Polymer.IronValidatorBehavior
-    ],
 
     validate: function(value) {
     	var items = this.items;
         if(!items || (this.difff && this.difff == this.diffs)) return false;
 
-    	var attrib = this.attrib;
-    	if(this.attrib) {
-    		var length = items.length;
-    		for(var i = 0; i < length; i++)
-    			if(items[i][attrib] == value) return true;
-    	} else return items.indexOf(value) >= 0;
+      return Teranga.indexOf(value, items, this.attrib) >= 0;
+    	// var attrib = this.attrib;
+    	// if(attrib) {
+    	// 	var length = items.length;
+    	// 	for(var i = 0; i < length; i++)
+    	// 		if(items[i][attrib] == value) return true;
+    	// } else return items.indexOf(value) >= 0;
     }
-  });
+  };
+
+
+  Teranga.InArrayValidator = [ Polymer.IronValidatorBehavior, Teranga.InArrayValidatorImpl];
+  // });
 </script>

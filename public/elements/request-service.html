@@ -45,7 +45,7 @@
       
       request: function() {
 	this.data = [];
-	this.$.request.url = window.Polymer.restAPI + "request/" + this.mode;
+	this.$.request.url = Teranga.restAPI + "request/" + this.mode;
 	
 	this.data.idtrip = this.trip;
 	this.data.message = this.message;

@@ -61,9 +61,9 @@
       userChanged: function() {
         if(this.fetch == "all") { 
         	if(this.user) {
-        	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/assessments";
+        	  this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/assessments";
         	  console.log("Assessments loading for user!: ");
-        	} else this.$.loadAll.url = window.Polymer.restAPI + "assessments";
+        	} else this.$.loadAll.url = Teranga.restAPI + "assessments";
 
         	console.log("Assessments loading with: " + this.$.loadAll.url);
         	
@@ -76,15 +76,15 @@
       //     console.log("Fetching all assessments");
 
       //   	if(this.user)
-      //   	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/assessments";
-      //     else this.$.loadAll.url = window.Polymer.restAPI + "assessments";
+      //   	  this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/assessments";
+      //     else this.$.loadAll.url = Teranga.restAPI + "assessments";
 
       //     console.log("assessments to fetch: " + this.$.loadAll.url);
       //     this.$.loadAll.generateRequest();
       //   }
       //   else if(this.fetch != "") {
       //   	console.log("ESTO ES: " + this.fetch);
-      //   	this.$.loadOne.url = window.Polymer.restAPI + "assessments/" + this.fetch;
+      //   	this.$.loadOne.url = Teranga.restAPI + "assessments/" + this.fetch;
       //     this.$.loadOne.generateRequest();
       //   }
       // },
@@ -113,7 +113,7 @@
       
       saveData: function() {
         console.log('SAVING ASSESSMENT');
-        this.$.create.url = window.Polymer.restAPI + "assessments";
+        this.$.create.url = Teranga.restAPI + "assessments";
         this.$.create.generateRequest();
       },
       

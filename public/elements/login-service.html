@@ -59,13 +59,13 @@
     
     auth: function() {
       console.log("auth");
-      this.$.request.url = window.Polymer.restAPI + "auth";
+      this.$.request.url = Teranga.restAPI + "auth";
       this.$.request.generateRequest();
     },
     
     register: function() {
       console.log("register");
-      this.$.request.url = window.Polymer.restAPI + "users";
+      this.$.request.url = Teranga.restAPI + "users";
       this.$.request.generateRequest();
     },
 //     created: function() {

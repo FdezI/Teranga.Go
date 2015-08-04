@@ -8,7 +8,9 @@
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
-<link rel="import" href="../elements/in-array-validator.html">
+<link rel="import" href="../elements/trip-edit-route-validator.html">
+<link rel="import" href="../elements/trip-edit-origin-validator.html">
+<link rel="import" href="../elements/trip-edit-destination-validator.html">
 
 <dom-module name="create-trip">
   <style>
@@ -47,27 +49,42 @@
 
     <datalist id="routes">
       <template is="dom-repeat" items="[[routes]]">
-        <option id="[[index]]" value="[[item.name]]">
+        <option value="[[item.name]]">
       </template>
     </datalist>
 
+    <datalist id="origins">
+      <template is="dom-repeat" items="[[origins]]">
+        <option value="[[item.city]]">
+      </template>
+    </datalist>
+    <datalist id="destinations">
+      <template is="dom-repeat" items="[[destinations]]">
+        <option value="[[item.city]]">
+      </template>
+    </datalist>
     <div class="create-trip-map">
       
     </div>
 
     <div class="create-trip-area">
       <div>
-        <in-array-validator items="[[routes]]" attrib="name" ></in-array-validator>
-        <paper-input label="Ruta" list="routes" value="{{fakefilters.route}}" validator="in-array-validator" auto-validate></paper-input>
+        <route-service id="rs2" fetch="[[selectedRoute.idroute]]" data="{{selectedRoute}}" on-loaded="routeLoaded"></route-service>
+        
+        <trip-edit-route-validator items="[[routes]]" attrib="name" ></trip-edit-route-validator>
+        <paper-input id="routeInput" label="Ruta" list="routes" value="{{fakefilters.route}}" validator="trip-edit-route-validator" required auto-validate on-input="routeSelected"></paper-input>
       </div>
 
       <div>
-        <paper-input class="create-trip-input" label="De:" placeholder="Salida" value="{{fakefilters.departure}}"></paper-input>
-        <input class="create-trip-input-extra" type="text" placeholder="Direccion" value="{{fakefilters.arrival}}">
+
+        <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
+        <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.departure}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
+        <input class="create-trip-input-extra" placeholder="Direccion" value="">
       </div>
       <div>
-        <paper-input class="create-trip-input"  label="A:" placeholder="Llegada"></paper-input>
-        <input class="create-trip-input-extra" type="text" placeholder="Direccion">
+        <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
+        <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.arrival}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
+        <input class="create-trip-input-extra" placeholder="Direccion" value="">
       </div>
       <div>
         <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input>
@@ -90,11 +107,16 @@
         filters: Object,
         idcar: Number,
         routes: Array,
+        selectedRoute: Object,
+        origins: Array,
+        destinations: Array,
+        others: Array,
         fakefilters: {
           type: Object,
           value: {},
           readOnly: true
-        }
+        },
+        items: Object
       },
       ready: function() {
         console.log("create-trip ready!");
@@ -109,6 +131,50 @@
       selectCar: function(e, car) {
         this.idcar = car.idcar;
         this.hideCarSelect();
+      },
+      routeSelected: function(e) {
+        var routes = this.routes;
+        if(!e.target.invalid) {
+          var route = this.selectedRoute = routes[Teranga.indexOf(e.target.value, routes, "name")];
+
+          if(!route.wps) this.$.rs2.reload();
+        }
+        else {
+          this.origins = [];
+          this.destinations = [];
+          this.others = [];
+        }
+
+        this.set('fakefilters.departure', "");// = "";
+        this.set('fakefilters.arrival', "");
+        // this.$.origInput.validate();
+        // this.$.destInput.validate();
+      },
+      routeLoaded: function(e, route) {
+        // this.origins = [];
+        // this.destinations = [];
+        // this.others = [];
+        var wps = route.wps,
+            origins = [],
+            destinations = []
+            others = [];
+
+        if(wps && wps.length > 1) {
+          var first = wps[0].order,
+              last = wps[wps.length - 1].order,
+              self = this;
+
+          route.wps.forEach(function(value) {
+            var order = value.order;
+            if(order == first) origins.push(value);//self.push('origins', value);
+            else if(order == last) destinations.push(value);
+            else others.push(value);
+          });
+        }
+
+        this.origins = origins;
+        this.destinations = destinations;
+        this.others = others;
       }
     });
   </script>

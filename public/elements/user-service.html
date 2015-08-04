@@ -45,7 +45,7 @@
       console.log("user-service ready");
       console.log("FETCH: " + this.fetch );
       if(this.fetch == "all") {
-        this.$.loadAll.url = window.Polymer.restAPI + "users";
+        this.$.loadAll.url = Teranga.restAPI + "users";
         this.$.loadAll.generateRequest();
       }
     },
@@ -56,7 +56,7 @@
       if(this.fetch && this.fetch != "all" && this.fetch != "") {
       // 	console.log("2");
       	if(this.mode != "full") {
-      	  this.$.loadOne.url = window.Polymer.restAPI + "users/" + this.fetch;
+      	  this.$.loadOne.url = Teranga.restAPI + "users/" + this.fetch;
       	  this.$.loadOne.generateRequest();
       // 	  console.log("3");
       	}
@@ -80,7 +80,7 @@
 //       if(!this.fetch) return;
       if(!this.update) return;
       
-      this.$.save.url = window.Polymer.restAPI + "users/" + this.fetch;
+      this.$.save.url = Teranga.restAPI + "users/" + this.fetch;
       this.$.save.body = JSON.stringify(this.update);
 
 //       var save = this.$.save;
