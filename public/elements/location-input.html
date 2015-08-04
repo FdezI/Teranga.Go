@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="location-service.html">
+
+<link rel="import" href="in-array-validator.html">
+
+<dom-module name="trip-table">
+	<template>
+		<location-service id="ls" fetch="list" data="{{locs}}"></location-service>
+
+		<in-array-validator items="[[locs]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></in-array-validator>
+		<paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="locs" value="{{fakefilters.origin}}" validator="in-array-validator" required></paper-input>
+		<paper-input id="destination" type="text" label="A:" placeholder="Destino" list="locs" value="{{fakefilters.destination}}" validator="in-array-validator" required></paper-input>
+	</template>
+
+	<script>
+		Polymer({
+	    is: "trip-table",
+	    properties: {
+	    	locs: {
+	    		type: Array,
+	    		notify: true
+	    	},
+	    	fakefilters: {
+	        type: Object,
+	        value: {},
+	        readOnly: true,
+	        notify: true
+	      }
+	    },
+
+	    observers: ['validate(fakefilters.origin)', 'validate(fakefilters.destination)'],
+
+	    validate: function() {
+        this.$.origin.validate();
+        this.$.destination.validate();
+    	}
+	  });
+	</script>
+</dom-module>
+

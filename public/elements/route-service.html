@@ -10,12 +10,12 @@
     
   <template>
     <iron-ajax id="loadAll"
-      last-response="{{response}}"
+      last-response="{{data}}"
       on-response="routesLoaded">
     </iron-ajax>
 
     <iron-ajax id="loadOne"
-      last-response="{{response}}"
+      last-response="{{data}}"
       on-response="routeLoaded">
     </iron-ajax>
   </template>
@@ -24,40 +24,51 @@
     Polymer({
       is: "route-service",
       properties: {
-        response: {
+        data: {
           type: Object,
           notify: true
         },
-        fetch: {
-        	type: String,
-        	observer: 'fetchChanged'
-        }
+        fetch: String,
+        update: Object
       },
       ready: function() {
           console.log("route-service ready!");
-
-          if(this.fetch == "all") {
-            this.$.loadAll.url = window.Polymer.restAPI + "routes";
-            this.$.loadAll.generateRequest();
-          }
-      },
-      
-      fetchChanged: function() {
-        if(this.fetch != "all" && this.fetch != "") {
-        	console.log("ESTO ES: " + this.fetch);
-        	this.$.loadOne.url = window.Polymer.restAPI + "routes/" + this.fetch;
-        }
       },
       
       routesLoaded: function() {
         console.log('PETICION 1');
         // this.data = this.$.loadAll.lastResponse;
+
+        this.fire('loaded', this.data);
       },
       
       routeLoaded: function() {
         console.log('PETICION 2');
+
+        this.fire('loaded', this.data);
         // this.data = this.$.loadOne.lastResponse;
       },
+
+      reload: function() {
+        var fetch = this.fetch;
+        var api = window.Polymer.restAPI;
+        var item = "routes/";
+        
+        console.log("reloading: " + fetch);
+        
+        if(fetch == "all" || fetch == "list") {
+          var req = this.$.loadAll;
+          req.url = api + item;
+          if(fetch == "list") req.url += "?list";
+          
+          req.generateRequest();
+        } else if(fetch !== "") {
+          req = this.$.loadOne;
+          req.url = api + item + fetch;
+
+          req.generateRequest();
+        }
+      }
       
     });
   </script>
