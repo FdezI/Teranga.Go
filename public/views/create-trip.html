@@ -1,10 +1,14 @@
 <link rel="import" href="trip.html">
 <link rel="import" href="../elements/trip-table.html">
-<link rel="import" href="../elements/trip-service.html">
+<!-- <link rel="import" href="../elements/trip-service.html"> -->
+<link rel="import" href="../elements/route-service.html">
+
 <link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../elements/in-array-validator.html">
 
 <dom-module name="create-trip">
   <style>
@@ -38,17 +42,28 @@
     }
   </style>
   <template>
+    <route-service id="rs" fetch="list" data="{{routes}}"></route-service>
+    <!-- <route-service id="r2" fetch="{{rte}}" data="{{routes}}"></route-service> -->
+
+    <datalist id="routes">
+      <template is="dom-repeat" items="[[routes]]">
+        <option id="[[index]]" value="[[item.name]]">
+      </template>
+    </datalist>
+
     <div class="create-trip-map">
       
     </div>
 
     <div class="create-trip-area">
       <div>
-        <paper-input label="Ruta"></paper-input>
+        <in-array-validator items="[[routes]]" attrib="name" ></in-array-validator>
+        <paper-input label="Ruta" list="routes" value="{{fakefilters.route}}" validator="in-array-validator" auto-validate></paper-input>
       </div>
+
       <div>
-        <paper-input class="create-trip-input" label="De:" placeholder="Salida"></paper-input>
-        <input class="create-trip-input-extra" type="text" placeholder="Direccion">
+        <paper-input class="create-trip-input" label="De:" placeholder="Salida" value="{{fakefilters.departure}}"></paper-input>
+        <input class="create-trip-input-extra" type="text" placeholder="Direccion" value="{{fakefilters.arrival}}">
       </div>
       <div>
         <paper-input class="create-trip-input"  label="A:" placeholder="Llegada"></paper-input>
@@ -73,10 +88,17 @@
       properties: {
         user: Object,
         filters: Object,
-        idcar: Number
+        idcar: Number,
+        routes: Array,
+        fakefilters: {
+          type: Object,
+          value: {},
+          readOnly: true
+        }
       },
       ready: function() {
         console.log("create-trip ready!");
+        this.$.rs.reload();
       },
       showCarSelect: function() {
         this.$.car_select.open();
