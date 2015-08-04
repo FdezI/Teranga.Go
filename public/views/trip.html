@@ -226,16 +226,16 @@
         this.$.ts.reload();
       },
       day: function(date) {
-        return window.Polymer.day(date);
+        return Teranga.day(date);
       },
       month: function(date) {
-       return window.Polymer.month(date);
+       return Teranga.month(date);
       },
       time: function(date) {
-        return window.Polymer.time(date);
+        return Teranga.time(date);
       },
       age: function(date) {
-        return window.Polymer.age(date);
+        return Teranga.age(date);
       },
       pets: function(trip) {
         // var img;
@@ -246,12 +246,12 @@
         // else img = "deny";
 
         console.log("PET: " + pet);
-        return window.Polymer.image.URL + "pet-" + (pet ? "allow" : ((pet == false || pet == 0) ? "deny" : "unknown")) + ".png";
+        return Teranga.image.URL + "pet-" + (pet ? "allow" : ((pet == false || pet == 0) ? "deny" : "unknown")) + ".png";
       },
       packages: function(trip) {
         var pck = trip.packages;
 
-        return window.Polymer.image.URL + "package-" + (pck ? "allow" : ((pck == false || pck == 0) ? "deny" : "unknown")) + ".png";
+        return Teranga.image.URL + "package-" + (pck ? "allow" : ((pck == false || pck == 0) ? "deny" : "unknown")) + ".png";
       }
     });
   </script>

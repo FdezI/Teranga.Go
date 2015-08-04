@@ -61,9 +61,9 @@
         this.reload();
         // if(this.fetch == "all") { 
         // 	if(this.user) {
-        // 	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
+        // 	  this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/trips";
         // 	  console.log("Trips loading for user!: ");
-        // 	} else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+        // 	} else this.$.loadAll.url = Teranga.restAPI + "trips";
 
         // 	console.log("Trips loading with: " + this.$.loadAll.url);
         	
@@ -76,15 +76,15 @@
       //     console.log("Fetching all trips");
 
       //   	if(this.user)
-      //   	  this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
-      //     else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+      //   	  this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/trips";
+      //     else this.$.loadAll.url = Teranga.restAPI + "trips";
 
       //     console.log("trips to fetch: " + this.$.loadAll.url);
       //     this.$.loadAll.generateRequest();
       //   }
       //   else if(this.fetch != "") {
       //   	console.log("ESTO ES: " + this.fetch);
-      //   	this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
+      //   	this.$.loadOne.url = Teranga.restAPI + "trips/" + this.fetch;
       //     this.$.loadOne.generateRequest();
       //   }
       // },
@@ -119,9 +119,9 @@
             // cost += p.cost;
 
             p.seats = seats;
-            p.day = window.Polymer.day(p.date);
-            p.month = window.Polymer.month(p.date);
-            p.time = window.Polymer.time(p.date);
+            p.day = Teranga.day(p.date);
+            p.month = Teranga.month(p.date);
+            p.time = Teranga.time(p.date);
             if(seats < free) free = seats;
           }
           // console.log("Coste: " + cost);
@@ -136,7 +136,7 @@
       
       saveData: function() {
         console.log('SAVING TRIP');
-        this.$.create.url = window.Polymer.restAPI + "trips";
+        this.$.create.url = Teranga.restAPI + "trips";
         this.$.create.generateRequest();
       },
       
@@ -148,14 +148,14 @@
         console.log("reloading: " + this.fetch);
         if(this.fetch == "all") { 
           if(this.user) {
-            this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/trips";
-          } else this.$.loadAll.url = window.Polymer.restAPI + "trips";
+            this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/trips";
+          } else this.$.loadAll.url = Teranga.restAPI + "trips";
           
           console.log(this.$.loadAll.params);
           this.$.loadAll.generateRequest();
         } else if(this.fetch !== "") {
           console.log("fetching " + this.fetch);
-          this.$.loadOne.url = window.Polymer.restAPI + "trips/" + this.fetch;
+          this.$.loadOne.url = Teranga.restAPI + "trips/" + this.fetch;
 
           console.log(this.$.loadOne.url);
           this.$.loadOne.generateRequest();

@@ -4,7 +4,8 @@
 
 <link rel="import" href="location-service.html">
 
-<link rel="import" href="in-array-validator.html">
+<!-- <link rel="import" href="in-array-validator.html"> -->
+<link rel="import" href="trip-search-validator.html">
 
 <dom-module name="trip-table">
   <style>
@@ -69,7 +70,7 @@
   
   <template>
     <location-service id="ls" fetch="list" data="{{locs}}"></location-service>
-    <in-array-validator items="[[locs]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></in-array-validator>
+    <trip-search-validator items="[[locs]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></trip-search-validator>
     
     <table>
       <tr>
@@ -82,10 +83,10 @@
           </template>
         </datalist>
         <td>
-          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="locs" value="{{fakefilters.origin}}" validator="in-array-validator" required></paper-input>
+          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="locs" value="{{fakefilters.origin}}" validator="trip-search-validator" required></paper-input>
         </td>
         <td>
-          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="locs" value="{{fakefilters.destination}}" validator="in-array-validator" required></paper-input>
+          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="locs" value="{{fakefilters.destination}}" validator="trip-search-validator" required></paper-input>
         </td>
       </tr>
       <tr>
@@ -177,13 +178,13 @@
       this.$.ls.reload();
     },
     day: function(trip) {
-      return window.Polymer.day(trip.date);
+      return Teranga.day(trip.date);
     },
     month: function(trip) {
-     return window.Polymer.month(trip.date);
+     return Teranga.month(trip.date);
     },
     time: function(trip) {
-      return window.Polymer.time(trip.date);
+      return Teranga.time(trip.date);
     },
     search: function() {
       var locs = this.locs,

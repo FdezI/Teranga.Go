@@ -1,19 +1,20 @@
 <dom-module name="server-config">
 <script>
-	var pol = window.Polymer;
-	pol.restAPI = window.location.origin + "/api/v1/";
+
+  Teranga = window.Teranga || {};
+	Teranga.restAPI = window.location.origin + "/api/v1/";
 
 
 
-	pol.image = {};
-	var images = pol.image;
+	Teranga.image = {};
+	var images = Teranga.image;
 	
 	images.URL = window.location.origin + "/images/";
 	images.user = {};
 	images.user.URL = images.URL + "images/user/";
 	images.user.AVATARS = images.user.URL + "avatar/";
 
-	pol.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+	Teranga.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 
 
@@ -21,24 +22,24 @@
 
 
 
-  pol.day = function(date) {
+  Teranga.day = function(date) {
     return new Date(Date.parse(date)).getDay();
   };
 
-  pol.month = function(date) {
+  Teranga.month = function(date) {
     var month = new Date(Date.parse(date)).getMonth();
     
     if(month >= 1 && month <= 12 )
-      return window.Polymer.months[month - 1].substring(0, 3);
+      return Teranga.months[month - 1].substring(0, 3);
 
     return month;
   };
 
-  pol.time = function(date) {
+  Teranga.time = function(date) {
   	return new Date(Date.parse(date)).toTimeString().substring(0,5);
   };
 
-  pol.age = function(date) {
+  Teranga.age = function(date) {
     var today = new Date();
     var birthDate = new Date(Date.parse(date));
     var age = today.getFullYear() - birthDate.getFullYear();

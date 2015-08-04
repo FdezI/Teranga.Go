@@ -64,7 +64,7 @@
       
       saveData: function() {
         // console.log('SAVING location');
-        // this.$.create.url = window.Polymer.restAPI + "locations";
+        // this.$.create.url = Teranga.restAPI + "locations";
         // this.$.create.generateRequest();
       },
       
@@ -73,7 +73,7 @@
 
       reload: function() {
       	var fetch = this.fetch;
-      	var api = window.Polymer.restAPI;
+      	var api = Teranga.restAPI;
       	var item = "locations/";
         
         console.log("reloading: " + fetch);

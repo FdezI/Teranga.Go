@@ -59,7 +59,7 @@
       
       // fetchChanged: function() {
       //   if(this.fetch != "all" && this.fetch != "") {
-      //   	if(this.user) this.$.loadOne.url = window.Polymer.restAPI + "users/" + this.user + "/cars/" + this.fetch;
+      //   	if(this.user) this.$.loadOne.url = Teranga.restAPI + "users/" + this.user + "/cars/" + this.fetch;
       //   }
       // },
       
@@ -85,7 +85,7 @@
         console.log("BODY TO SEND:");
         console.log(this.update);
         
-        this.$.create.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
+        this.$.create.url = Teranga.restAPI + "users/" + this.user + "/cars";
         this.$.create.body = JSON.stringify(this.update);
         console.log(this.$.create.body);
         this.$.create.generateRequest();
@@ -101,14 +101,14 @@
       reload: function() {
         if(this.fetch == "all") {
           if(this.user) {
-            this.$.loadAll.url = window.Polymer.restAPI + "users/" + this.user + "/cars";
+            this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/cars";
             console.log("Cars Loaded!");
-          } else this.$.loadAll.url = window.Polymer.restAPI + "cars";
+          } else this.$.loadAll.url = Teranga.restAPI + "cars";
           console.log("Cars loaded with: " + this.$.loadAll.url);
           this.$.loadAll.generateRequest();
         } else if(this.fetch !== "") {
           console.log("fetching " + this.fetch);
-          this.$.loadOne.url = window.Polymer.restAPI + "cars/" + this.fetch;
+          this.$.loadOne.url = Teranga.restAPI + "cars/" + this.fetch;
           this.$.loadOne.generateRequest();
         }
       }
