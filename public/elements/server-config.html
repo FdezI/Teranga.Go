@@ -51,5 +51,15 @@
   }
 
 
+  Teranga.indexOf = function(value, items, attrib) {
+    if(attrib) {
+      var length = items.length;
+      for(var i = 0; i < length; i++)
+        if(items[i][attrib] == value) return i;
+    } else return items.indexOf(value);
+
+    return -1;
+  }
+
 </script>
 </dom-module>

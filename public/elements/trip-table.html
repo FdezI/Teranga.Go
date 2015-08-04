@@ -69,24 +69,24 @@
   </style>
   
   <template>
-    <location-service id="ls" fetch="list" data="{{locs}}"></location-service>
-    <trip-search-validator items="[[locs]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></trip-search-validator>
+    <location-service id="ls" fetch="list" data="{{wps}}"></location-service>
+    <trip-search-validator items="[[wps]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></trip-search-validator>
     
     <table>
       <tr>
         <td colspan="2">Encuentra el viaje que necesitas</td>
       </tr>
       <tr>
-        <datalist id="locs">
-          <template id="asdf" is="dom-repeat" items="[[locs]]">
+        <datalist id="wps">
+          <template id="asdf" is="dom-repeat" items="[[wps]]">
             <option id="[[index]]" value="[[item.city]]">
           </template>
         </datalist>
         <td>
-          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="locs" value="{{fakefilters.origin}}" validator="trip-search-validator" required></paper-input>
+          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator" required></paper-input>
         </td>
         <td>
-          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="locs" value="{{fakefilters.destination}}" validator="trip-search-validator" required></paper-input>
+          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="wps" value="{{fakefilters.destination}}" validator="trip-search-validator" required></paper-input>
         </td>
       </tr>
       <tr>
@@ -169,7 +169,7 @@
         value: {},
         readOnly: true
       },
-      locs: Array
+      wps: Array
     },
 
     observers: ['fromChanged(filters.from)', 'toChanged(filters.to)', 'validate(fakefilters.origin)', 'validate(fakefilters.destination)'],
@@ -187,8 +187,8 @@
       return Teranga.time(trip.date);
     },
     search: function() {
-      var locs = this.locs,
-          length = locs.length,
+      var wps = this.wps,
+          length = wps.length,
           f = this.filters,
           ff = this.fakefilters;
           
@@ -196,7 +196,7 @@
         var i = -1;
         delete f[key];
         while(++i < length && !f[key])
-          if(locs[i].city == ff[key]) f[key] = locs[i].idlocation;
+          if(wps[i].city == ff[key]) f[key] = wps[i].idlocation;
       });
 
       this.fire('search');

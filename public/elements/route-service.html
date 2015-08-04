@@ -37,6 +37,7 @@
       
       routesLoaded: function() {
         console.log('PETICION 1');
+        console.log(this.data);
         // this.data = this.$.loadAll.lastResponse;
 
         this.fire('loaded', this.data);
@@ -44,6 +45,7 @@
       
       routeLoaded: function() {
         console.log('PETICION 2');
+        console.log(this.data);
 
         this.fire('loaded', this.data);
         // this.data = this.$.loadOne.lastResponse;

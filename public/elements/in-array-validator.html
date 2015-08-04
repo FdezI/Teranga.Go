@@ -12,16 +12,16 @@
     },
 
     validate: function(value) {
-      console.log("ENTERING");
     	var items = this.items;
         if(!items || (this.difff && this.difff == this.diffs)) return false;
 
-    	var attrib = this.attrib;
-    	if(this.attrib) {
-    		var length = items.length;
-    		for(var i = 0; i < length; i++)
-    			if(items[i][attrib] == value) return true;
-    	} else return items.indexOf(value) >= 0;
+      return Teranga.indexOf(value, items, this.attrib) >= 0;
+    	// var attrib = this.attrib;
+    	// if(attrib) {
+    	// 	var length = items.length;
+    	// 	for(var i = 0; i < length; i++)
+    	// 		if(items[i][attrib] == value) return true;
+    	// } else return items.indexOf(value) >= 0;
     }
   };
 
