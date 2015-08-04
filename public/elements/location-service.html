@@ -51,11 +51,11 @@
         // this.response = this.data;
         // this.data = this.response;
 
-        this.fire('loaded');
+        this.fire('loaded', this.data);
       },
       
-      locationLoaded: function(e, a, as) {
-        this.fire('loaded');
+      locationLoaded: function() {
+        this.fire('loaded', this.data);
       },
       
       saveData: function() {

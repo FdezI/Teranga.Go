@@ -112,10 +112,7 @@
         value: {},
         readOnly: true
       },
-      locs: {
-        type: Array,
-        value: [{idlocation:0, city:"City1"}, {idlocation:1, city:"City2"}]
-      }
+      locs: Array
     },
 
     observers: ['fromChanged(filters.from)', 'toChanged(filters.to)', 'validate(fakefilters.origin)', 'validate(fakefilters.destination)'],

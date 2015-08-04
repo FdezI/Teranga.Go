@@ -4,10 +4,17 @@ exports.create = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-	if(req.query.list || req.query.hasOwnProperty('list')) var select = "idlocation, city";
+	if(req.query.list || req.query.hasOwnProperty('list')) var select = "idlocation, city, country";
 	else select = "*";
 
-	pool.query('SELECT ' + select + ' FROM location', function(err, rows, fields) {
+	if(req.query.route) {
+		var sql = 'SELECT ' + select + ', type, RP.order\
+								FROM location, routePoints RP\
+								WHERE route=' + pool.escape(req.query.route) + ' AND location=idlocation\
+								ORDER BY RP.order ASC';
+	} else sql = 'SELECT ' + select + ' FROM location';
+
+	pool.query(sql, function(err, rows, fields) {
 		if(err) throw err;
 		
 		res.json(rows);
