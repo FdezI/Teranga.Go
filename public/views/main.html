@@ -89,7 +89,7 @@
 				</paper-toolbar>
 				
 				<!-- Drawer Content -->
-				<paper-menu class="list" attr-for-selected="hash" selected="{{route}}" on-iron-select="menuItemSelected">
+				<paper-menu class="list" attr-for-selected="route-hash" selected="{{route}}" on-iron-select="menuItemSelected">
 				  <template is="dom-repeat" items="{{pages}}" as="page">
 				    <a route-hash="{{page.hash}}" href="{{page.url}}">
 				      <iron-icon icon="label-outline"></iron-icon>

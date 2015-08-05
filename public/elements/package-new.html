@@ -1,0 +1,132 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+
+<dom-module name="package-new">
+  <style>
+    .line {
+      margin: 10px;
+      border: 1px solid #ccc;
+    }
+
+    :host {
+      text-align: center;
+    }
+
+    .edit-table {
+      width: 100%;
+    }
+
+    .column1 {
+      text-align: right;
+      width: 50%;
+      padding-right: 20px;
+      text-transform: small-caps;
+    }
+
+    .column2 {
+      text-align: left;
+    }
+
+    .column2 > input {
+      height: 26px;
+      margin: 3px;
+      padding: 2px 10px 2px 10px;
+    }
+
+    .edit-title {
+      font-variant: small-caps;
+      font-weight: bold;
+      font-size: xx-large;
+    }
+
+    .primary-button-edit {
+      background: #f00;
+      height: 40px;
+      margin: 3px;
+      border: 1px solid #ccc;
+    }
+
+    .secondary-button-edit {
+      background: #ccc;
+      height: 25px;
+      margin: 3px;
+      border: 1px solid #999;
+    }
+    .comment-box {
+      width: 100%;
+    }
+    .comment-title {
+      text-align: left;
+      padding: 10px;
+    }
+    .y-o-span {
+      align-self: flex-end;
+      padding-bottom: 12px;
+    }
+  </style>
+  
+  <template>
+    <data-service id="cs" type="cars" user="[[iduser]]" update="[[update]]" on-created="saved"></data-service>
+
+    <div class="container-edit layout vertical center-justified">
+      <span class="edit-title">Nuevo paquete</span>
+      <div class="line"></div>
+
+      <table class="edit-table">
+        <tr>
+          <td class="column1">Nombre</td>
+          <td class="column2"><input name="name"></td>
+        <tr> 
+        <tr>
+          <td class="column1">Tamaño</td>
+          <!-- <template is="dom-if" if="[[newcar]]"> -->
+          <td class="column2"><paper-slider></paper-slider></td>
+        <tr> 
+        <tr>
+          <td colspan="2" class="comment-title">Comentario</td>
+        <tr> 
+        <tr>
+          <td colspan="2"><textarea class="comment-box" name="comment" rows="4"></textarea></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="layout horizontal">
+              <paper-input id="user" autocomplete="on" type="text" label="Usuario receptor" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator"></paper-input>
+              <span class="flex y-o-span"> y/o </span>
+              <paper-input id="iduser" type="text" label="DNI, NIF o NIE del receptor"></paper-input>
+            </div>
+          </td>
+        <tr/>
+      </table>
+      <button class="primary-button-edit" on-click="saveData">Crear</button>
+      <button class="secondary-button-edit" on-click="discardData">Cancelar</button>
+    </div>
+  </template>
+
+  <script>
+  Polymer({
+    is: "package-new",
+    properties: {
+      iduser: Number
+    },
+    saveData: function() {
+      this.$.cs.saveData();
+    },
+    discardData: function() {
+      this.fire('discard');
+    },
+    saved: function(e, data) {
+      var car = this.car;
+      var u = this.update;
+      Object.keys(u).forEach(function(key) {
+        car[key] = u[key];
+      });
+
+      car.owners = data.owners;
+      console.log("PERSONAS: " + car.owners);
+      if(this.newcar) this.fire('newcar', car);
+    }
+  });
+  </script>
+</dom-module>
