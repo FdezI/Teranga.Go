@@ -1,3 +1,4 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module name="tracking-view">
@@ -9,12 +10,18 @@
     margin-top: 5%;
     opacity: 0.5;
   }
-  .input-package {
+  #input {
     padding: 10px;
     margin: 20px;
     border: 1px solid #777;
     width: 80%;
     border-radius: 3px;
+  }
+  .valid {
+
+  }
+  .invalid {
+
   }
   .package-button {
     width: 150px;
@@ -24,7 +31,7 @@
     <div class="layout vertical center">
       <img class="tracking-img" src="../images/package-allow.png">
       <span>Introduce el identificador (ID) del paquete</span>
-      <input class="input-package" type="text" placeholder="ID">
+      <input id="input" class$="[[validateclass]]" type="text" placeholder="ID" on-input="validate" required>
       <paper-button class="package-button" raised on-click="search">Buscar</paper-button>
     </div>
   </template>
@@ -34,7 +41,14 @@
       is: "tracking-view",
       properties: {
         user: Object,
-        filters: Object
+        filters: Object,
+        validateclass: {
+          type: String,
+          value: "invalid"
+        }
+      },
+      validate: function() {
+        this.validateclass = /^\d+$/.test(this.$.input.value) ? "valid" : "invalid";
       }
     });
   </script>
