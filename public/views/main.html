@@ -228,6 +228,7 @@
 
       routeChanged: function() {
       	if(this.route === "profile") this.$$("profile-view").edit = false;
+      	else if(this.route === "tracking") this.$$("tracking-view").back();
       }
     });    
   </script>
