@@ -13,6 +13,17 @@
     /*margin: 10px;*/
   }
 
+  .location-title {
+    font-weight: bold;
+    font-size: 30px;
+  }
+
+  .location-description {
+    margin-left: 20px;
+    margin-top: 10px;
+    color: #999;
+  }
+
   .container {
     margin: 40px 0px 40px 0px;
   }
@@ -35,9 +46,8 @@
     margin-right: 20px;
   }
 
-  .left-box:after, .left-box:before {
-    right: 100%;
-    top: 50%;
+  .left-box:after, .left-box:before, .right-box:after, .right-box:before {
+    top: 75px;
     border: solid transparent;
     content: " ";
     height: 0;
@@ -46,40 +56,36 @@
     pointer-events: none;
   }
 
-  .left-box:after {
-    border-color: rgba(255, 255, 255, 0);
-    border-right-color: #fff;
-    border-width: 15px;
-    margin-top: -15px;
-  }
-  .left-box:before {
-    border-color: rgba(204, 204, 204, 0);
-    border-right-color: #ccc;
-    border-width: 21px;
-    margin-top: -21px;
+  .left-box:after, .left-box:before {
+    right: 100%;
   }
   .right-box:after, .right-box:before {
     left: 100%;
-    top: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
   }
 
-  .right-box:after {
+  .left-box:after, .right-box:after {
     border-color: rgba(255, 255, 255, 0);
-    border-left-color: #fff;
     border-width: 15px;
     margin-top: -15px;
   }
-  .right-box:before {
+  .left-box:before, .right-box:before {
     border-color: rgba(204, 204, 204, 0);
-    border-left-color: #ccc;
     border-width: 21px;
     margin-top: -21px;
+  }
+
+  .left-box:after {
+    border-right-color: #fff;
+  }
+  .left-box:before {
+    border-right-color: #ccc;
+  }
+
+  .right-box:after {
+    border-left-color: #fff;
+  }
+  .right-box:before {
+    border-left-color: #ccc;
   }
   </style>
   <template>
