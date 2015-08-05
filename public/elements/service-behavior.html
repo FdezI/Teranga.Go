@@ -1,0 +1,58 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
+<!-- <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html"> -->
+  
+<script>
+
+  Teranga.ServiceBehavior = {
+    properties: {
+      data: {
+      	type: Object,
+      	notify: true
+      },
+      fetch: String,
+      user: Number,
+      update: Object,
+      type: String,
+      filters: Object,
+    },
+    
+    ready: function() {
+      console.log(this.type + "-service ready");
+    },
+    
+    dataLoaded: function() {
+      this.fire('loaded', this.data);
+    },
+
+    saveData: function() {
+      console.log("saveData: " + this.update);
+
+      if(!this.update) return;
+      
+      this.$.save.url = Teranga.restAPI + "users/" + this.fetch;
+      this.$.save.body = JSON.stringify(this.update);
+      
+      console.log("BODY: " + this.$.save.body + ", for " + this.user + ": " + this.fetch);
+      
+      this.$.save.generateRequest();
+    },
+
+    reload: function() {
+      console.log("reloading: " + this.fetch);
+      if(this.fetch == "all") { 
+        if(this.user) {
+          this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/" + this.type;
+        } else this.$.loadAll.url = Teranga.restAPI + this.type;
+        
+        console.log(this.$.loadAll.params);
+        this.$.loadAll.generateRequest();
+      } else if(this.fetch !== "") {
+        console.log("fetching " + this.fetch);
+        this.$.loadOne.url = Teranga.restAPI + this.type + "/" + this.fetch;
+
+        console.log(this.$.loadOne.url);
+        this.$.loadOne.generateRequest();
+      }
+    }
+  };
+</script>

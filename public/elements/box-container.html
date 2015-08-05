@@ -30,6 +30,9 @@
     	<button on-click="toggle" class="container">
         <div style="display: flex;">
           <span class="layout horizontal center">[[name]]</span>
+          <template is="dom-if" if="[[additable]]">
+            <paper-icon-button icon="add" on-click="add" class="button-inner"></paper-icon-button>
+          </template>
           <template is="dom-if" if="[[reloadable]]">
             <template is="dom-if" if="[[!reloading]]">
               <paper-icon-button icon="refresh" on-click="reload" class="button-inner"></paper-icon-button>
@@ -57,6 +60,10 @@
         type: Boolean,
         value: false
       },
+      additable: {
+        type: Boolean,
+        value: false
+      },
       open: {
         type: Boolean,
         // value: false,
@@ -65,15 +72,21 @@
       reloading: {
         type: Boolean,
         value: false
-      }
+      },
+
     },
     toggle: function() {
       // this.$.collapse.toggle();
       this.open = !this.open;
+      if(this.open) this.fire('open');
     },
     reload: function() {
       event.stopPropagation();
       this.fire('reload');
+    },
+    add: function() {
+      event.stopPropagation();
+      this.fire('add');
     }
   });
   </script>

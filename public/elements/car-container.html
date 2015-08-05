@@ -1,7 +1,7 @@
 <link rel="import" href="car-box.html">
 <link rel="import" href="car-edit.html">
 
-<link rel="import" href="car-service.html">
+<link rel="import" href="data-service.html">
 <link rel="import" href="pop-up.html">
 
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -19,7 +19,7 @@
       
     </box-container> -->
     <div class="car-container">
-      <car-service user="[[iduser]]" data="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
+      <data-service type="cars" user="[[iduser]]" data="{{cars}}" on-loaded="loaded" fetch="all"></data-service>
       <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
         <car-box car="[[car]]" on-click="carSelect"></car-box>
       </template>

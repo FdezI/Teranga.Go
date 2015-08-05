@@ -1,0 +1,61 @@
+<link rel="import" href="box-container.html">
+<!-- <link rel="import" href="travel-box.html"> -->
+
+<!-- <link rel="import" href="trip-service.html"> -->
+
+<dom-module name="data-container">
+  <template>
+    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" open="{{open}}" reloading="{{loading}}" reloadable$="[[reloadable]]" additable$="[[additable]]">
+      <template id="open" is="dom-if" if="[[open]]">
+        <!-- <content select="service"></content> -->
+        <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+      </template>
+
+      
+      <!-- <template id="dataRepeat" is="dom-if" if="true"> -->
+        <content></content>
+      <!-- </template> -->
+
+      <!-- <template id="dataRepeat" is="dom-repeat" items="[[data]]"> -->
+        <!-- <content select="repeat"></content> -->
+        <!-- <travel-box trip="[[item]]"></travel-box> -->
+        <!-- <content></content> -->
+      <!-- </template> -->
+      
+    </box-container>
+  </template>
+
+  <script>
+    Polymer({
+      is: "data-container",
+      properties: {
+        name: String,
+        data: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number,
+        open: Boolean,
+        loading: Boolean,
+        type: String,
+        reloadable: Boolean,
+        additable: Boolean
+      },
+      loadData: function() {
+        if(!this.data) this.reloadData();
+      },
+      reloadData: function() {
+        this.open = true;
+        this.$.open.render();
+        this.loading = true;
+        this.$$("data-service").reload();
+      },
+      loaded: function(e, data) {
+        this.loading = false;
+        // this.$.dataRepeat.render();
+        // this.set('data', pack);
+        this.fire('loaded', data);
+      }
+    });
+  </script>
+</dom-module>

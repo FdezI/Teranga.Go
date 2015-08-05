@@ -87,15 +87,15 @@ exports.getTrips = function(req, res) {
 	// FIRST METHOD
 
 	var user = req.params.iduser;
-	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, PB.date as atime, false as driving, accepted = true as accepted\
+	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, PB.date as atime, false as driving\
 											FROM userTrips\
 												LEFT JOIN tripPoints AS PA ON userTrips.trip = PA.trip AND pointA = PA.order\
 												LEFT JOIN tripPoints AS PB ON userTrips.trip = PB.trip AND pointB = PB.order\
 												INNER JOIN location AS LA ON LA.idlocation = PA.location\
 												INNER JOIN location AS LB ON LB.idlocation = PB.location\
-											WHERE user=? AND accepted=1)\
+											WHERE user=?)\
 											UNION DISTINCT\
-											(SELECT LA.city, LB.city, PA.date, PB.date, true, true\
+											(SELECT LA.city, LB.city, PA.date, PB.date, true\
 											FROM trip\
 												LEFT JOIN tripPoints AS PA ON PA.order = 0 AND idtrip = PA.trip \
 												LEFT JOIN tripPoints AS PB ON PB.order = 99 AND idtrip = PB.trip\
@@ -127,7 +127,7 @@ exports.getCars = function(req, res) {
 							FROM owners AS O\
 								JOIN car ON idcar = O.car\
 								JOIN owners AS O2 ON O2.car = idcar\
-							WHERE O.owner = ? GROUP BY idcar', req.params.iduser, function(err, rows, result) {
+							WHERE O.owner = ? GROUP BY idcar', req.params.iduser, function(err, rows, fields) {
 		if(err) throw err;
 
 		res.json(rows);
@@ -135,8 +135,20 @@ exports.getCars = function(req, res) {
 };
 
 exports.getPackages = function(req, res) {
-};
+	var user = req.params.iduser;
+	pool.query("SELECT idpackage, P.name, size, P.description, if(P.emitter = ?, 'emitter', 'receiver') 'is', iduser as other, U.name as otherName, if(COUNT(PT.package) > 0, if(T.expiration < NOW(), 'done', 'accepted'), if(COUNT(PR.package) > 0, if(T.expiration < NOW(), 'expired', 'pending'), 'waiting')) status\
+							FROM package P\
+								LEFT JOIN user U ON iduser = if(P.emitter = ?, receiver, emitter)\
+								LEFT JOIN packageTrips PT ON PT.package = idpackage\
+								LEFT JOIN packageRequests PR ON PR.package = idpackage\
+								LEFT JOIN trip T ON idtrip = PT.trip OR idtrip = PR.trip\
+							WHERE emitter = ? OR receiver = ?\
+							GROUP BY idpackage", [user, user, user, user], function(err, rows, fields) {
+		if(err) throw err;
 
+		res.json(rows);
+	});
+};
 
 // AUTHENTICATED
 exports.update = function(req, res) {
