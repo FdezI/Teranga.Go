@@ -1,8 +1,16 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 
 <dom-module name="trip-request">
 	<style>
-	</style>
+	 .table-request {
+    width: 100%;
+    margin: 10px;
+   }
+   .comment-text-area {
+    width: 100%;
+   }
+  </style>
 	<template>
 		<div class="collapse-content-comment layout vertical">
       <table class="table-request">
@@ -49,9 +57,14 @@
           <td>x<span>[[getc(d,a,seat)]]</span>€</td>
         </tr>
         <tr>
-          <td>Paquetes</td>
-          <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td>
+          <td colspan="2">Paquetes</td>
+          <!-- <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td> -->
           <td>x<span>[[getpkc(d,a,pkn)]]</span>€</td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <paper-input label="Añadir paquete"></paper-input>
+          </td>
         </tr>
         <tr>
           <td colspan="2">Precio final</td>
