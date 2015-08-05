@@ -1,0 +1,54 @@
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module name="package-line">
+  <style>
+    .container {
+      background: #fafafa;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .package-name {
+      margin: 10px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .size {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-right: 10px;
+    }
+    .package-comment {
+      border-radius: 3px;
+      margin-left: 30px;
+      margin-bottom: 10px;
+      color: #666;
+    }
+    .delete-button {
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+  <template>
+    <div class="container layout vertical">
+      <div class="package-info layout horizontal">
+        <span class="package-name flex">Name</span>
+        <div class="layout horizontal right-position">
+          <span class="size">Mediano</span>
+          <paper-icon-button icon="close" on-click="delete" class="button-inner"></paper-icon-button>
+        </div>
+      </div>
+      <span class="package-comment">commentario sobre el paquete</span>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "package-line",
+      properties: {
+        package: Object
+      }
+    });
+  </script>
+</dom-module>
