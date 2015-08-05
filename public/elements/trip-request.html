@@ -1,14 +1,24 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../elements/package-line.html">
 
 <dom-module name="trip-request">
 	<style>
-	 .table-request {
-    width: 100%;
-    margin: 10px;
+   .table-request {
+      width: 100%;
+      margin: 10px;
    }
    .comment-text-area {
-    width: 100%;
+      width: 100%;
+   }
+   .package-button {
+      float: right;
+   }
+   .add-package {
+    margin: 10px 5% 10px 5%;
+    background: #efefef;
    }
   </style>
 	<template>
@@ -63,7 +73,17 @@
         </tr>
         <tr>
           <td colspan="4">
-            <paper-input label="Añadir paquete"></paper-input>
+            <div class="layout vertical add-package">
+              <div class="layout horizontal header-add-package">
+                <paper-input label="Añadir paquete"></paper-input>
+                <div class="flex"></div>
+                <div class="layout horizontal center"><paper-button class="package-button" raised on-click="aaa">Crear paquete</paper-button></div>
+              </div>
+              <div class="container-add-package">
+                <!-- Meter los package-line aqui -->
+                <package-line></package-line>
+              </div>
+            </div>
           </td>
         </tr>
         <tr>
