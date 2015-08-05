@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../elements/trip-edit-route-validator.html">
 <link rel="import" href="../elements/trip-edit-origin-validator.html">
@@ -89,6 +90,10 @@
       <div>
         <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input>
         <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+      </div>
+      <div>
+        <paper-button rised on-click="saveData">Guardar</paper-button>
+        <paper-button rised on-click="discardData">Cancelar</paper-button>
       </div>
     </div>
 
@@ -175,6 +180,10 @@
         this.origins = origins;
         this.destinations = destinations;
         this.others = others;
+      },
+
+      discardData: function() {
+        this.fire('discard');
       }
     });
   </script>

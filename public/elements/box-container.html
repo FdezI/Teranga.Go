@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<!-- <link rel="import" href="../bower_components/paper-button/paper-button.html"> -->
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module name="box-container">
@@ -27,7 +28,7 @@
   </style>
   
   <template>
-    	<button on-click="toggle" class="container">
+    	<button raised on-click="toggle" class="container">
         <div class="layout horizontal">
           <span class="layout horizontal center flex">[[name]]</span>
           <template is="dom-if" if="[[additable]]">
