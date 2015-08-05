@@ -7,14 +7,18 @@
     page('/', function () {
       app.route = 'home';
     });
-    page('/profile', function () {
+    page('/page', function () {
       app.route = 'profile';
     });
     page('/trips', function () {
       app.route = 'trips';
     });
-    page('/tracking', function () {
+     page('/tracking', function () {
       app.route = 'tracking';
+    });
+    page('/tracking/:idpackage', function (data) {
+      app.route = 'tracking';
+      app.params = data.params; 
     });
     // page('/users/:name', function (data) {
     //   app.route = 'user-info';

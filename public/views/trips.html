@@ -1,19 +1,19 @@
 <link rel="import" href="trip.html">
 <link rel="import" href="../elements/trip-table.html">
-<link rel="import" href="../elements/trip-service.html">
+<link rel="import" href="../elements/data-service.html">
 
 <dom-module name="trips-view">
   <style>
   </style>
   <template>
-    <trip-service id="ts" fetch="all" filters="[[filters]]" data="{{trips}}"></trip-service>
+    <data-service id="ts" type="trips" fetch="all" filters="[[filters]]" data="{{trips}}"></data-service>
     <trip-table trips="{{trips}}" filters="{{filters}}" on-search="search"></trip-table>
-    <!-- <select value="{{selected::input}}">
+    <select value="{{selected::input}}">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
     </select>
-    <trip-view idtrip="[[selected]]"></trip-view> -->
+    <trip-view idtrip="[[selected]]"></trip-view>
   </template>
 
   <script>

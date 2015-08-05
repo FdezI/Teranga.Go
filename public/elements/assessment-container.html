@@ -1,19 +1,21 @@
-<link rel="import" href="box-container.html">
+<link rel="import" href="data-container.html">
 <link rel="import" href="comment-box.html">
-
-<link rel="import" href="assessment-service.html">
-
 <dom-module name="assessment-container">
   <template>
-    <box-container name="Opiniones" on-reload="reloadAssessments" on-open="loadAssessments" open="{{open}}" reloading="{{loading}}">
+    <!-- <box-container name="Opiniones" on-reload="reloadAssessments" on-open="loadAssessments" open="{{open}}" reloading="{{loading}}">
       <template id="open" is="dom-if" if="[[open]]">
-        <assessment-service user="[[iduser]]" data="{{assessments}}" on-loaded="loaded" fetch="all"></assessment-service>
+        <data-service type="assessments" user="[[iduser]]" data="{{assessments}}" on-loaded="loaded" fetch="all"></data-service>
       </template>
 
       <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
         <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
       </template>
-    </box-container>
+    </box-container> -->
+    <data-container name="Opiniones" iduser="[[iduser]]" type="assessments" data="{{assessments}}" reloadable>
+      <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
+        <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
+      </template>
+    </data-container>
   </template>
 
   <script>
@@ -24,25 +26,10 @@
           type: Object,
           notify: true
         },
-        iduser: Number,
-        open: Boolean,
-        loading: Boolean
+        iduser: Number
       },
       getImageUrl: function(name) {
         return Teranga.image.user.AVATARS + name;
-      },
-      loadAssessments: function() {
-        if(!this.assessments) this.reloadAssessments();
-      },
-      reloadAssessments: function() {
-        this.open = true;
-        this.$.open.render();
-        this.loading = true;
-        this.$$("assessment-service").reload();
-        this.$.assessmentsRepeat.render();
-      },
-      loaded: function() {
-        this.loading = false;
       }
     });
   </script>

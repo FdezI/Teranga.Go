@@ -1,4 +1,4 @@
-<link rel="import" href="car-service.html">
+<link rel="import" href="data-service.html">
 
 <dom-module name="car-edit">
   <style>
@@ -54,7 +54,7 @@
   </style>
   
   <template>
-    <car-service id="cs" user="[[iduser]]" update="[[update]]" on-created="saved"></car-service>
+    <data-service id="cs" type="cars" user="[[iduser]]" update="[[update]]" on-created="saved"></data-service>
 
     <div class="container-car-edit layout vertical center-justified">
       <template is="dom-if" if="[[newcar]]">

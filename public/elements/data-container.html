@@ -5,25 +5,29 @@
 
 <dom-module name="data-container">
   <template>
-    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" open="{{open}}" reloading="{{loading}}" reloadable additable>
+    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" open="{{open}}" reloading="{{loading}}" reloadable$="[[reloadable]]" additable$="[[additable]]">
       <template id="open" is="dom-if" if="[[open]]">
         <!-- <content select="service"></content> -->
-        <trip-service id="ts" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+        <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
       </template>
 
       
+      <!-- <template id="dataRepeat" is="dom-if" if="true"> -->
+        <content></content>
+      <!-- </template> -->
 
-      <template id="dataRepeat" is="dom-repeat" items="[[data]]">
+      <!-- <template id="dataRepeat" is="dom-repeat" items="[[data]]"> -->
         <!-- <content select="repeat"></content> -->
-        <travel-box trip="[[item]]"></travel-box>
-      </template>
+        <!-- <travel-box trip="[[item]]"></travel-box> -->
+        <!-- <content></content> -->
+      <!-- </template> -->
       
     </box-container>
   </template>
 
   <script>
     Polymer({
-      is: "trip-container",
+      is: "data-container",
       properties: {
         name: String,
         data: {
@@ -32,7 +36,10 @@
         },
         iduser: Number,
         open: Boolean,
-        loading: Boolean
+        loading: Boolean,
+        type: String,
+        reloadable: Boolean,
+        additable: Boolean
       },
       loadData: function() {
         if(!this.data) this.reloadData();
@@ -41,11 +48,13 @@
         this.open = true;
         this.$.open.render();
         this.loading = true;
-        this.$$("trip-service").reload();
-        this.$.dataRepeat.render();
+        this.$$("data-service").reload();
       },
-      loaded: function() {
+      loaded: function(e, data) {
         this.loading = false;
+        // this.$.dataRepeat.render();
+        // this.set('data', pack);
+        this.fire('loaded', data);
       }
     });
   </script>

@@ -1,20 +1,13 @@
-<link rel="import" href="box-container.html">
+<link rel="import" href="data-container.html">
 <link rel="import" href="travel-box.html">
-
-<link rel="import" href="trip-service.html">
 
 <dom-module name="trip-container">
   <template>
-    <box-container name="Viajes" on-reload="reloadTrips" on-open="loadTrips" open="{{open}}" reloading="{{loading}}" reloadable additable>
-      <template id="open" is="dom-if" if="[[open]]">
-        <trip-service id="ts" user="[[iduser]]" data="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
+    <data-container name="Viajes" iduser="[[iduser]]" type="trips" data="{{trips}}" reloadable additable>
+      <template is="dom-repeat" items="[[trips]]">
+        <travel-box trip="[[item]]"></travel-box>
       </template>
-
-      <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
-        <travel-box trip="[[trip]]"></travel-box>
-      </template>
-      
-    </box-container>
+    </data-container>
   </template>
 
   <script>
@@ -25,22 +18,7 @@
           type: Object,
           notify: true
         },
-        iduser: Number,
-        open: Boolean,
-        loading: Boolean
-      },
-      loadTrips: function() {
-        if(!this.trips) this.reloadTrips();
-      },
-      reloadTrips: function() {
-        this.open = true;
-        this.$.open.render();
-        this.loading = true;
-        this.$$("trip-service").reload();
-        this.$.tripsRepeat.render();
-      },
-      loaded: function() {
-        this.loading = false;
+        iduser: Number
       }
     });
   </script>

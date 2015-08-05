@@ -136,7 +136,7 @@ exports.getCars = function(req, res) {
 
 exports.getPackages = function(req, res) {
 	var user = req.params.iduser;
-	pool.query("SELECT idpackage, P.name, size, P.comment, if(P.emitter = ?, 'emitter', 'receiver') 'is', iduser as other, U.name as otherName, if(COUNT(PT.package) > 0, if(T.expiration < NOW(), 'done', 'accepted'), if(COUNT(PR.package) > 0, if(T.expiration < NOW(), 'expired', 'pending'), 'waiting')) status\
+	pool.query("SELECT idpackage, P.name, size, P.description, if(P.emitter = ?, 'emitter', 'receiver') 'is', iduser as other, U.name as otherName, if(COUNT(PT.package) > 0, if(T.expiration < NOW(), 'done', 'accepted'), if(COUNT(PR.package) > 0, if(T.expiration < NOW(), 'expired', 'pending'), 'waiting')) status\
 							FROM package P\
 								LEFT JOIN user U ON iduser = if(P.emitter = ?, receiver, emitter)\
 								LEFT JOIN packageTrips PT ON PT.package = idpackage\

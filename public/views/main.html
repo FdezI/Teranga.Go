@@ -144,7 +144,7 @@
 				    </section>
 				    <section hash="tracking">
 				    	<!-- <template> -->
-				      	<tracking-view session="{{session}}" route="{{route}}"></tracking-view>
+				      	<tracking-view session="{{session}}" route="{{route}}" idpackage="[[params.idpackage]]"></tracking-view>
 				      <!-- </template> -->
 				    </section>
 				  </iron-pages>
@@ -168,6 +168,7 @@
 				  value: "home",
 				  observer: 'routeChanged'
 				},
+				params: Object,
 				displayLogin: {
 				  type: String,
 				  value: "hidden"
@@ -188,12 +189,9 @@
 				}
       },
       
-      domReady: function() {
+      ready: function() {
 			// 	if(!this.session) this.session = {};
 			// 	this.session = null;
-				console.log("MAIN SESSION: " + this.session);
-				console.log("SESSION USER: " + this.session.user);
-				console.log("ready");
       },
       
       loginIconClicked: function(e, detail, sender) {

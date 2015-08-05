@@ -5,7 +5,8 @@
 <link rel="import" href="../elements/location-box.html">
 <link rel="import" href="../elements/travel-line.html">
 
-<link rel="import" href="../elements/trip-service.html">
+<!-- <link rel="import" href="../elements/trip-service.html"> -->
+<link rel="import" href="../elements/data-service.html">
 <link rel="import" href="../elements/trip-request.html">
 
 <dom-module name="trip-view">
@@ -111,7 +112,7 @@
     }
   </style>
   <template>
-    <trip-service id="ts" fetch="[[idtrip]]" response="{{trip}}"></trip-service>
+    <data-service id="ts" type="trips" fetch="[[idtrip]]" on-loaded="tripTweak"></data-service>
     <div class="layout horizontal">
       <travel-line>
         <template is="dom-repeat" items="{{trip.wps}}" as="wp">
@@ -252,6 +253,36 @@
         var pck = trip.packages;
 
         return Teranga.image.URL + "package-" + (pck ? "allow" : ((pck == false || pck == 0) ? "deny" : "unknown")) + ".png";
+      },
+
+      tripTweak: function(e, trip) {
+        // var trip = this.$.loadOne.lastResponse;
+        var wps = trip.wps;
+        if(wps) {
+          var size = wps.length;
+          // var cost = 0;
+          var seats = trip.seats;
+          var free = seats;
+
+          trip.destiny = wps[size - 1];
+          for(var i = 0; i < size; i++) {
+            var p = wps[i];
+            seats += p.down - p.up;
+            // cost += p.cost;
+
+            p.seats = seats;
+            p.day = Teranga.day(p.date);
+            p.month = Teranga.month(p.date);
+            p.time = Teranga.time(p.date);
+            if(seats < free) free = seats;
+          }
+          // console.log("Coste: " + cost);
+          trip.cost = trip.destiny.cost;
+          trip.free = free;
+        }
+        // this.response = res;
+        // this.data = trip;
+        this.set('trip', trip);
       }
     });
   </script>
