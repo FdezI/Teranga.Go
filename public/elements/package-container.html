@@ -1,14 +1,14 @@
 <link rel="import" href="box-container.html">
 <link rel="import" href="package-box.html">
 
-<!-- <link rel="import" href="package-service.html"> -->
+<link rel="import" href="package-service.html">
 
 <dom-module name="package-container">
   <template>
-    <box-container name="Paquetes" on-reload="reloadPackages" open="{{open}}" reloading="{{loading}}">
-      <!-- <template is="dom-if" if="[[open]]">
-        <package-service user="[[iduser]]" response="{{packages}}" on-loaded="loaded" fetch="all"></package-service>
-      </template> -->
+    <box-container name="Paquetes" on-reload="reloadPackages" on-open="loadTrips" open="{{open}}" reloading="{{loading}}" reloadable additable>
+      <template id="open" is="dom-if" if="[[open]]">
+        <package-service user="[[iduser]]" data="{{packages}}" on-loaded="loaded" fetch="all"></package-service>
+      </template>
 
       <template id="packagesRepeat" is="dom-repeat" items="[[packages]]" as="package">
         <package-box package="[[package]]"></package-box>
@@ -21,14 +21,20 @@
     Polymer({
       is: "package-container",
       properties: {
-        package: {
+        packages: {
           type: Object,
           notify: true
         },
         iduser: Number,
+        open: Boolean,
         loading: Boolean
       },
+      loadTrips: function() {
+        if(!this.packages) this.reloadPackages();
+      },
       reloadPackages: function() {
+        this.open = true;
+        this.$.open.render();
         this.loading = true;
         this.$$("package-service").reload();
         this.$.packagesRepeat.render();

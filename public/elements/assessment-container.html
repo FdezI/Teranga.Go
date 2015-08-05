@@ -5,9 +5,9 @@
 
 <dom-module name="assessment-container">
   <template>
-    <box-container name="Opiniones" on-reload="reloadAssessments" open="{{open}}" reloading="{{loading}}">
-      <template is="dom-if" if="[[open]]">
-        <assessment-service user="[[iduser]]" response="{{assessments}}" on-loaded="loaded" fetch="all"></assessment-service>
+    <box-container name="Opiniones" on-reload="reloadAssessments" on-open="loadAssessments" open="{{open}}" reloading="{{loading}}">
+      <template id="open" is="dom-if" if="[[open]]">
+        <assessment-service user="[[iduser]]" data="{{assessments}}" on-loaded="loaded" fetch="all"></assessment-service>
       </template>
 
       <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
@@ -31,7 +31,12 @@
       getImageUrl: function(name) {
         return Teranga.image.user.AVATARS + name;
       },
+      loadAssessments: function() {
+        if(!this.assessments) this.reloadAssessments();
+      },
       reloadAssessments: function() {
+        this.open = true;
+        this.$.open.render();
         this.loading = true;
         this.$$("assessment-service").reload();
         this.$.assessmentsRepeat.render();

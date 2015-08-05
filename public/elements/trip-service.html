@@ -1,5 +1,6 @@
 <!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="service-behavior.html">
 
 <dom-module name="trip-service">
   <style>
@@ -12,7 +13,7 @@
     <iron-ajax id="loadAll"
       params="[[filters]]"
       last-response="{{data}}"
-      on-response="tripsLoaded">
+      on-response="dataLoaded">
     </iron-ajax>
 
     <iron-ajax id="loadOne"
@@ -31,34 +32,39 @@
   <script>
     Polymer({
       is: "trip-service",
-      properties: {
-        data: {
-          type: Object,
-          notify: true
-        },
-        fetch: {
-        	type: String
-        	// observer: 'fetchChanged'
-        },
-        // response: {
+      hostAttributes: {
+        type: "trips"
+      },
+      // properties: {
+        // data: {
         //   type: Object,
         //   notify: true
         // },
-        user: {
-        	type: Number,
-        	observer: 'userChanged'
-        },
-        update: Object,
-        filters: Object
-      },
-      
-      ready: function() {
-        console.log("trip-service ready! for: " + this.fetch);
-        // this._ready = true;
-      },
+        // fetch: {
+        // 	type: String
+        // 	// observer: 'fetchChanged'
+        // },
+        // // response: {
+        // //   type: Object,
+        // //   notify: true
+        // // },
+        // user: {
+        // 	type: Number
+        // 	// observer: 'userChanged'
+        // },
+        // update: Object,
+        // filters: Object
+      // },
 
-      userChanged: function() {
-        this.reload();
+      behaviors: [Teranga.ServiceBehavior],
+
+      // ready: function() {
+      //   console.log("trip-service ready! for: " + this.fetch);
+      //   // this._ready = true;
+      // },
+
+      // userChanged: function() {
+      //   this.reload();
         // if(this.fetch == "all") { 
         // 	if(this.user) {
         // 	  this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/trips";
@@ -69,7 +75,7 @@
         	
         // 	this.$.loadAll.generateRequest();
         // }
-      },
+      // },
       
       // fetchChanged: function() {
       //   if(this.fetch == "all") {
@@ -89,17 +95,17 @@
       //   }
       // },
       
-      tripsLoaded: function() {
-        // Make a copy of the loaded data
-        console.log('Trips loaded:');
-        // console.log(this.response);
-  //       this.data = this.$.loadAll.response.slice(0);
-        // this.data = this.$.loadAll.lastResponse;
-        // this.response = this.data;
-        // this.data = this.response;
+  //     tripsLoaded: function() {
+  //       // Make a copy of the loaded data
+  //       console.log('Trips loaded:');
+  //       // console.log(this.response);
+  // //       this.data = this.$.loadAll.response.slice(0);
+  //       // this.data = this.$.loadAll.lastResponse;
+  //       // this.response = this.data;
+  //       // this.data = this.response;
 
-        this.fire('loaded');
-      },
+  //       this.fire('loaded', this.data);
+  //     },
       
       tripLoaded: function(e, a, as) {
         console.log('Trip Loaded:');
@@ -131,36 +137,36 @@
         // this.response = res;
         this.data = res;
         // console.log(this.response);
-        this.fire('loaded');
+        this.fire('loaded', this.data);
       },
       
-      saveData: function() {
-        console.log('SAVING TRIP');
-        this.$.create.url = Teranga.restAPI + "trips";
-        this.$.create.generateRequest();
-      },
+      // saveData: function() {
+      //   console.log('SAVING TRIP');
+      //   this.$.create.url = Teranga.restAPI + "trips";
+      //   this.$.create.generateRequest();
+      // },
       
-      createdResponse: function() {
-        // this.response = this.$.create.lastResponse;
-      },
+      // createdResponse: function() {
+      //   // this.response = this.$.create.lastResponse;
+      // },
 
-      reload: function() {
-        console.log("reloading: " + this.fetch);
-        if(this.fetch == "all") { 
-          if(this.user) {
-            this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/trips";
-          } else this.$.loadAll.url = Teranga.restAPI + "trips";
+      // reload: function() {
+      //   console.log("reloading: " + this.fetch);
+      //   if(this.fetch == "all") { 
+      //     if(this.user) {
+      //       this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/trips";
+      //     } else this.$.loadAll.url = Teranga.restAPI + "trips";
           
-          console.log(this.$.loadAll.params);
-          this.$.loadAll.generateRequest();
-        } else if(this.fetch !== "") {
-          console.log("fetching " + this.fetch);
-          this.$.loadOne.url = Teranga.restAPI + "trips/" + this.fetch;
+      //     console.log(this.$.loadAll.params);
+      //     this.$.loadAll.generateRequest();
+      //   } else if(this.fetch !== "") {
+      //     console.log("fetching " + this.fetch);
+      //     this.$.loadOne.url = Teranga.restAPI + "trips/" + this.fetch;
 
-          console.log(this.$.loadOne.url);
-          this.$.loadOne.generateRequest();
-        }
-      }
+      //     console.log(this.$.loadOne.url);
+      //     this.$.loadOne.generateRequest();
+      //   }
+      // }
     });
   </script>
 </dom-module>

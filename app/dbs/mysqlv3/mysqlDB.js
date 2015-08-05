@@ -7,7 +7,7 @@ mysql.pool = mysql.createPool({
   host     : 'localhost',
   user     : 'tfg',
   password : 'asdfasdf',
-  database : 'TFGv2'
+  database : 'TFGv3'
 });
 /////////////////
 

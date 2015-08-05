@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 
 var app        = express();                 // define our app using express
 // var db         = require('./app/dbs/mongo/mongoDB');
-var db         = require('./app/dbs/mysqlv2/mysqlDB');
+var db         = require('./app/dbs/mysqlv3/mysqlDB');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -100,32 +100,32 @@ apiRouter.route('/users/:iduser')
 	.delete(db.userController.delete);
 	
 apiRouter.route('/users/:iduser/cars')
-	.post(db.carController.create)
+	// .post(db.carController.create)
 	.get(db.userController.getCars);
 	// .get(db.carController.getAll);
-apiRouter.route('/users/:iduser/cars/:idcar') // Maybe should this be deleted and use unlinked instead
-	.get(db.carController.get)
-	.put(db.carController.update)
-	.delete(db.carController.delete);
+// apiRouter.route('/users/:iduser/cars/:idcar') // Maybe should this be deleted and use unlinked instead
+// 	.get(db.carController.get)
 
 apiRouter.route('/users/:iduser/assessments')
 	.get(db.userController.getAssessments);
 
+apiRouter.route('/users/:iduser/packages')
+	.get(db.userController.getPackages);
+
 apiRouter.route('/users/:iduser/trips')
-// 	.post(db.carController.create)
-	// .get(db.tripController.getAll);
-	.get(db.userController.getTrips)
-apiRouter.route('/users/:iduser/trips/:idtrip') // Maybe should this be deleted and use unlinked instead
-	.get(db.tripController.get)
-	.put(db.tripController.addPassenger);
+	.get(db.userController.getTrips);
+
+// apiRouter.route('/users/:iduser/trips/:idtrip') // Maybe should this be deleted and use unlinked instead
+// 	.get(db.tripController.get)
+// 	.put(db.tripController.addPassenger);
 	
-apiRouter.route('/users/:iduser/packets')
-	.post(db.packetController.create)
-	.get(db.packetController.getAll);
-apiRouter.route('/users/:iduser/packets/:packet_id') // Maybe should this be deleted and use unlinked instead
-	.get(db.packetController.get)
-	.put(db.packetController.update)
-	.delete(db.packetController.delete);
+apiRouter.route('/users/:iduser/packages')
+	.post(db.userController.create)
+	.get(db.userController.getAll);
+apiRouter.route('/users/:iduser/packages/:idpackage') // Maybe should this be deleted and use unlinked instead
+	.get(db.userController.get)
+	.put(db.userController.update)
+	.delete(db.userController.delete);
 	
 apiRouter.route('/routes')
 	.post(db.routeController.create)
@@ -165,6 +165,11 @@ apiRouter.route('/locations')
 	.get(db.locationController.getAll);
 apiRouter.route('/locations/:idlocation')
 	.get(db.locationController.get);
+apiRouter.route('/packages')
+	.get(db.packageController.getAll);
+apiRouter.route('/packages/:idpackage')
+	.get(db.packageController.get);
+
 	
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

@@ -1,0 +1,52 @@
+<link rel="import" href="box-container.html">
+<!-- <link rel="import" href="travel-box.html"> -->
+
+<!-- <link rel="import" href="trip-service.html"> -->
+
+<dom-module name="data-container">
+  <template>
+    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" open="{{open}}" reloading="{{loading}}" reloadable additable>
+      <template id="open" is="dom-if" if="[[open]]">
+        <!-- <content select="service"></content> -->
+        <trip-service id="ts" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+      </template>
+
+      
+
+      <template id="dataRepeat" is="dom-repeat" items="[[data]]">
+        <!-- <content select="repeat"></content> -->
+        <travel-box trip="[[item]]"></travel-box>
+      </template>
+      
+    </box-container>
+  </template>
+
+  <script>
+    Polymer({
+      is: "trip-container",
+      properties: {
+        name: String,
+        data: {
+          type: Object,
+          notify: true
+        },
+        iduser: Number,
+        open: Boolean,
+        loading: Boolean
+      },
+      loadData: function() {
+        if(!this.data) this.reloadData();
+      },
+      reloadData: function() {
+        this.open = true;
+        this.$.open.render();
+        this.loading = true;
+        this.$$("trip-service").reload();
+        this.$.dataRepeat.render();
+      },
+      loaded: function() {
+        this.loading = false;
+      }
+    });
+  </script>
+</dom-module>

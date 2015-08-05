@@ -1,0 +1,37 @@
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="service-behavior.html">
+
+<dom-module name="data-service">
+  <style>
+    :host {
+      display: none;
+    }
+  </style>
+  
+  <template>
+    <iron-ajax id="loadAll"
+      last-response="{{data}}"
+      on-response="dataLoaded">
+    </iron-ajax>
+
+    <iron-ajax id="loadOne"
+      last-response="{{data}}"
+      on-response="dataLoaded">
+    </iron-ajax>
+    
+    <iron-ajax id="create"
+      body="{{update}}"
+      last-response="{{data}}"
+      on-response="createdResponse"
+      content-type="application/json"
+      method="POST">
+    </iron-ajax>
+    
+  </template>
+  <script>
+    Polymer({
+      is: "data-service",
+      behaviors: [Teranga.ServiceBehavior]
+    });
+  </script>
+</dom-module>

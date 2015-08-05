@@ -1,7 +1,8 @@
+<!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="service-behavior.html">
 
-<dom-module name="assessment-service">
+<dom-module name="package-service">
   <style>
     :host {
       display: none;
@@ -10,13 +11,14 @@
   
   <template>
     <iron-ajax id="loadAll"
+      params="[[filters]]"
       last-response="{{data}}"
-      on-response="assessmentsLoaded">
+      on-response="packagesLoaded">
     </iron-ajax>
 
     <iron-ajax id="loadOne"
-      last-response="{{data}}"
-      on-response="assessmentLoaded">
+    	last-response="{{data}}"
+      on-response="packageLoaded">
     </iron-ajax>
     
     <iron-ajax id="create"
@@ -30,11 +32,10 @@
   </template>
   <script>
     Polymer({
-      is: "assessment-service",
+      is: "package-service",
       hostAttributes: {
-        type: "assessments",
-      },
-      behaviors: [Teranga.ServiceBehavior]
+      	type: "packages"
+      }
       // properties: {
       //   data: {
       //     type: Object,
@@ -42,28 +43,34 @@
       //   },
       //   fetch: String,
       //   user: Number,
-      //   update: String
+      //   update: Object,
+      //   filters: Object
       // },
       
       // ready: function() {
-      //   console.log("assessment-service ready! for: " + this.fetch);
+      //   console.log("package-service ready! for: " + this.fetch);
+      //   // this._ready = true;
       // },
+
+      // // userChanged: function() {
+      // //   this.reload();
+      // // },
       
-      // assessmentsLoaded: function() {
-      //   console.log('Assessments loaded:');
+      // packagesLoaded: function() {
+      //   console.log('packages loaded:');
 
       //   this.fire('loaded', this.data);
       // },
       
-      // assessmentLoaded: function() {
-      //   console.log('Assessment Loaded:');
+      // packageLoaded: function() {
+      //   console.log('package Loaded:');
 
       //   this.fire('loaded', this.data);
       // },
       
       // saveData: function() {
-      //   console.log('SAVING ASSESSMENT');
-      //   this.$.create.url = Teranga.restAPI + "assessments";
+      //   console.log('SAVING package');
+      //   this.$.create.url = Teranga.restAPI + "packages";
       //   this.$.create.generateRequest();
       // },
       
@@ -75,14 +82,14 @@
       //   console.log("reloading: " + this.fetch);
       //   if(this.fetch == "all") { 
       //     if(this.user) {
-      //       this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/assessments";
-      //     } else this.$.loadAll.url = Teranga.restAPI + "assessments";
+      //       this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/packages";
+      //     } else this.$.loadAll.url = Teranga.restAPI + "packages";
           
       //     console.log(this.$.loadAll.params);
       //     this.$.loadAll.generateRequest();
       //   } else if(this.fetch !== "") {
       //     console.log("fetching " + this.fetch);
-      //     this.$.loadOne.url = Teranga.restAPI + "assessments/" + this.fetch;
+      //     this.$.loadOne.url = Teranga.restAPI + "packages/" + this.fetch;
 
       //     console.log(this.$.loadOne.url);
       //     this.$.loadOne.generateRequest();
