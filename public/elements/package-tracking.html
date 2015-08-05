@@ -2,7 +2,7 @@
 <link rel="import" href="../elements/tracking-line.html">
 <link rel="import" href="../elements/package-line.html">
 
-<link rel="import" href="../elements/data-service.html">
+<!-- <link rel="import" href="../elements/data-service.html"> -->
 
 <dom-module name="package-tracking">
   <style>
@@ -96,7 +96,7 @@
     }
   </style>
   <template>
-    <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}"></data-service>
+    <!-- <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}"></data-service> -->
 
     <div class="info-container">
       <img class="img-package" src="../images/package-allow.png">
@@ -132,15 +132,18 @@
     Polymer({
       is: "package-tracking",
       properties: {
-        idpackage: {
-          type: Number,
-          observer: 'idpackageChanged'
-        },
-        package: Object
+        // idpackage: {
+        //   type: Number,
+        //   observer: 'idpackageChanged'
+        // },
+        package: {
+          type: Object,
+          notify: true
+        }
       },
-      idpackageChanged: function() {
-        this.$.ds.reload();
-      },
+      // idpackageChanged: function() {
+      //   this.$.ds.reload();
+      // },
       traveling: function() {
         // if(package && package.status == "inactivo") return false;
         // else return true;

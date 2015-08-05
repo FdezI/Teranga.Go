@@ -1,5 +1,8 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../elements/package-tracking.html">
+<link rel="import" href="../elements/data-service.html">
 
 <dom-module name="tracking-view">
   <style>
@@ -10,30 +13,35 @@
     margin-top: 5%;
     opacity: 0.5;
   }
-  #input {
-    padding: 10px;
-    margin: 20px;
-    border: 1px solid #777;
+  .package-input {
+    /*padding: 10px;*/
+    /*margin: 20px;*/
+    /*border: 1px solid #777;*/
     width: 80%;
-    border-radius: 3px;
-  }
-  .valid {
-
-  }
-  .invalid {
-
+    /*border-radius: 3px;*/
   }
   .package-button {
     width: 150px;
   }
   </style>
   <template>
-    <div class="layout vertical center">
-      <img class="tracking-img" src="../images/package-allow.png">
-      <span>Introduce el identificador (ID) del paquete</span>
-      <input id="input" class$="[[validateclass]]" type="text" placeholder="ID" on-input="validate" required>
-      <paper-button class="package-button" raised on-click="search">Buscar</paper-button>
-    </div>
+    <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}" on-loaded="loaded"></data-service>
+
+    <template is="dom-if" if="[[!package]]">
+      <div class="layout vertical center">
+        <img class="tracking-img" src="../images/package-allow.png">
+        <paper-input id="input" class="package-input" placeholder="Introduce el identificador (ID) del paquete" label="ID" pattern="^\d+$" error-message="El identificador debe estar compuesto únicamente por números" required auto-validate on-keydown="search" value="{{idpackage}}"></paper-input>
+        <template is="dom-if" if="[[!loading]]">
+          <paper-button class="package-button" raised on-click="search">Buscar</paper-button>
+        </template>
+        <template is="dom-if" if="[[loading]]">
+          <paper-slider></paper-slider>
+        </template>
+      </div>
+    </template>
+    <template is="dom-if" if="[[package]]">
+      <package-tracking package="[[package]]"></package-tracking>
+    </template>
   </template>
 
   <script>
@@ -42,13 +50,24 @@
       properties: {
         user: Object,
         filters: Object,
-        validateclass: {
-          type: String,
-          value: "invalid"
+        idpackage: Number,
+        package: {
+          type: Object,
+          value: null
+        },
+        loading: {
+          type: Boolean,
+          value: false
         }
       },
-      validate: function() {
-        this.validateclass = /^\d+$/.test(this.$.input.value) ? "valid" : "invalid";
+      search: function(e) {
+        if((!(e instanceof KeyboardEvent) || e.keyCode === 13) && !this.$$("#input").invalid) {
+          this.loading = true;
+          this.$.ds.reload();
+        }
+      },
+      loaded: function() {
+        this.loading = false;
       }
     });
   </script>
