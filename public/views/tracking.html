@@ -23,6 +23,9 @@
   .package-button {
     width: 150px;
   }
+  .back-button {
+    margin: 5px;
+  }
   </style>
   <template>
     <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}" on-loaded="loaded"></data-service>
@@ -40,6 +43,7 @@
       </div>
     </template>
     <template is="dom-if" if="[[package]]">
+      <div><paper-button class="back-button" raised on-click="back">Volver</paper-button></div>
       <package-tracking package="[[package]]"></package-tracking>
     </template>
   </template>
