@@ -28,8 +28,8 @@
   
   <template>
     	<button on-click="toggle" class="container">
-        <div style="display: flex;">
-          <span class="layout horizontal center">[[name]]</span>
+        <div class="layout horizontal">
+          <span class="layout horizontal center flex">[[name]]</span>
           <template is="dom-if" if="[[additable]]">
             <paper-icon-button icon="add" on-click="add" class="button-inner"></paper-icon-button>
           </template>
