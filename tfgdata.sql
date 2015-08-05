@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.44, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: TFGv2
+-- Host: localhost    Database: TFGv3
 -- ------------------------------------------------------
 -- Server version	5.5.44-0ubuntu0.14.04.1
 
@@ -16,15 +16,15 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `TFGv2`
+-- Current Database: `TFGv3`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `TFGv2` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `TFGv3` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-GRANT ALL PRIVILEGES ON TFG . * TO 'tfg'@'localhost' IDENTIFIED BY 'asdfasdf';
+GRANT ALL PRIVILEGES ON TFGv3.* TO 'tfg'@'localhost' IDENTIFIED BY 'asdfasdf';
 FLUSH PRIVILEGES;
 
-USE `TFGv2`;
+USE `TFGv3`;
 
 --
 -- Table structure for table `assessment`
@@ -171,9 +171,16 @@ DROP TABLE IF EXISTS `package`;
 CREATE TABLE `package` (
   `idpackage` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `size` bit(3) NOT NULL,
-  PRIMARY KEY (`idpackage`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `size` tinyint(2) NOT NULL,
+  `emitter` int(11) NOT NULL,
+  `receiver` int(11) DEFAULT NULL,
+  `description` tinytext,
+  PRIMARY KEY (`idpackage`),
+  KEY `fk_package_1_idx` (`emitter`),
+  KEY `fk_package_2_idx` (`receiver`),
+  CONSTRAINT `fk_package_1` FOREIGN KEY (`emitter`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_package_2` FOREIGN KEY (`receiver`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +189,42 @@ CREATE TABLE `package` (
 
 LOCK TABLES `package` WRITE;
 /*!40000 ALTER TABLE `package` DISABLE KEYS */;
+INSERT INTO `package` VALUES (1,'Caja',2,1,NULL,'Este es un comentario del paquete 1, la caja!'),(2,'Piano',5,1,2,NULL),(3,'Cajita',1,2,NULL,'Este es un comentario del paquete 3, la cajita!');
 /*!40000 ALTER TABLE `package` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `packageRequests`
+--
+
+DROP TABLE IF EXISTS `packageRequests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `packageRequests` (
+  `trip` int(11) NOT NULL,
+  `package` int(11) NOT NULL,
+  `pointA` tinyint(3) NOT NULL,
+  `pointB` tinyint(3) NOT NULL,
+  `cost` int(8) DEFAULT NULL,
+  `comment` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`trip`,`package`),
+  KEY `fk_packageRequest_2_idx` (`package`),
+  KEY `fk_packageRequest_3_idx` (`trip`,`pointA`),
+  KEY `fk_packageRequest_4_idx` (`trip`,`pointB`),
+  CONSTRAINT `fk_packageRequest_3` FOREIGN KEY (`trip`, `pointA`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_packageRequest_4` FOREIGN KEY (`trip`, `pointB`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_packageRequest_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_packageRequest_2` FOREIGN KEY (`package`) REFERENCES `package` (`idpackage`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `packageRequests`
+--
+
+LOCK TABLES `packageRequests` WRITE;
+/*!40000 ALTER TABLE `packageRequests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `packageRequests` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -195,12 +237,10 @@ DROP TABLE IF EXISTS `packageTrips`;
 CREATE TABLE `packageTrips` (
   `trip` int(11) NOT NULL,
   `package` int(11) NOT NULL,
-  `cost` int(4) DEFAULT NULL,
-  `comment` varchar(45) DEFAULT NULL,
-  `accepted` bit(1) NOT NULL DEFAULT b'0',
   `pointA` tinyint(3) NOT NULL,
   `pointB` tinyint(3) NOT NULL,
-  PRIMARY KEY (`trip`),
+  `cost` int(8) DEFAULT NULL,
+  PRIMARY KEY (`trip`,`package`),
   KEY `fk_packageTrips_2_idx` (`package`),
   KEY `fk_packageTrips_3_idx` (`pointA`),
   KEY `fk_packageTrips_3_idx1` (`trip`,`pointA`),
@@ -270,7 +310,7 @@ CREATE TABLE `routePoints` (
 
 LOCK TABLES `routePoints` WRITE;
 /*!40000 ALTER TABLE `routePoints` DISABLE KEYS */;
-INSERT INTO `routePoints` VALUES (1,1,'start',1),(1,2,'center',2),(1,3,'center',3),(1,4,'end',4),(1,5,'end',5);
+INSERT INTO `routePoints` VALUES (1,1,'start',1),(1,2,'center',2),(1,3,'center',3),(1,4,'end',4),(1,5,'end',4);
 /*!40000 ALTER TABLE `routePoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,7 +329,7 @@ CREATE TABLE `trip` (
   `packages` bit(1) DEFAULT NULL,
   `animals` bit(1) DEFAULT NULL,
   `comment` text,
-  `tripcol` varchar(45) DEFAULT NULL,
+  `expiration` date DEFAULT NULL,
   PRIMARY KEY (`idtrip`),
   KEY `fk_trip_1_idx` (`driver`),
   KEY `fk_trip_2_idx` (`car`),
@@ -337,7 +377,7 @@ CREATE TABLE `tripPoints` (
 
 LOCK TABLES `tripPoints` WRITE;
 /*!40000 ALTER TABLE `tripPoints` DISABLE KEYS */;
-INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de málaga, 115','','2015-09-09 21:00:00',0,0),(2,1,3,'c/ la piruleta','\0','2015-08-01 12:50:38',4,2),(2,2,4,'c/ aleatoria de dogo','','2015-08-01 12:50:38',4,3),(2,99,5,'c/ final de ruta','','2015-09-10 07:30:00',8,5),(3,0,4,'c/ inicio de dogo','','2014-09-10 07:30:00',NULL,NULL),(3,99,1,'c/ final de granada','','2014-09-15 07:30:00',NULL,NULL),(4,0,1,'c/ Sin fin','','0000-00-00 00:00:00',89,5),(4,99,3,'c/ algo con fin','','0000-00-00 00:00:00',23,6),(5,0,4,'c/ Inicio','','0000-00-00 00:00:00',23,24),(5,99,5,'c/ el fin','','0000-00-00 00:00:00',24,45),(6,0,4,'c/ africana','','0000-00-00 00:00:00',23,56),(6,99,2,'c/ española','','0000-00-00 00:00:00',98,8);
+INSERT INTO `tripPoints` VALUES (2,0,1,'c/ carretera de málaga, 115','','2015-09-09 21:00:00',0,0),(2,1,3,'c/ la piruleta','\0','2015-08-01 12:50:38',4,2),(2,2,4,'c/ aleatoria de dogo','','2015-08-01 12:50:38',4,3),(2,99,5,'c/ final de ruta','','2015-09-10 07:30:00',8,5),(3,0,4,'c/ inicio de dogo','','2016-09-10 07:30:00',NULL,NULL),(3,99,1,'c/ final de granada','','2016-09-15 07:30:00',NULL,NULL),(4,0,1,'c/ Sin fin','','0000-00-00 00:00:00',89,5),(4,99,3,'c/ algo con fin','','0000-00-00 00:00:00',23,6),(5,0,4,'c/ Inicio','','0000-00-00 00:00:00',23,24),(5,99,5,'c/ el fin','','0000-00-00 00:00:00',24,45),(6,0,4,'c/ africana','','0000-00-00 00:00:00',23,56),(6,99,2,'c/ española','','0000-00-00 00:00:00',98,8);
 /*!40000 ALTER TABLE `tripPoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,6 +414,40 @@ INSERT INTO `user` VALUES (1,'Usuario1',NULL,'usuario1@mail.com','avatar1','','
 UNLOCK TABLES;
 
 --
+-- Table structure for table `userRequests`
+--
+
+DROP TABLE IF EXISTS `userRequests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `userRequests` (
+  `trip` int(11) NOT NULL,
+  `user` int(11) NOT NULL,
+  `pointA` tinyint(3) NOT NULL,
+  `pointB` tinyint(3) NOT NULL,
+  `cost` int(8) DEFAULT NULL,
+  `comment` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`trip`,`user`),
+  KEY `fk_userRequest_2_idx` (`user`),
+  KEY `fk_userRequest_3_idx` (`trip`,`pointA`),
+  KEY `fk_userRequest_4_idx` (`trip`,`pointB`),
+  CONSTRAINT `fk_userRequest_1` FOREIGN KEY (`trip`) REFERENCES `trip` (`idtrip`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_userRequest_2` FOREIGN KEY (`user`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_userRequest_3` FOREIGN KEY (`trip`, `pointA`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_userRequest_4` FOREIGN KEY (`trip`, `pointB`) REFERENCES `tripPoints` (`trip`, `order`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userRequests`
+--
+
+LOCK TABLES `userRequests` WRITE;
+/*!40000 ALTER TABLE `userRequests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `userRequests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `userTrips`
 --
 
@@ -383,11 +457,9 @@ DROP TABLE IF EXISTS `userTrips`;
 CREATE TABLE `userTrips` (
   `trip` int(11) NOT NULL,
   `user` int(11) NOT NULL,
-  `cost` int(4) DEFAULT NULL,
-  `comment` varchar(45) DEFAULT NULL,
-  `accepted` bit(1) DEFAULT NULL,
   `pointA` tinyint(3) NOT NULL,
   `pointB` tinyint(3) NOT NULL,
+  `cost` int(8) DEFAULT NULL,
   PRIMARY KEY (`trip`,`user`),
   KEY `fk_userTrips_2_idx` (`user`),
   KEY `fk_userTrips_3_idx` (`pointA`,`pointB`),
@@ -406,7 +478,7 @@ CREATE TABLE `userTrips` (
 
 LOCK TABLES `userTrips` WRITE;
 /*!40000 ALTER TABLE `userTrips` DISABLE KEYS */;
-INSERT INTO `userTrips` VALUES (2,2,90,'','',1,99),(2,3,150,'que carero!!','',2,99),(2,4,50,'baratuno','',0,2),(3,2,60,'Aham!, hecho!','',0,99);
+INSERT INTO `userTrips` VALUES (2,2,1,99,90),(2,3,2,99,150),(2,4,0,2,50),(3,2,0,99,60);
 /*!40000 ALTER TABLE `userTrips` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -419,4 +491,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-02 12:15:25
+-- Dump completed on 2015-08-05 16:38:19
