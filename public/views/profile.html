@@ -128,7 +128,7 @@
             </div>
           </div>
 
-          <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}"></package-container>
+          <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}" on-select="packageSelected"></package-container>
           <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
           
           <template is="dom-if" if="[[showdriver]]">
@@ -219,6 +219,9 @@
       updateShow: function() {
         if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;
         else this.showdriver = false;
+      },
+      packageSelected: function(e, package) {
+        page("/tracking/" + package.idpackage);
       }
     });
   </script>

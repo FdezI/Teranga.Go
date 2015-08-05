@@ -33,8 +33,7 @@
   </style>
   
   <template>
-    <a id="linkpackage" href="[[url]]">
-      <div class="package">
+      <div id="linkpackage" class="package">
         <table>
           <tr>
             <td>
@@ -64,16 +63,13 @@
           </tr>
         </table>
       </div>
-    </a>
   </template>
 
   <script>
   Polymer({
     is: "package-box",
     properties: {
-      package: {
-        type: Object
-      }
+      package: Object
       // name: String,
       // idpackage: String,
       // size: String,

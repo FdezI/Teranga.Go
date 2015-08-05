@@ -5,7 +5,7 @@
   <template>
     <data-container name="Paquetes" iduser="[[iduser]]" type="packages" data="{{packages}}" reloadable additable>
       <template is="dom-repeat" items="[[packages]]">
-        <package-box package="[[item]]"></package-box>
+        <package-box package="[[item]]" on-click="packageSelect"></package-box>
       </template>
     </data-container>
   </template>
@@ -19,6 +19,10 @@
           notify: true
         },
         iduser: Number
+      },
+      packageSelect: function(e) {
+        // console.log(e.model.package);
+        this.fire('select', e.model.__data__.item);
       }
     });
   </script>
