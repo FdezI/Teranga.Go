@@ -84,10 +84,10 @@
           </template>
         </datalist>
         <td>
-          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator" required></paper-input>
+          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator" error-message="Seleccione una opción de la lista" required></paper-input>
         </td>
         <td>
-          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="wps" value="{{fakefilters.destination}}" validator="trip-search-validator" required></paper-input>
+          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="wps" value="{{fakefilters.destination}}" validator="trip-search-validator" error-message="Seleccione una opción de la lista" required></paper-input>
         </td>
       </tr>
       <tr>
