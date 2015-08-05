@@ -1,9 +1,31 @@
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <dom-module name="tracking-view">
   <style>
-
+    .tracking-img {
+    width: 35%;
+    height: auto;
+    margin-bottom: 10px;
+    margin-top: 5%;
+    opacity: 0.5;
+  }
+  .input-package {
+    padding: 10px;
+    margin: 20px;
+    border: 1px solid #777;
+    width: 80%;
+    border-radius: 3px;
+  }
+  .package-button {
+    width: 150px;
+  }
   </style>
   <template>
-  
+    <div class="layout vertical center">
+      <img class="tracking-img" src="../images/package-allow.png">
+      <span>Introduce el identificador (ID) del paquete</span>
+      <input class="input-package" type="text" placeholder="ID">
+      <paper-button class="package-button" raised on-click="search">Buscar</paper-button>
+    </div>
   </template>
 
   <script>
