@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<dom-module name="info-box">
+	<style>
+    .contentinfo.column {
+      width: 24.5%;
+      min-width: 120px;
+      min-height: 152px;
+      margin: 50px 2% 0 2%;
+      padding: 30px 20px 20px 20px;
+      display: inline-block;
+      vertical-align: top;
+      background-color: #EBEBEB;
+      text-align: center;
+    }
+    .contentinfo.column > ::content img {
+      margin-top: -80px;
+      width: 50px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      background: #ddd;
+      padding: 10px;
+    }
+    .contentinfo.column > ::content h3 {
+      margin: 0;
+    }
+    .contentinfo.column > ::content button {
+      width: 150px;
+      padding: 10px;
+    }
+	</style>
+	
+	<template>
+		<div class="contentinfo column">
+      <content select="img"></content>
+      <content select="h3"></content>
+      <content select="p"></content>
+      <template is="dom-if" if="[[button]]">
+      	<paper-button class="btn green" raised on-click="">
+      		<span>[[button]]</span>
+    		</paper-button>
+      </template>
+    </div>
+	</template>
+
+	<script>
+		Polymer({
+			is: "info-box",
+			hostAttributes: {
+				button: false
+			}
+		});
+	</script>
+</dom-module>

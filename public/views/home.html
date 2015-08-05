@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="../elements/map-searcher.html">
 <link rel="import" href="../elements/location-info.html">
+<link rel="import" href="../elements/info-box.html">
 
 <dom-module name="home-view">
   
@@ -15,63 +16,35 @@
       height: 100%;
       width: 100%;
     }
-    .contentinfo.column {
-      width: 24.5%;
-      min-width: 120px;
-      min-height: 152px;
-      margin: 50px 2% 0 2%;
-      padding: 30px 20px 20px 20px;
-      display: inline-block;
-      vertical-align: top;
-      background-color: #EBEBEB;
-      text-align: center;
-    }
-    .contentinfo.column > img {
-      margin-top: -80px;
-      width: 50px;
-      height: 50px;
-      border: 1px solid #ccc;
-      border-radius: 50%;
-      background: #ddd;
-      padding: 10px;
-    }
-    .contentinfo.column > h3 {
-      margin: 0;
-    }
-    .contentinfo.column > button {
-      width: 150px;
-      padding: 10px;
-    }
   </style>
   <template>
       <map-searcher></map-searcher>
 
-      <div class="other">
-        <div class="contentinfo column">
+      <div>
+        <info-box button="Regístrate">
           <img src="../images/user.png"/>
           <h3>¿Eres nuevo por aquí?</h3>
-          <p>Registrate y descubre un nuevo mundo.</p>
-          <paper-button class="btn green" raised on-click="register">Registrate</paper-button>
-        </div>
-        <div class="contentinfo column center">
-          <img src="../images/user.png"/>
+          <p>Registrate y descubre un nuevo mundo.</p>-->
+        </info-box>
+
+        <info-box class="center">
+           <img src="../images/user.png"/>
           <h3>Totalmente gratuito</h3>
           <p>Encuentra cientos de tesoros sin gastar nada.</p>
-        </div>
-        <div class="contentinfo column">
+        </info-box>
+
+        <info-box button="Busca ahora">
           <img src="../images/user.png"/>
           <h3>Descubre nuevos lugares</h3>
           <p>Y cambia tu forma de ver el mundo.</p>
-          <paper-button class="btn green" raised on-click="search">Busca ahora</paper-button>
-        </div>
+        </info-box>
       </div>
 
       <div>
         <location-info right></location-info>
         <location-info></location-info>
       </div>
-
-    <!-- </article> -->
+      
   </template>
   <script>
     Polymer({

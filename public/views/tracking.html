@@ -1,0 +1,163 @@
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../elements/tracking-line.html">
+<link rel="import" href="../elements/package-line.html">
+
+<link rel="import" href="../elements/data-service.html">
+
+<dom-module name="tracking-view">
+  <style>
+    .info-container{
+      display: block;
+    }
+
+    .img-package {
+      width: 100px;
+      height: 100px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0px 0px 5px #ccc;
+      padding: 10px;
+      display: inline-block;
+    }
+
+    .name-package {
+      margin: 20px;
+      vertical-align: top;
+      display: inline-block;
+    }
+
+    .size-package {
+      float: right;
+      padding: 15px;
+      border: 1px solid #ccc;
+      display: inline-block;
+      vertical-align: top;
+      margin: 20px;
+      text-align: center;
+    }
+    .delete-container {
+      display: inline-table;
+      width: 100%;
+    }
+    .delete-package {
+      float: right;
+      /*border: 1px solid #ccc;*/
+      margin: 10px;
+      /*padding: 10px;*/
+    }
+    .comment-package {
+      position: relative;
+      background: #ffffff;
+      border: 2px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .comment-package:after, .comment-package:before {
+      bottom: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .comment-package:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-bottom-color: #ffffff;
+      border-width: 17px;
+      left: 39px;
+    }
+    .comment-package:before {
+      border-color: rgba(204, 204, 204, 0);
+      border-bottom-color: #ccc;
+      border-width: 20px;
+      left: 36px;
+    }
+    .status-package {
+      vertical-align: top;
+      display: inline-block;
+      margin: 30px;
+      width: 77%;
+    }
+    .tracking-line {
+      width: 140px;
+      display: inline-block;
+    }
+    .not-traveling-package {
+      padding: 30px;
+      text-align: center;
+      background: #ddd;
+      border: 1px solid #ddd;
+      width: 100%;
+      margin: 20px;
+    }
+  </style>
+  <template>
+    <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}"></data-service>
+
+    <div class="info-container">
+      <img class="img-package" src="../images/package-allow.png">
+      <div class="name-package">
+        <span>[[package.name]]</span>
+        <div>ID: <span>[[package.idpackage]]</span></div>
+      </div>
+      <div class="size-package">[[size(package.size)]]</div>
+    </div>
+    <div class="comment-package">[[package.description]]</div>
+    <div class="delete-container"><paper-button class="delete-package" raised on-click="delete">Eliminar paquete</paper-button></div>
+    <div class="vertical-separator"></div>
+
+    <template is="dom-if" if="[[traveling()]]">
+      <div class="tracking-line"><tracking-line></tracking-line></div>
+    </template>
+
+    <div class="status-package">
+      <div>Estado: <span>Inactivo</span></div>
+      <template is="dom-if" if="[[traveling()]]">
+        <div>Fecha estimada de salida: <span>10</span> <span>Junio</span> a las <span>10:30</span></div>
+        <div>Fecha estimada de llegada: <span>10</span> <span>Junio</span> a las <span>10:30</span></div>
+        <div>Última localización: <span>Motril</span></div>
+      </template>
+      <template is="dom-if" if="[[!traveling()]]">
+        <div class="not-traveling-package">El paquete no se encuentra viajando en estos momentos</div>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "tracking-view",
+      properties: {
+        idpackage: {
+          type: Number,
+          observer: 'idpackageChanged'
+        },
+        package: Object
+      },
+      idpackageChanged: function() {
+        this.$.ds.reload();
+      },
+      traveling: function() {
+        // if(package && package.status == "inactivo") return false;
+        // else return true;
+        return true;
+      },
+
+      size: function(size) {
+        switch(size) {
+          case 0: return 'Muy Pequeño';
+          case 1: return 'Pequeño';
+          case 2: return 'Mediano';
+          case 3: return 'Grande';
+          case 4: return 'Muy Grande';
+        }
+
+        return "Sin tamaño";
+      }
+    });
+  </script>
+</dom-module>
