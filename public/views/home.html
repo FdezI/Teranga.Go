@@ -1,6 +1,8 @@
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="../elements/map-searcher.html">
+<link rel="import" href="../elements/location-info.html">
 
 <dom-module name="home-view">
   
@@ -13,22 +15,64 @@
       height: 100%;
       width: 100%;
     }
+    .contentinfo.column {
+      width: 24.5%;
+      min-width: 120px;
+      min-height: 152px;
+      margin: 50px 2% 0 2%;
+      padding: 30px 20px 20px 20px;
+      display: inline-block;
+      vertical-align: top;
+      background-color: #EBEBEB;
+      text-align: center;
+    }
+    .contentinfo.column > img {
+      margin-top: -80px;
+      width: 50px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      background: #ddd;
+      padding: 10px;
+    }
+    .contentinfo.column > h3 {
+      margin: 0;
+    }
+    .contentinfo.column > button {
+      width: 150px;
+      padding: 10px;
+    }
   </style>
   <template>
-<!--   <section layout center-center fit> -->
-    <article class="center">
-      <map-searcher/>
-      <!-- <div layout horizontal vertical center-center class="center">
-    	  <google-map latitude="14.7324022" longitude="-17.3881194"></google-map>
-    	  <div layout horizontal>
-    	    <paper-input label="Origen"></paper-input>
-    	    <paper-input label="Destino"></paper-input>
-    	  </div>
-      </div> -->
-    </article>
-  </template>
-<!--   </section> -->
+      <map-searcher></map-searcher>
 
+      <div class="other">
+        <div class="contentinfo column">
+          <img src="../images/user.png"/>
+          <h3>¿Eres nuevo por aquí?</h3>
+          <p>Registrate y descubre un nuevo mundo.</p>
+          <paper-button class="btn green" raised on-click="register">Registrate</paper-button>
+        </div>
+        <div class="contentinfo column center">
+          <img src="../images/user.png"/>
+          <h3>Totalmente gratuito</h3>
+          <p>Encuentra cientos de tesoros sin gastar nada.</p>
+        </div>
+        <div class="contentinfo column">
+          <img src="../images/user.png"/>
+          <h3>Descubre nuevos lugares</h3>
+          <p>Y cambia tu forma de ver el mundo.</p>
+          <paper-button class="btn green" raised on-click="search">Busca ahora</paper-button>
+        </div>
+      </div>
+
+      <div>
+        <location-info right></location-info>
+        <location-info></location-info>
+      </div>
+
+    <!-- </article> -->
+  </template>
   <script>
     Polymer({
       is:"home-view",
