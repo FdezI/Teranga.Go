@@ -1,6 +1,13 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animations.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-down-animation.html">
+
 <link rel="import" href="../elements/package-tracking.html">
 <link rel="import" href="../elements/data-service.html">
 
@@ -27,21 +34,28 @@
   <template>
     <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}" on-loaded="loaded"></data-service>
 
-    <template is="dom-if" if="[[!package]]">
-      <div class="layout vertical center">
-        <img class="tracking-img" src="../images/package-allow.png">
-        <paper-input id="input" class="package-input" placeholder="Introduce el identificador (ID) del paquete" label="ID" pattern="^\d+$" error-message="El identificador debe estar compuesto únicamente por números" required auto-validate on-keydown="search" value="{{idpackage}}"></paper-input>
-        <template is="dom-if" if="[[!loading]]">
-          <paper-button class="package-button" raised on-click="search">Buscar</paper-button>
-        </template>
-        <template is="dom-if" if="[[loading]]">
-          <paper-slider></paper-slider>
-        </template>
-      </div>
-    </template>
-    <template is="dom-if" if="[[package]]">
-      <package-tracking package="[[package]]"></package-tracking>
-    </template>
+    <neon-animated-pages attr-for-selected="name" id="pages" class="flex" selected="[[page]]">
+
+      <!-- <template is="dom-if" if="[[!package]]"> -->
+      <neon-animatable name="search" entry-animation="slide-down-animation" exit-animation="slide-up-animation">
+        <div class="layout vertical center">
+          <img class="tracking-img" src="../images/package-allow.png">
+          <paper-input id="input" class="package-input" placeholder="Introduce el identificador (ID) del paquete" label="ID" pattern="^\d+$" error-message="El identificador debe estar compuesto únicamente por números" required auto-validate on-keydown="search"></paper-input>
+          <template is="dom-if" if="[[!loading]]">
+            <paper-button class="package-button" raised on-click="search">Buscar</paper-button>
+          </template>
+          <template is="dom-if" if="[[loading]]">
+            <paper-spinner active></paper-spinner>
+          </template>
+        </div>
+      </neon-animatable>
+      <!-- </template> -->
+      <!-- <template is="dom-if" if="[[package]]"> -->
+      <neon-animatable name="package" entry-animation="slide-up-animation" exit-animation="slide-down-animation">
+        <package-tracking package="[[package]]"></package-tracking>
+      </neon-animatable>
+      <!-- </template> -->
+    </neon-animated-pages>
   </template>
 
   <script>
@@ -50,9 +64,17 @@
       properties: {
         user: Object,
         filters: Object,
-        idpackage: Number,
+        page: {
+          type: String,
+          value: "search"
+        },
+        idpackage: {
+          type: Number,
+          observer: ['idpackageChanged']
+        },
         package: {
           type: Object,
+          observer: ['packageChanged'],
           value: null
         },
         loading: {
@@ -60,14 +82,25 @@
           value: false
         }
       },
+      idpackageChanged: function() {
+        this.$.ds.reload();
+      },
       search: function(e) {
-        if((!(e instanceof KeyboardEvent) || e.keyCode === 13) && !this.$$("#input").invalid) {
-          this.loading = true;
-          this.$.ds.reload();
+        if((!(e instanceof KeyboardEvent) || e.keyCode === 13)) {
+          var input = this.$$("#input");
+          if(!input.invalid) {
+            this.loading = true;
+            this.idpackage = input.value;
+            // this.$.ds.reload();
+          }
         }
       },
       loaded: function() {
         this.loading = false;
+      },
+      packageChanged: function() {
+        if(this.package) this.page = "package";
+        else this.plage = "search";
       }
     });
   </script>
