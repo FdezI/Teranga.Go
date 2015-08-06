@@ -24,6 +24,23 @@ body {
 	display: none;
 }
 
+.paper-font-title {
+	color: #fff;
+}
+.paper-icon-header {
+	color: #fff;
+	margin: 0px!important;
+}
+
+.paper-icon-header-div {
+	height: 100%;
+	padding: 0px 10px;
+}
+
+.paper-icon-header-div:hover, .paper-icon-header-div:active {
+	background: #121212;
+}
+
 .margin-block {
 	margin: 15px;
 }

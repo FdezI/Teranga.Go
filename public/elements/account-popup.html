@@ -1,0 +1,31 @@
+<dom-module name="account-popup">
+  <style>
+    .container {
+      color: white;
+      background: #121212;
+      position: absolute;
+      padding: 10px 0;
+    }
+    .container > ul {
+      padding: 0 20px;
+    }
+    .container > ul > li {
+      line-height: 20px;
+    }
+  </style>
+  <template>
+    <ul>
+      <li>Ver perfil</li>
+      <li>Cerrar sesión</li>
+    </ul>
+  </template>
+
+  <script>
+    Polymer({
+      is: "account-popup",
+      properties: {
+        package: Object
+      }
+    });
+  </script>
+</dom-module>
