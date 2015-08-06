@@ -2,7 +2,10 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../elements/package-line.html">
+<link rel="import" href="../elements/package-new.html">
+<link rel="import" href="../elements/package-content.html">
 
 <dom-module name="trip-request">
 	<style>
@@ -86,11 +89,16 @@
           <td colspan="4">
             
               <div class="layout vertical add-package">
+                <div class="container-add-package">
+                  <!-- Meter los package-line aqui -->
+                  <package-line></package-line>
+                </div>
+
                 <template is="dom-if" if="[[!selectedpackage]]">
                   <div class="layout horizontal header-add-package">
-                    <paper-button class="package-button" raised on-click="aaa">Añadir paquete</paper-button>
+                    <paper-button class="package-button" raised on-click="addPackage">Añadir paquete</paper-button>
                     <div class="flex"></div>
-                    <div class="layout horizontal center"><paper-button class="package-button" raised on-click="aaa">Crear paquete</paper-button></div>
+                    <div class="layout horizontal center"><paper-button class="package-button" raised on-click="newPackage">Crear paquete</paper-button></div>
                   </div>
                 </template>
 
@@ -111,11 +119,6 @@
                   </div>
                   </div>
                 </template>
-
-                <div class="container-add-package">
-                  <!-- Meter los package-line aqui -->
-                  <package-line></package-line>
-                </div>
               </div>
           </td>
         </tr>
@@ -127,6 +130,13 @@
 
       </table>
     </div>
+
+    <paper-dialog id="newPackage" with-backdrop>
+      <package-new></package-new>
+    </paper-dialog>
+    <paper-dialog id="addPackage" with-backdrop>
+      <package-content></package-content>
+    </paper-dialog>
 	</template>
 	<script>
 		Polymer({
@@ -220,6 +230,12 @@
       },
       getTotal: function() {
       	return this.priceUser + this.pricePackages;
+      },
+      newPackage: function() {
+        this.$.newPackage.open();
+      },
+      addPackage: function() {
+        this.$.addPackage.open();
       }
     });
 	</script>

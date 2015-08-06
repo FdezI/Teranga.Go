@@ -1,0 +1,63 @@
+<!-- <link rel="import" href="data-service.html"> -->
+
+<dom-module name="generic-container">
+  <template>
+  	<!-- <template id="load" is="dom-if" if="[[load]]">
+      <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+    </template> -->
+
+    <content id="content"></content>
+  </template>
+
+  <script>
+    Polymer({
+      is: "generic-container",
+      properties: {
+        loading: Boolean
+      },
+      reloadData: function() {
+        this.$.content._distributedNodes.forEach(function(value) {
+          if(value.reloadData) value.reloadData();
+        });
+        // console.log(items);
+        // for(var i = 0; i < items.length; i++) {
+        //   console.log(items[i]);
+        // }
+      }
+      // properties: {
+      //   data: {
+      //     type: Object,
+      //     notify: true
+      //   },
+      //   load: Boolean,
+      //   loading: {
+      //     type: Boolean,
+      //     value: false,
+      //     readOnly: true,
+      //     notify: true
+      //   },
+      //   iduser: Number,
+      //   type: String
+      // },
+      // ready: function() {
+      //   if(this.load) this.reloadData();
+      // },
+      // // loadChanged: function() {
+      // 	// if(this.load && !this.data) this.reloadData();
+      // // },
+      // reloadData: function() {
+      //   this.load = true;
+      //   this.$.load.render();
+      //   this.loading = true;
+      //   this.$$("data-service").reload();
+      //   console.log(this.iduser + this.type)
+      // },
+      // loaded: function(e, data) {
+      //   this.loading = false;
+      //   // this.$.dataRepeat.render();
+      //   // this.set('data', pack);
+      //   this.fire('loaded', data);
+      // }
+    });
+  </script>
+</dom-module>

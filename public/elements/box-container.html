@@ -45,7 +45,7 @@
         </div>
       </button>
 
-      <iron-collapse class="content" id="collapse" opened="[[open]]">
+      <iron-collapse class="content" id="collapse" opened="[[opened]]">
         <div class="collapse-content">
           <content></content>
         </div>
@@ -65,7 +65,7 @@
         type: Boolean,
         value: false
       },
-      open: {
+      opened: {
         type: Boolean,
         // value: false,
         notify: true
@@ -76,10 +76,16 @@
       },
 
     },
+    open: function() {
+      this.opened = true;
+    },
+    close: function() {
+
+    },
     toggle: function() {
       // this.$.collapse.toggle();
-      this.open = !this.open;
-      if(this.open) this.fire('open');
+      this.opened = !this.opened;
+      if(this.opened) this.fire('open');
     },
     reload: function() {
       event.stopPropagation();

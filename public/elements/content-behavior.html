@@ -1,0 +1,11 @@
+<script>
+  Teranga.ContentBehavior = {
+    properties: {
+      data: Object
+    },
+
+    select: function(e) {
+      this.fire('select', e.model.__data__.item);
+    }
+  };
+</script>

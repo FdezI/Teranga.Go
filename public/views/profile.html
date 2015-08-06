@@ -133,7 +133,11 @@
                 </div>
               </div>
 
-              <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}" on-select="packageSelected"></package-container>
+              <generic-collapse-container name="Paquetes" reloadable additable>
+                <package-content iduser="[[session.user.iduser]]" on-select="packageSelected" data="{{session.user.packages}}"></package-content>
+              </generic-collapse-container>
+
+              <!-- <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}" on-select="packageSelected"></package-container> -->
               <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
               
               <template is="dom-if" if="[[showdriver]]">

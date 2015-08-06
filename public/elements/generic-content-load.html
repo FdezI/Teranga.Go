@@ -1,0 +1,22 @@
+<link rel="import" href="data-service.html">
+<link rel="import" href="content-load-behavior.html">
+
+<dom-module name="generic-content-load">
+	<template>
+		<template id="load" is="dom-if" if="[[load]]">
+      <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+    </template>
+		<content></content>
+  </template>
+
+  <script>
+    Polymer({
+      is: "generic-content-load",
+      properties: {
+	      iduser: Number,
+	      type: String
+      },
+     	behaviors: [Teranga.ContentLoadBehavior]
+    });
+  </script>
+</dom-module>

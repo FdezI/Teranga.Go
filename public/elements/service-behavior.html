@@ -44,7 +44,7 @@
           this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/" + this.type;
         } else this.$.loadAll.url = Teranga.restAPI + this.type;
         
-        console.log(this.$.loadAll.params);
+        // console.log(this.$.loadAll.params);
         this.$.loadAll.generateRequest();
       } else if(this.fetch !== "") {
         console.log("fetching " + this.fetch);

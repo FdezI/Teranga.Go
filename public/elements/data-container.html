@@ -1,19 +1,21 @@
 <link rel="import" href="box-container.html">
 <!-- <link rel="import" href="travel-box.html"> -->
 
-<!-- <link rel="import" href="trip-service.html"> -->
+<link rel="import" href="data-service.html">
 
 <dom-module name="data-container">
   <template>
-    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" open="{{open}}" reloading="{{loading}}" reloadable$="[[reloadable]]" additable$="[[additable]]">
+    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" opened="{{open}}" reloading="[[loading]]" reloadable$="[[reloadable]]" additable$="[[additable]]">
       <template id="open" is="dom-if" if="[[open]]">
         <!-- <content select="service"></content> -->
         <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+
+        
       </template>
 
-      
+      <content></content>
       <!-- <template id="dataRepeat" is="dom-if" if="true"> -->
-        <content></content>
+        
       <!-- </template> -->
 
       <!-- <template id="dataRepeat" is="dom-repeat" items="[[data]]"> -->
@@ -36,7 +38,10 @@
         },
         iduser: Number,
         open: Boolean,
-        loading: Boolean,
+        loading: {
+          type: Boolean,
+          readOnly: true
+        },
         type: String,
         reloadable: Boolean,
         additable: Boolean

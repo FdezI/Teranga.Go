@@ -1,0 +1,34 @@
+<script>
+  Teranga.ContentLoadBehavior = {
+    properties: {
+      data: {
+        type: Object,
+        notify: true
+      },
+      load: Boolean,
+      loading: {
+        type: Boolean,
+        value: false,
+        readOnly: true,
+        notify: true
+      }
+    },
+    ready: function() {
+      if(this.load) this.reloadData();
+    },
+    reloadData: function() {
+      this.load = true;
+      this.$.load.render();
+      this.loading = true;
+      this.$$("data-service").reload();
+      console.log(this.iduser + this.type)
+    },
+    loaded: function(e, data) {
+      this.loading = false;
+      // this.$.dataRepeat.render();
+      // this.set('data', pack);
+      this.fire('loaded', data);
+    }
+  };
+</script>
+

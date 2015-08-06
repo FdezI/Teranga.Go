@@ -1,28 +1,29 @@
 <link rel="import" href="data-container.html">
+<link rel="import" href="package-content.html">
 <link rel="import" href="package-box.html">
+<link rel="import" href="generic-collapse-container.html">
+
 
 <dom-module name="package-container">
   <template>
-    <data-container name="Paquetes" iduser="[[iduser]]" type="packages" data="{{packages}}" reloadable additable>
-      <template is="dom-repeat" items="[[packages]]">
-        <package-box package="[[item]]" on-click="packageSelect"></package-box>
-      </template>
-    </data-container>
+    <!-- <data-container name="Paquetes" iduser="[[iduser]]" type="packages" data="{{packages}}" reloadable additable>
+      <package-content data="[[packages]]" on-select="packageSelect"></package-content>
+    </data-container> -->
+
+    <generic-collapse-container name="Paquetes" reloadable additable>
+      <package-content iduser="[[iduser]]" on-select="packageSelect"></package-content>
+    </generic-collapse-container>
   </template>
 
   <script>
     Polymer({
       is: "package-container",
       properties: {
-        packages: {
-          type: Object,
-          notify: true
-        },
         iduser: Number
       },
-      packageSelect: function(e) {
+      packageSelect: function(e, item) {
         // console.log(e.model.package);
-        this.fire('select', e.model.__data__.item);
+        this.fire('select', item);
       }
     });
   </script>
