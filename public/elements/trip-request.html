@@ -11,7 +11,7 @@
       margin: 10px;
     }
     .comment-text-area {
-      width: 100%;
+      width: 99%;
     }
     .package-button {
       float: right;
@@ -31,9 +31,40 @@
     .header-add-package {
       margin: 9px;
     }
+    .request {
+      position: relative;
+      background: #fff;
+      border: 2px solid #ccc;
+      border-radius: 3px;
+      padding: 20px;
+      margin-top: 11px;
+    }
+    .request:after, .request:before {
+      bottom: 100%;
+      left: 30px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .request:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-bottom-color: #fff;
+      border-width: 10px;
+      margin-left: -10px;
+    }
+    .request:before {
+      border-color: rgba(204, 204, 204, 0);
+      border-bottom-color: #ccc;
+      border-width: 13px;
+      margin-left: -13px;
+    }
   </style>
 	<template>
-		<div class="collapse-content-comment layout vertical">
+		<div class="request layout vertical">
       <table class="table-request">
         <tr> 
           <td>Salida</td> 
