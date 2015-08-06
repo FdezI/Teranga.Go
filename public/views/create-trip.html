@@ -12,13 +12,12 @@
 <link rel="import" href="../elements/trip-edit-route-validator.html">
 <link rel="import" href="../elements/trip-edit-origin-validator.html">
 <link rel="import" href="../elements/trip-edit-destination-validator.html">
+<link rel="import" href="../elements/filter-selector.html">
+<link rel="import" href="../elements/location-line.html">
 
 <dom-module name="create-trip">
   <style>
-    :host {
-      display: flex;
-    }
-    .create-trip-map {
+    .trip-map {
       background: #369;
       width: 30%;
       margin: 10px 2% 10px 0px;
@@ -26,10 +25,11 @@
       align-self: center;
       display: inline-block;
     }
-    .create-trip-area {
+    .basic-info {
       display: inline-block;
       width: 65%;
       min-width: 200px;
+      vertical-align: top;
     }
     .create-trip-input {
       min-width: 160px;
@@ -42,6 +42,20 @@
       display: inline-block;
       width: 68%;
       padding: 10px 0 10px 1%;
+    }
+    .extra-info {
+
+    }
+    .column1-3, .column2-3, .column3-3 {
+      min-width: 200px;
+      height: 170px;
+      margin: 2.5%;
+      padding: 10px;
+      vertical-align: top;
+      display: inline-block!important;
+      width: 25%;
+      background: #ccc;
+      border: 1px solid #aaa;
     }
   </style>
   <template>
@@ -64,44 +78,92 @@
         <option value="[[item.city]]">
       </template>
     </datalist>
-    <div class="create-trip-map">
-      
+    
+    <div>
+      <div class="trip-map">
+        
+      </div>
+
+      <div class="basic-info">
+        <div>
+          <route-service id="rs2" fetch="[[selectedRoute.idroute]]" data="{{selectedRoute}}" on-loaded="routeLoaded"></route-service>
+          <trip-edit-route-validator items="[[routes]]" attrib="name" ></trip-edit-route-validator>
+          <paper-input id="routeInput" label="Ruta" list="routes" value="{{fakefilters.route}}" validator="trip-edit-route-validator" required auto-validate on-input="routeSelected"></paper-input>
+        </div>
+
+        <div>
+          <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
+          <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.departure}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
+          <input class="create-trip-input-extra" placeholder="Direccion" value="">
+        </div>
+        <div>
+          <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
+          <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.arrival}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
+          <input class="create-trip-input-extra" placeholder="Direccion" value="">
+        </div>
+
+        <div class="layout horizontal">
+          <div class="layout vertical">
+            <span>Fecha</span>
+            <input type="date">
+          </div>
+          <div class="layout vertical">
+            <span>Hora</span>
+            <input type="time">
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="create-trip-area">
-      <div>
-        <route-service id="rs2" fetch="[[selectedRoute.idroute]]" data="{{selectedRoute}}" on-loaded="routeLoaded"></route-service>
-        
-        <trip-edit-route-validator items="[[routes]]" attrib="name" ></trip-edit-route-validator>
-        <paper-input id="routeInput" label="Ruta" list="routes" value="{{fakefilters.route}}" validator="trip-edit-route-validator" required auto-validate on-input="routeSelected"></paper-input>
+    <div class="extra-info">
+      <div class="column1-3 layout vertical">
+        <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
+        <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
       </div>
 
-      <div>
-
-        <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
-        <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.departure}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
-        <input class="create-trip-input-extra" placeholder="Direccion" value="">
-      </div>
-      <div>
-        <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
-        <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.arrival}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
-        <input class="create-trip-input-extra" placeholder="Direccion" value="">
-      </div>
-      <div>
+      <div class="column2-3 layout vertical">
         <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input>
-        <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+        <div class="layout vertical">
+          <span>Asientos libres</span>
+          <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+        </div>
       </div>
-      <div>
-        <paper-button rised on-click="saveData">Guardar</paper-button>
-        <paper-button rised on-click="discardData">Cancelar</paper-button>
+
+      <div class="column3-3 layout vertical">
+        <span>Precio</span>
+        <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+        <div class="layout horizontal">
+          <span class="flex">Asiento</span>
+          <div>x <span>13</span>€</div>
+        </div>
+        <div class="layout horizontal">
+          <span class="flex">Paquete</span>
+          <div>x <span>10</span>€</div>
+        </div>
       </div>
+    </div>
+
+    <div class="vertical-separator"></div>
+
+    <div class="create-trip-other-locations">
+      <span>Paradas intermedias</span>
+      <location-line></location-line>
+      <location-line></location-line>
+    </div>
+
+
+
+
+    <div>
+      <paper-button rised on-click="saveData">Guardar</paper-button>
+      <paper-button rised on-click="discardData">Cancelar</paper-button>
     </div>
 
 
     <paper-dialog id="car_select" with-backdrop>
       <car-container iduser="[[user.iduser]]" cars="[[user.cars]]" on-select="selectCar"></car-container>
     </paper-dialog>
-
   </template>
 
   <script>

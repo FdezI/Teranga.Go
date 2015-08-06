@@ -8,6 +8,7 @@
 <!-- <link rel="import" href="../elements/trip-service.html"> -->
 <link rel="import" href="../elements/data-service.html">
 <link rel="import" href="../elements/trip-request.html">
+<link rel="import" href="../elements/trip-opinion.html">
 
 <dom-module name="trip-view">
   <style>
@@ -181,14 +182,30 @@
           <div><span>[[trip.comment]]</span></div>
         </div>
 
-        <button on-click="toggle" class="button-request">
-          <span>Pedir</span>
-        </button>
-        <iron-collapse class="content" id="collapse">
-          <template is="dom-if" if="[[request]]">
-            <trip-request trip="[[trip]]"></trip-request>
-          </template>
-        </iron-collapse>
+          <button on-click="toggle" class="button-request">
+            <template is="dom-if" if="[[!opinion]]"><span>Pedir</span></template>
+            <template is="dom-if" if="[[opinion]]"><span>Opinar</span></template>
+          </button>
+          <iron-collapse class="content" id="collapse">
+            <template is="dom-if" if="[[!opinion]]">
+              <trip-request trip="[[trip]]"></trip-request>
+            </template>
+            <template is="dom-if" if="[[opinion]]">
+              <trip-opinion></trip-opinion>
+            </template>
+          </iron-collapse>
+
+        <!-- <template is="dom-if" if="[[opinion]]">
+          <button on-click="toggle" class="button-request">
+            <span>Opinar</span>
+          </button>
+          <iron-collapse class="content" id="collapse">
+            <template is="dom-if" if="[[request]]">
+              <trip-opinion></trip-opinion>
+            </template>
+          </iron-collapse>
+        </template> -->
+
       </div>
     </div>
     
@@ -199,6 +216,10 @@
       is: "trip-view",
       properties: {
         session: Object,
+        opinion: {
+          type: Boolean,
+          value: false
+        },
         idtrip: {
           type: Number,
           observer: 'idtripChanged'

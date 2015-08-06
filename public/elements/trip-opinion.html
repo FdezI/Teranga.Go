@@ -1,0 +1,84 @@
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<dom-module name="trip-opinion">
+  <style>
+  .opinion-img {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+  }
+  .opinion-text {
+    width: 97%;
+    margin-left: 20px;
+  }
+  .save-button {
+    width: 100%;
+    text-align: right;
+  }
+  .opinion {
+    position: relative;
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    padding: 20px;
+    margin-top: 11px;
+  }
+  .opinion:after, .opinion:before {
+    bottom: 100%;
+    left: 30px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .opinion:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #fff;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  .opinion:before {
+    border-color: rgba(204, 204, 204, 0);
+    border-bottom-color: #ccc;
+    border-width: 13px;
+    margin-left: -13px;
+  }
+  .text-center {
+    align-self: center;
+  }
+  </style>
+  <template>
+    <div class="opinion">
+      <div class="layout horizontal">
+        <div>
+          <div class="layout horizontal">
+            <img src="../images/car.png" class="opinion-img">
+            <span class="text-center">Coche</span>
+          </div>
+          <paper-slider min="1" max="10" pin snaps editable></paper-slider>
+          <div class="layout horizontal">
+            <img src="../images/user.png" class="opinion-img">
+            <span class="text-center">Conductor</span>
+          </div>
+          <paper-slider min="1" max="10" pin snaps editable></paper-slider>
+        </div>
+        <div class="flex"><textarea class="opinion-text" rows="8" placeholder="Escribe aquí tu opinión"></textarea></div>
+      </div>
+      <div class="save-button"><paper-button on-click="saveData">Enviar opinión</paper-button></div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "trip-opinion",
+      properties: {
+        user: Object,
+        filters: Object
+      }
+    });
+  </script>
+</dom-module>

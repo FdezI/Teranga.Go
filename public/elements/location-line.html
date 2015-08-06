@@ -1,27 +1,45 @@
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <dom-module name="location-line">
   <style>
-
+  .stop-img {
+    width: 30px;
+  }
+  .location-name {
+    display: inline-block;
+  }
+  .extra-info {
+    display: -webkit-inline-box;
+  }
+  .input-location {
+    width: 300px;
+  }
+  .other-info {
+    float: right;
+  }
   </style>
   <template>
   <div>
-    <div>
+    <div class="location-name">
       <span>Localizacion</span>
-      <img src="../images/stop.png">
+      <paper-icon-button src="../images/stop.png"></paper-icon-button>
     </div>
 
-    <div>
-      <input type="text">
-      <div>
-        <span>Retardo</span>
-        <input type="time">
-      </div>
-      <div>
-        <span>Salida</span>
-        <div>
-          <span>10</span>
-          <span>Jun</span>
+    <div class="extra-info">
+      <input class="input-location" type="text">
+      <div class="other-info layout horizontal">
+        <div class="layout horizontal">
+          <span>Retardo</span>
+          <input type="time">
         </div>
-        <span>10:30</span>
+        <div class="layout horizontal">
+          <span>Salida</span>
+          <div class="layout vertical">
+            <span>10</span>
+            <span>Jun</span>
+          </div>
+          <span>10:30</span>
+        </div>
       </div>
     </div>
   </div>
