@@ -13,7 +13,7 @@
       <option value="2">2</option>
       <option value="3">3</option>
     </select>
-    <trip-view idtrip="[[selected]]"></trip-view>
+    <trip-view idtrip="[[selected]]" user="{{session.user}}"></trip-view>
   </template>
 
   <script>
@@ -29,7 +29,8 @@
           type: String,
           notify: true
         },
-        filters: Object
+        filters: Object,
+        session: Object
       },
       ready: function() {
         console.log("trips-view ready!");

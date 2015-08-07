@@ -6,18 +6,20 @@
         notify: true
       },
       load: Boolean,
+      force: Boolean,
       loading: {
         type: Boolean,
         value: false,
         readOnly: true,
         notify: true
-      }
+      },
+      needed: Boolean
     },
     ready: function() {
-      if(this.load) this.reloadData();
+    	if(this.force || (this.load && !this.data)) this.reloadData();
     },
     reloadData: function() {
-      this.load = true;
+      this.needed = true;
       this.$.load.render();
       this.loading = true;
       this.$$("data-service").reload();

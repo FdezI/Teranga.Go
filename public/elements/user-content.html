@@ -1,29 +1,29 @@
 <link rel="import" href="content-behavior.html">
 <link rel="import" href="content-load-behavior.html">
 <!-- <link rel="import" href="generic-content-load.html"> -->
-<link rel="import" href="package-box.html">
+<link rel="import" href="user-box.html">
 
 <link rel="import" href="data-service.html">
 
-<dom-module name="package-content">
+<dom-module name="user-content">
 	<template>
 		<template id="load" is="dom-if" if="[[needed]]">
-      <data-service type="packages" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></data-service>
+      <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></data-service>
     </template>
 
     <!-- <generic-content-load iduser="[[iduser]]" data="{{data}}"> -->
 			<template id="repeat" is="dom-repeat" items="[[data]]" filter="filter">
-		    <package-box package="[[item]]" on-click="select"></package-box>
+		    <user-box package="[[item]]" on-click="select"></user-box>
 		  </template>
 	  <!-- </generic-content-load> -->
   </template>
 
   <script>
     Polymer({
-      is: "package-content",
+      is: "user-content",
       properties: {
-	      iduser: Number
-	      // type: String
+	      iduser: Number,
+	      type: String
       },
      	behaviors: [Teranga.ContentBehavior, Teranga.ContentLoadBehavior]
     });

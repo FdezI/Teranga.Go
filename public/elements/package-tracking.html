@@ -151,15 +151,7 @@
       },
 
       size: function(size) {
-        switch(size) {
-          case 0: return 'Muy Pequeño';
-          case 1: return 'Pequeño';
-          case 2: return 'Mediano';
-          case 3: return 'Grande';
-          case 4: return 'Muy Grande';
-        }
-
-        return "Sin tamaño";
+        return Teranga.packageSizes(size);
       }
     });
   </script>

@@ -188,7 +188,7 @@
           </button>
           <iron-collapse class="content" id="collapse">
             <template is="dom-if" if="[[!opinion]]">
-              <trip-request trip="[[trip]]"></trip-request>
+              <trip-request trip="[[trip]]" user="{{user}}"></trip-request>
             </template>
             <template is="dom-if" if="[[opinion]]">
               <trip-opinion></trip-opinion>
@@ -215,7 +215,7 @@
     Polymer({
       is: "trip-view",
       properties: {
-        session: Object,
+        user: Object,
         opinion: {
           type: Boolean,
           value: false

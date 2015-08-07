@@ -1,11 +1,33 @@
 <script>
   Teranga.ContentBehavior = {
     properties: {
-      data: Object
+      data: Object,
+      filtertext: String,
+      filterattrib: String,
+      filterlist: Array,
+      filtermode: String
     },
+    observers: ['filterChanged(filterlist.splices)', 'filterChanged(filtertext)'],
 
     select: function(e) {
       this.fire('select', e.model.__data__.item);
+    },
+
+    filter: function(item) {
+      var attrib = this.filterattrib;
+      var itemValue = item[attrib];
+
+      if(this.filtertext)
+        var matched = itemValue.match(new RegExp(this.filtertext, 'i'));
+      if(!matched && this.filterlist)
+        matched = !this.filterlist.every(function(value){ return value[attrib] != itemValue});
+      
+      console.log(!matched);
+      return this.filtermode == "in" ? matched : !matched;
+    },
+    filterChanged: function() {
+      console.log("CAMBIADO ---");
+      this.$.repeat.render();
     }
   };
 </script>

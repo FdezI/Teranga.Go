@@ -34,13 +34,13 @@
   <template>
     <div class="container layout vertical">
       <div class="package-info layout horizontal">
-        <span class="package-name flex">Name</span>
+        <span class="package-name flex">[[package.name]]</span>
         <div class="layout horizontal right-position">
-          <span class="size">Mediano</span>
+          <span class="size">[[size(package.size)]]</span>
           <paper-icon-button icon="close" on-click="delete" class="button-inner"></paper-icon-button>
         </div>
       </div>
-      <span class="package-comment">commentario sobre el paquete</span>
+      <span class="package-comment">[[package.description]]</span>
     </div>
   </template>
 
@@ -49,6 +49,12 @@
       is: "package-line",
       properties: {
         package: Object
+      },
+      size: function(size) {
+        return Teranga.packageSizes(size);
+      },
+      delete: function() {
+        this.fire('delete', this.package);
       }
     });
   </script>

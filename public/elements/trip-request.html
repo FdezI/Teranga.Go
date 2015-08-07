@@ -3,9 +3,10 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../elements/package-line.html">
-<link rel="import" href="../elements/package-new.html">
-<link rel="import" href="../elements/package-content.html">
+<link rel="import" href="pop-up.html">
+<link rel="import" href="package-line.html">
+<link rel="import" href="package-new.html">
+<link rel="import" href="package-content.html">
 
 <dom-module name="trip-request">
 	<style>
@@ -122,14 +123,16 @@
               <div class="layout vertical add-package">
                 <div class="container-add-package">
                   <!-- Meter los package-line aqui -->
-                  <package-line></package-line>
+                  <template is="dom-repeat" items="{{selectedpackages}}">
+                    <package-line package="[[item]]" on-delete="removePackage"></package-line>
+                  </template>
                 </div>
 
                 <template is="dom-if" if="[[!selectedpackage]]">
                   <div class="layout horizontal header-add-package">
-                    <paper-button class="package-button" raised on-click="addPackage">Añadir paquete</paper-button>
+                    <paper-button class="package-button" raised on-click="openAdd">Añadir paquete</paper-button>
                     <div class="flex"></div>
-                    <div class="layout horizontal center"><paper-button class="package-button" raised on-click="newPackage">Crear paquete</paper-button></div>
+                    <div class="layout horizontal center"><paper-button class="package-button" raised on-click="openNew">Crear paquete</paper-button></div>
                   </div>
                 </template>
 
@@ -162,12 +165,20 @@
       </table>
     </div>
 
-    <paper-dialog id="newPackage" with-backdrop>
-      <package-new></package-new>
-    </paper-dialog>
-    <paper-dialog id="addPackage" with-backdrop>
-      <package-content></package-content>
-    </paper-dialog>
+    <pop-up id="newPackage" with-backdrop>
+      <!-- <template is="dom-if" if="[[npopened]]"> -->
+        <package-new user="{{user}}" on-discard="discardNew" on-newpackage="addNew"></package-new>
+      <!-- </template> -->
+    </pop-up>
+    <pop-up id="addPackage" with-backdrop>
+    <!-- <paper-dialog id="addPackage" opened="{{apopened}}" with-backdrop> -->
+      <!-- <template is="dom-if" if="[[apopened]]"> -->
+        <generic-container>
+          <package-content filterlist="[[selectedpackages]]" filterattrib="idpackage" iduser="[[user.iduser]]" on-select="addPackage" data="{{user.packages}}" load></package-content>
+        </generic-container>
+      <!-- </template> -->
+    <!-- </paper-dialog> -->
+    </pop-up>
 	</template>
 	<script>
 		Polymer({
@@ -200,7 +211,15 @@
       		value: true
       	},
       	priceUser: Number,
-      	pricePackages: Number
+      	pricePackages: Number,
+        user: {
+          type: Object,
+          notify: true
+        },
+        selectedpackages: {
+          type: Array,
+          value: []
+        }
       },
       // byIndex: function(index) {
       // 	console.log(this.trip);
@@ -262,11 +281,26 @@
       getTotal: function() {
       	return this.priceUser + this.pricePackages;
       },
-      newPackage: function() {
+      openNew: function() {
         this.$.newPackage.open();
       },
-      addPackage: function() {
+      openAdd: function() {
         this.$.addPackage.open();
+      },
+      discardNew: function() {
+        this.$.newPackage.close();
+      },
+      addNew: function(e, package) {
+        this.push('user.packages', package);
+        this.packageAdded(e, package);
+      },
+      removePackage: function(e, package) {
+        this.splice('selectedpackages', this.selectedpackages.indexOf(package), 1);
+      },
+      addPackage: function(e, package) {
+        this.$.addPackage.close();
+        this.$.newPackage.close();
+        this.push('selectedpackages', package);
       }
     });
 	</script>

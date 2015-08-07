@@ -18,9 +18,12 @@
 
 
 
+  Teranga.pSizes = ['Muy Pequeño', 'Pequeño', 'Mediano', 'Grande', 'Muy Grande'];
 
-
-
+  Teranga.packageSizes = function(size) {
+    var sizes = Teranga.pSizes;
+    return size < sizes.length ? sizes[size] : "Sin tamaño";
+  }
 
   Teranga.day = function(date) {
     return new Date(Date.parse(date)).getDay();

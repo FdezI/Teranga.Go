@@ -150,6 +150,17 @@ exports.getPackages = function(req, res) {
 	});
 };
 
+exports.getFavorites = function(req, res) {
+	var user = req.params.iduser;
+	pool.query("SELECT iduser, name, surnames FROM favorites\
+								JOIN user ON iduser=user2\
+							WHERE user1=?", user, function(err, rows, fields) {
+		if(err) throw err;
+
+		res.json(rows);
+	});
+};
+
 // AUTHENTICATED
 exports.update = function(req, res) {
 	pool.query('UPDATE user SET ? WHERE iduser=?', [req.body, req.params.iduser], function(err, result) {

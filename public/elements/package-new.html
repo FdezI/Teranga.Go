@@ -1,6 +1,10 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="pop-up.html">
+<link rel="import" href="user-content.html">
 
 <dom-module name="package-new">
   <style>
@@ -67,7 +71,9 @@
   </style>
   
   <template>
-    <data-service id="cs" type="cars" user="[[iduser]]" update="[[update]]" on-created="saved"></data-service>
+    <data-service id="ps" type="packages" user="[[user.iduser]]" update="[[update]]" on-created="saved"></data-service>
+    <!-- FAVORITOS - SERVICE -->
+    <!-- <data-service id="fs" type="favorites" user="[[iduser]]" fetch="all" data="{{user.favorites}}"></data-service> -->
 
     <div class="container-edit layout vertical center-justified">
       <span class="edit-title">Nuevo paquete</span>
@@ -76,25 +82,27 @@
       <table class="edit-table">
         <tr>
           <td class="column1">Nombre</td>
-          <td class="column2"><input name="name"></td>
+          <td class="column2"><input name="name" value="{{update.name::input}}"></td>
         <tr> 
         <tr>
           <td class="column1">Tamaño</td>
           <!-- <template is="dom-if" if="[[newcar]]"> -->
-          <td class="column2"><paper-slider></paper-slider></td>
+          <td class="column2"><paper-slider value="{{update.size}}" min="1" max="5" pin snaps editable></paper-slider></td>
         <tr> 
         <tr>
-          <td colspan="2" class="comment-title">Comentario</td>
+          <td colspan="2" class="comment-title">Descripción</td>
         <tr> 
         <tr>
-          <td colspan="2"><textarea class="comment-box" name="comment" rows="4"></textarea></td>
+          <td colspan="2"><textarea class="comment-box" name="comment" rows="4" input="{{update.description::input}}"></textarea></td>
         </tr>
         <tr>
           <td colspan="2">
             <div class="layout horizontal">
-              <paper-input id="user" autocomplete="on" type="text" label="Usuario receptor" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator"></paper-input>
+              <!-- <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input> -->
+              <paper-input label="Usuario receptor" eadonly always-float-label on-keypress="openFavorites" on-click="openFavorites" value="[[favorite]]"></paper-input>
+              
               <span class="flex y-o-span"> y/o </span>
-              <paper-input id="iduser" type="text" label="DNI, NIF o NIE del receptor"></paper-input>
+              <paper-input label="DNI, NIF o NIE del receptor" value="{{update.receiverID}}"></paper-input>
             </div>
           </td>
         <tr/>
@@ -102,30 +110,61 @@
       <button class="primary-button-edit" on-click="saveData">Crear</button>
       <button class="secondary-button-edit" on-click="discardData">Cancelar</button>
     </div>
+
+    <!-- <paper-dialog id="addFavorite" with-backdrop> -->
+    <!-- <pop-up id="addFavorite" with-backdrop> -->
+      <!-- <template is="dom-if" if="[[fopened]]"> -->
+        <!-- <generic-container> -->
+          <!-- <user-content type="favorites" iduser="[[user.iduser]]" on-select="selectFavorite" data="{{user.favorites}}" load></user-content> -->
+        <!-- </generic-container> -->
+      <!-- </template> -->
+    <!-- </pop-up> -->
+    <!-- </paper-dialog> -->
   </template>
 
   <script>
   Polymer({
     is: "package-new",
     properties: {
-      iduser: Number
+      // iduser: Number,
+      update: Object,
+      loading: Boolean,
+      favorite: Object,
+      user: {
+        type: Object,
+        notify: true
+      }
     },
     saveData: function() {
-      this.$.cs.saveData();
+      this.loading = true;
+      this.$.ps.saveData();
     },
     discardData: function() {
+      this.update = {};
+
       this.fire('discard');
     },
     saved: function(e, data) {
-      var car = this.car;
+      this.loading = false;
+      var package = {};
       var u = this.update;
       Object.keys(u).forEach(function(key) {
-        car[key] = u[key];
+        package[key] = u[key];
+      });
+      Object.keys(data).forEach(function(key) {
+        package[key] = data[key];
       });
 
-      car.owners = data.owners;
-      console.log("PERSONAS: " + car.owners);
-      if(this.newcar) this.fire('newcar', car);
+      this.fire('newpackage', package);
+    },
+    selectFavorite: function(e, user) {
+      this.$.addFavorite.close();
+      this.favorite = user;
+      this.update.receiver = user.iduser;
+    },
+    openFavorites: function() {
+      console.log("USER: " + this.user.iduser);
+      this.$.addFavorite.open();
     }
   });
   </script>
