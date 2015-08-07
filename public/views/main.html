@@ -115,9 +115,19 @@
 				  <span class="flex"></span>
 				  
 				  <!-- Toolbar icons -->
-				  <paper-icon-button icon="refresh"></paper-icon-button>
-				  <paper-icon-button icon="add"></paper-icon-button>
-				  <paper-icon-button icon="account-circle" on-tap="loginIconClicked"></paper-icon-button>
+				  <template is="dom-if" if="[[session.user]]">
+					  <div class="paper-icon-header-div layout horizontal center">
+					  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
+					  </div>
+					  <div class="paper-icon-header-div layout horizontal center">
+					  	<paper-icon-button class="paper-icon-header" icon="account-circle" on-tap="loginIconClicked"></paper-icon-button>
+					  </div>
+				  </template>
+
+				  <template is="dom-if" if="[[!session.user]]">
+					  <paper-button class="paper-icon-header layout horizontal center">Loguearse</paper-button>
+					  <paper-button class="layout horizontal center paper-icon-header">Registrarse</paper-button>
+				  </template>
 				  
 				  <!-- Application name -->
 				  <!-- <div class="middle paper-font-display2 app-name"></div> -->
