@@ -11,6 +11,7 @@ body {
   background: #fafafa;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
+  background-image: url('../images/squares.png');
 }
 
 #body-content {
@@ -22,6 +23,29 @@ body {
 
 .hidden {
 	display: none;
+}
+
+.menu-item {
+	display: block;
+	text-decoration: none;
+	padding: 10px 10%;
+	background: #fff;
+	color: #222;
+	font-variant: small-caps;
+	font-weight: bold;
+	font-size: 19px;
+	height: 24px;
+}
+
+.menu-item:hover {
+	cursor: pointer;
+	background: #222!important;
+	color: #eee!important;
+}
+
+.menu-item.selected {
+	position: relative;
+	background: #FF6A1D;
 }
 
 .paper-font-title {

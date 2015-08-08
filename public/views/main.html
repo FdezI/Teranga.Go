@@ -93,9 +93,11 @@
 				<!-- Drawer Content -->
 				<paper-menu class="list" attr-for-selected="route-hash" selected="{{route}}" on-iron-select="menuItemSelected">
 				  <template is="dom-repeat" items="{{pages}}" as="page">
-				    <a route-hash="{{page.hash}}" href="{{page.url}}">
-				      <iron-icon icon="label-outline"></iron-icon>
+				    <a class="menu-item" route-hash="{{page.hash}}" href="{{page.url}}">
+				      <!-- <iron-icon icon="label-outline"></iron-icon> -->
 				      <span>{{page.name}}</span>
+				      <!-- <iron-icon style="float:right" icon="label"></iron-icon> -->
+
 				    </a>
 			<!--	    <paper-item hash="{{page.hash}}">
 				      <iron-icon icon="label-outline"></iron-icon>
