@@ -6,77 +6,29 @@
 
 <dom-module name="login-box">
   <style>
+	  :host {
+	  	display: block;
+			margin: 0!important;
+			padding: 0!important;
+	  }
   	.login-button {
   		background: #FF6A1D;
+  		margin: 10px;
+  		width: 70%;
   	}
   	.login-container {
   		background: #fff;
   		border: 1px solid #ccc;
   		padding: 20px;
-  		width: 100px;
-  		height: 100px;
-  	}
-  	:host {
-  		background: #fff;
-  		border: 1px solid #ccc;
-  		padding: 20px;
-  		width: 100px;
-  		height: 100px;
   	}
   </style>
   
   <template>
-  	<!-- <div class="layout vertical center login-container"> -->
-  		<paper-input label="Nombre" always-float-label></paper-input>
+  	<div class="layout vertical center login-container">
+  		<paper-input label="Email" always-float-label></paper-input>
   		<paper-input label="Contraseña" always-float-label></paper-input>
   		<paper-button class="login-button" raised>Iniciar</paper-button>
-  	<!-- </div> -->
-    <!-- <div class="container">
-			<div id="card" class="card">
-			  <template is="dom-if" if="[[session.user]]">
-			    <section>
-			      <p>Bienvenido, <span>{{session.user.nick}}<span></p>
-			      <button class='toggle' on-click="onExit">Salir</button>
-			    </section>
-			  </template>
-			  <template is="dom-if" if="[[!session.user]]"">
-			    <login-service id="loginserv" session="{{session}}" data="{{data}}"></login-service>
-			    <section class='back'>
-			      <form>
-							<h2>Register now!</h2>
-							<p>
-								<label for="account_email">E-mail</label>
-								<input type='email' id="account_email" value="{{item.email::input}}">
-							</p> <p>
-								<label for="account_password">Password</label>
-								<input type='password' id="account_password" value="{{item.password::input}}">
-							</p> <p>
-								<label for="account_password_confirmation">Confirm password</label>
-								<input type='password' id="account_password_confirmation">
-							</p><p>
-								<button on-click="onRegister">Register</button>
-							</p>
-							<button class='toggle' on-click="onClick">Loguear</button>
-		      	</form>
-			    </section>
-			    <section class='front'>
-						<form>
-							<h2>Enter site</h2>
-							<p>
-								<label for="user_email">E-mail</label>
-								<input type='email' id="user_email" value="{{item.email::input}}">
-							</p> <p>
-								<label for="user_password">Password</label>
-								<input type='password' id="user_password" value="{{item.password::input}}">
-							</p> <p>
-								<button on-click="onSubmit">Submit</button>
-							</p>
-							<button class='toggle' on-click="onClick">Registrar</button>
-						</form>
-					</section>
-			  </template>
-			</div>
-  	</div> -->
+  	</div>
   </template>
   <script>
 		Polymer({
@@ -85,49 +37,48 @@
 				session: {
 					type: Object,
 					notify: true
-				}
-				// },
-				// item: {
-				// 	type: Object,
-				// 	value: {},
-				// },
-				// data: Object
+				},
+				item: {
+					type: Object,
+					value: {}
+				},
+				data: Object
 			},
 
-			// observers: [
-			// 	'sessionUserChanged(session.user)'
-			// ],
+			observers: [
+				'sessionUserChanged(session.user)'
+			],
 
-			// ready: function() {
-			// 	console.log("login-box ready: " + this.session.user);
-			// },
-			// onClick: function() {
-			// 	event.preventDefault();
-			// 	event.stopPropagation();
-			// },
-			// onExit: function() {
-			// 	delete this.data;
-			// 	delete this.session.user;
-			// 	this.session = {};
-			// },
-			// onSubmit: function() {
-			// 	console.log("submit");
-			// 	event.preventDefault();
-			// 	event.stopPropagation();
-			// 	this.data = JSON.stringify(this.item);
+			ready: function() {
+				console.log("login-box ready: " + this.session.user);
+			},
+			onClick: function() {
+				event.preventDefault();
+				event.stopPropagation();
+			},
+			onExit: function() {
+				delete this.data;
+				delete this.session.user;
+				this.session = {};
+			},
+			onSubmit: function() {
+				console.log("submit");
+				event.preventDefault();
+				event.stopPropagation();
+				this.data = JSON.stringify(this.item);
 
-			// 	this.$$("login-service").auth();
-			// },
-			// onRegister: function() {
-			// 	event.preventDefault();
-			// 	event.stopPropagation();
+				this.$$("login-service").auth();
+			},
+			onRegister: function() {
+				event.preventDefault();
+				event.stopPropagation();
 
-			// 	this.data = JSON.stringify(this.item);
-			// 	this.$$("login-service").register();
-			// },
-			// sessionUserChanged: function() {
-			// 	if(!this.session) this.session = {};
-			// }
+				this.data = JSON.stringify(this.item);
+				this.$$("login-service").register();
+			},
+			sessionUserChanged: function() {
+				if(!this.session) this.session = {};
+			}
 		});
   </script>
 </dom-module>
