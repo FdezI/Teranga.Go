@@ -39,6 +39,7 @@ body {
 
 .paper-icon-header-div:hover, .paper-icon-header-div:active {
 	background: #121212;
+	cursor: pointer;
 }
 
 .margin-block {

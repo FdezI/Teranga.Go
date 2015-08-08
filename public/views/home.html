@@ -4,6 +4,7 @@
 <link rel="import" href="../elements/map-searcher.html">
 <link rel="import" href="../elements/location-info.html">
 <link rel="import" href="../elements/info-box.html">
+<!-- <link rel="import" href="../views/register.html"> -->
 
 <dom-module name="home-view">
   
@@ -18,32 +19,35 @@
     }
   </style>
   <template>
-      <map-searcher></map-searcher>
 
-      <div>
-        <info-box button="Regístrate">
-          <img src="../images/user.png"/>
-          <h3>¿Eres nuevo por aquí?</h3>
-          <p>Registrate y descubre un nuevo mundo.</p>-->
-        </info-box>
+    <!-- <register-view></register-view> -->
 
-        <info-box class="center">
-           <img src="../images/user.png"/>
-          <h3>Totalmente gratuito</h3>
-          <p>Encuentra cientos de tesoros sin gastar nada.</p>
-        </info-box>
+    <map-searcher></map-searcher>
 
-        <info-box button="Busca ahora">
-          <img src="../images/user.png"/>
-          <h3>Descubre nuevos lugares</h3>
-          <p>Y cambia tu forma de ver el mundo.</p>
-        </info-box>
-      </div>
+    <div>
+      <info-box button="Regístrate">
+        <img src="../images/user.png"/>
+        <h3>¿Eres nuevo por aquí?</h3>
+        <p>Registrate y descubre un nuevo mundo.</p>-->
+      </info-box>
 
-      <div>
-        <location-info right></location-info>
-        <location-info></location-info>
-      </div>
+      <info-box class="center">
+         <img src="../images/user.png"/>
+        <h3>Totalmente gratuito</h3>
+        <p>Encuentra cientos de tesoros sin gastar nada.</p>
+      </info-box>
+
+      <info-box button="Busca ahora">
+        <img src="../images/user.png"/>
+        <h3>Descubre nuevos lugares</h3>
+        <p>Y cambia tu forma de ver el mundo.</p>
+      </info-box>
+    </div>
+
+    <div>
+      <location-info right></location-info>
+      <location-info></location-info>
+    </div>
       
   </template>
   <script>

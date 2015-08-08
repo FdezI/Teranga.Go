@@ -1,42 +1,94 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/paper-toogle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module name="register-view">
   <style>
+  	.register-img {
+  		width: 100%;
+  		margin-bottom: 1em;
+  	}
+
+  	.register-img-div {
+  		width: 16%;
+  		display: inline-block;
+  		margin-right: 4%;
+			margin-top: 20px;
+			vertical-align: top;
+			min-width: 100px;
+  	}
+
+  	.register-info-div {
+  		width: 75%;
+  		display: inline-block;
+  	}
+  	.register-title {
+  		text-align: center;
+			font-size: 2em;
+			padding: 10px;
+  	}
+  	.register-login {
+  		text-align: center;
+  		font-size: 14px;
+  		color: #727272;
+  	}
+  	.register-half-input {
+  		width: 45%;
+  		min-width: 150px;
+  		margin: 0px 2%;
+			display: inline-block;
+  	}
+  	.register-date {
+  		margin: 10px 2%;
+  	}
+  	.register-date > span {
+  		color: #727272;
+			font-size: 12px;
+			margin-bottom: 5px;  	
+		}
+		.register-date > input {
+			padding: 7px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+		}
   </style>
   <template>
     <div>
-	  	<span>
-	  		¿Todavía no te has registrado? ¡Hazlo gratis!
-	  	</span>
+	  	<div class="register-title">
+	  		<span>¿Todavía no te has registrado? ¡Hazlo gratis!</span>
+	  	</div>
+	  	<div class="register-login">
+  			<span>¿Ya tienes una cuenta?</span>
+  			<paper-button raised>Logueate</paper-button>
+	  	</div>
+	  	<div class="vertical-separator"></div>
 	  	<div>
-	  		<div>
-	  			<img src="../images/user.png">
+	  		<div class="register-img-div">
+	  			<img class="register-img" src="../images/user.png">
 	  			<div>
 	  				<span>Conductor</span>
-	  				<paper-toogle-button></paper-toogle-button>
+	  				<paper-toggle-button></paper-toggle-button>
 	  			</div>
 	  		</div>
 
-	  		<div>
+	  		<div class="register-info-div">
 	  			<div>
-	  				<paper-input label="Nombre"></paper-input>
-	  				<paper-input label="Apellidos"></paper-input>
+	  				<paper-input class="register-half-input" label="Nombre"></paper-input>
+	  				<paper-input class="register-half-input" label="Apellidos"></paper-input>
 					</div>
 					<div>
-	  				<paper-input label="email"></paper-input>
-	  				<paper-input label="telefono"></paper-input>
+	  				<paper-input class="register-half-input" label="email"></paper-input>
+	  				<paper-input class="register-half-input" label="telefono"></paper-input>
 					</div>
-					<div>
+					<div class="register-half-input register-date layout vertical">
 						<span>Fecha de nacimiento</span>
 						<input type="date">
 					</div>
 					<div>
-	  				<paper-input label="Contraseña"></paper-input>
+	  				<paper-input class="register-half-input" always-float-label type="password" label="Contraseña"></paper-input>
 					</div>
 					<div>
-	  				<paper-input label="Repetir contraseña"></paper-input>
+	  				<paper-input class="register-half-input" always-float-label  type="password" label="Repetir contraseña"></paper-input>
 					</div>
 	  		</div>
 
