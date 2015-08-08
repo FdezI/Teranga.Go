@@ -1,0 +1,32 @@
+<link rel="import" href="content-behavior.html">
+<link rel="import" href="content-load-behavior.html">
+
+<link rel="import" href="data-service.html">
+
+<link rel="import" href="comment-box.html">
+
+<dom-module name="assessment-content">
+	<template>
+		<template id="load" is="dom-if" if="[[needed]]">
+      <data-service type="assessments" user="[[iduser]]" data="{{data}}" on-response="loaded" fetch="all"></data-service>
+    </template>
+
+		<template id="repeat" is="dom-repeat" items="[[data]]" filter="filter">
+	    <comment-box image="[[getImageUrl(item.avatar)]]" profileurl="/" car="[[item.car]]" driver="[[item.driver]]" comment="[[item.comment]]"></comment-box>
+	  </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: "assessment-content",
+      properties: {
+	      iduser: Number
+      },
+     	behaviors: [Teranga.ContentBehavior, Teranga.ContentLoadBehavior],
+
+     	getImageUrl: function(name) {
+        return Teranga.image.user.AVATARS + name;
+      }
+    });
+  </script>
+</dom-module>
