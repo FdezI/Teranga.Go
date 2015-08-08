@@ -41,6 +41,7 @@
 <link rel="import" href="./create-trip.html">
 <link rel="import" href="./tracking.html">
 
+<link rel="import" href="register.html">
 
 
 <dom-module name="profile-view">
@@ -170,6 +171,7 @@
       </template>
 
       <template is="dom-if" if="[[!session.user]]">
+        <register-view></register-view>
 	      <p>Please, log-in</p>
       </template>
   </template>

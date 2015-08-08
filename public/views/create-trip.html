@@ -114,12 +114,12 @@
         <div>
           <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
           <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.origin}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
-          <input class="create-trip-input-extra" placeholder="Direccion" value="{{filters.address::input}}">
+          <input class="create-trip-input-extra" placeholder="Direccion" value="{{fakefilters.origin.address::input}}">
         </div>
         <div>
           <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
           <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.destination}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
-          <input class="create-trip-input-extra" placeholder="Direccion" value="">
+          <input class="create-trip-input-extra" placeholder="Direccion" value="{{fakefilters.origin.destination::input}}">
         </div>
 
         <div class="layout horizontal">
@@ -170,7 +170,7 @@
       <span>Paradas intermedias</span>
       <location-line name="[[fakefilters.origin]]" stop></location-line>
       <template is="dom-repeat" items="[[others]]">
-        <location-line name="[[item.city]]" retardation></location-line>
+        <location-line location="[[item]]" retardation></location-line>
       </template>
       <location-line name="[[fakefilters.destination]]" stop></location-line>
     </div>
@@ -210,7 +210,7 @@
         },
         filters: {
           type: Object,
-          value: {}
+          value: {origin:{}, destination:{}, wps:[]}
         },
         items: Object,
         mapData: {
@@ -280,7 +280,6 @@
           });
         }
 
-
         
 
 
@@ -328,6 +327,64 @@
 
       address: function(wp) {
         return wp.city + "," + wp.country;
+      },
+
+      saveData: function() {
+        var rte = this.selectedRoute;
+        if(!rte) return;
+
+        var wps = rte.wps,
+          length = wps.length,
+          f = this.filters,
+          ff = this.fakefilters;
+
+        Object.keys(ff).forEach(function(key) {
+          var i = -1;
+          delete f[key];
+          while(++i < length && !f[key])
+            if(wps[i].city == ff[key]) {
+              var loc = f[key];
+              loc.idlocation = wps[i].idlocation;
+              loc.address = wps[i].address;
+            }
+        });
+
+        f.wps = [];
+        this.others.forEach(function(loc) {
+          // GREAT IF THE attribs GROWS
+          // var attribs = ["idlocation", "address", "retardation"];
+          // var obj = {}
+          // attribs.forEach(function(value) {
+          //   obj[value] = loc[value];
+          // });
+          // f.wps.push(obj);
+
+          // GREATER WITH FEW ATTRIBS
+          f.wps.push({idlocation: loc.idlocation, address: loc.address, retardation: loc.retardation});
+        });
+
+        var car = this.car;
+        if(!car) return;
+
+        f.car = car.idcar;
+        //TODO coste
+
+        var neededAttribs = ["origin", "destination", "wps"];
+        var neededAttribsLoc = ["idlocation", "address"];
+
+        if(!neededAttribs.every(function(attrib){
+          if(!f[attrib]) return false;
+        })) return;
+
+        if(!neededAttribsLoc.every(function(attrib){
+          if(!f.wps.every(function(wp) {
+            return wp[attrib];
+          })) return false;
+        })) return;
+
+        console.log("SAVE FILTERS: ");
+        console.log(this.filters);
+
       }
     });
   </script>

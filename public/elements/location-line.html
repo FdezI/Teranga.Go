@@ -21,18 +21,18 @@
   <template>
   <div>
     <div class="location-name">
-      <span>[[name]]</span>
+      <span>[[location.city]]</span>
       <!-- <paper-button toggles><img src="../images/stop.png"></paper-button> -->
       <paper-icon-button src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
     </div>
 
     <div class="extra-info">
-      <input class="input-location" type="text">
+      <input class="input-location" type="text" value="{{location.address::input}}">
       <div class="other-info layout horizontal">
         <template is="dom-if" if="[[retardation]]">
           <div class="layout horizontal">
             <span>Retardo</span>
-            <input type="time">
+            <input type="time" value="{{location.retardation::input}}">
           </div>
         </template>
         <div class="layout horizontal">
@@ -52,7 +52,9 @@
     Polymer({
       is: "location-line",
       properties: {
-        name: String,
+        location: Object,
+        // name: String,
+        // address: String,
         stop: Boolean,
         retardation: Boolean
       }

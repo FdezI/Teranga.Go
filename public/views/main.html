@@ -35,6 +35,7 @@
 
 <link rel="import" href="create-trip.html">
 
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../elements/pop-up.html">
 
 <!-- <link rel="import" href="../elements/login-box.html"> -->
@@ -120,12 +121,12 @@
 					  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
 					  </div>
 					  <div class="paper-icon-header-div layout horizontal center">
-					  	<paper-icon-button class="paper-icon-header" icon="account-circle" on-tap="loginIconClicked"></paper-icon-button>
+					  	<paper-icon-button class="paper-icon-header" icon="account-circle"></paper-icon-button>
 					  </div>
 				  </template>
 
 				  <template is="dom-if" if="[[!session.user]]">
-					  <paper-button class="paper-icon-header layout horizontal center">Loguearse</paper-button>
+					  <paper-button class="paper-icon-header layout horizontal center" on-click="showLogin">Loguearse</paper-button>
 					  <paper-button class="layout horizontal center paper-icon-header">Registrarse</paper-button>
 				  </template>
 				  
@@ -146,7 +147,7 @@
 				    </section>
 				    <section hash="profile">
 				    	<!-- <template> -->
-				      	<profile-view session="{{session}}" route="{{route}}"></profile-view>
+				      	<profile-view session="{{session}}" route="{{route}}" on-show-login="showLogin"></profile-view>
 				      <!-- </template> -->
 				    </section>
 				    <section hash="trips">
@@ -169,7 +170,14 @@
       </paper-scroll-header-panel>
     </paper-drawer-panel>
     
-    <login-box class$="{{displayLogin}}" session="{{session}}"></login-box>
+    <!-- <login-box class$="{{displayLogin}}" session="{{session}}"></login-box> -->
+		<!-- <login-box session="{{session}}"></login-box> -->
+    <pop-up id="login" with-backdrop>
+    <!-- <paper-dialog id="login" with-backdrop> -->
+    	asdfasdf
+    	<login-box session="{{session}}"></login-box>
+  	<!-- </paper-dialog> -->
+    </pop-up>
     
 <!--     <iron-localstorage name="session" value="{{session}}"></iron-localstorage> -->
   </template>
@@ -184,10 +192,10 @@
 				  observer: 'routeChanged'
 				},
 				params: Object,
-				displayLogin: {
-				  type: String,
-				  value: "hidden"
-				},
+				// displayLogin: {
+				//   type: String,
+				//   value: "hidden"
+				// },
 				pages: {
 				  type: Object,
 				  value: [
@@ -208,11 +216,11 @@
 			// 	this.session = null;
       },
       
-      loginIconClicked: function(e, detail, sender) {
-				console.log("loginIconClicked");
-				this.displayLogin = this.displayLogin == "" ? "hidden" : "";
-				console.log("DisplayLogin: " + this.displayLogin);
-      },
+    //   loginIconClicked: function(e, detail, sender) {
+				// console.log("loginIconClicked");
+				// this.displayLogin = this.displayLogin == "" ? "hidden" : "";
+				// console.log("DisplayLogin: " + this.displayLogin);
+    //   },
       
 //       keyHandler: function(e, detail, sender) {
 // 	var pages = Polymer.dom(document).querySelector('#pages');
@@ -243,6 +251,11 @@
       routeChanged: function() {
       	if(this.route === "profile") this.$$("profile-view").edit = false;
       	else if(this.route === "tracking") this.$$("tracking-view").back();
+      },
+
+      showLogin: function() {
+      	console.log("OPEN");
+      	this.$.login.open();
       }
     });    
   </script>

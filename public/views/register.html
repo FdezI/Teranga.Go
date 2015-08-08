@@ -59,7 +59,7 @@
 	  	</div>
 	  	<div class="register-login">
   			<span>¿Ya tienes una cuenta?</span>
-  			<paper-button raised>Logueate</paper-button>
+  			<paper-button raised on-click="logIn">Logueate</paper-button>
 	  	</div>
 	  	<div class="vertical-separator"></div>
 	  	<div>
@@ -129,6 +129,10 @@
 
       tripSelected: function(e, trip) {
         this.set('selected', trip.idtrip);
+      },
+
+      logIn: function() {
+        this.fire("show-login");
       }
     });
   </script>
