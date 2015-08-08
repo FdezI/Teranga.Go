@@ -1,3 +1,8 @@
+
+
+
+
+<!--EL TRUCO DEL ASYNC NO SIRVE PARA LO ESPERADO, hay que buscar una forma de recargar el paper-dialog una vez el dom-if se muestra -->
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
 <dom-module name="pop-up">
@@ -7,11 +12,13 @@
   </style>
 
   <template>
-    <paper-dialog opened="{{ready}}" with-backdrop$="[[withBackdrop]]">
-      <template is="dom-if" if="{{opened}}">
-        <content></content>
-      </template>
-    </paper-dialog>
+    <template is="dom-if" if="{{opened}}">
+      <paper-dialog id="dialog" opened="{{opened}}" with-backdrop$="[[withBackdrop]]" on-iron-overlay-opened="refit">
+        <!-- <template id="asdf" is="dom-if" if="{{opened}}"> -->
+        <content id="content"></content>
+        <!-- </template> -->
+      </paper-dialog>
+    </template>
   </template>
 
 </dom-module>
@@ -28,19 +35,26 @@
       opened: {
         type: Boolean,
         value: false,
-        notify: true,
-        observer: ['_openedChanged']
+        notify: true
+        // observer: ['openedChanged']
       },
 
-      ready: {
-        type: Boolean,
-        observer: ['_readyChanged']
-      },
+      // ready: {
+      //   type: Boolean,
+      //   value: false,
+      //   observer: ['_readyChanged']
+      // },
 
       withBackdrop: {
         type: Boolean,
         value: false
       }
+    },
+
+    ready: function () {
+        var self = this,
+        observer = new MutationObserver(function (mutations) { self.refit();}
+                                        ).observe(this, { childList: true, subtree: true, characterData: false });
     },
 
     open: function() {
@@ -55,16 +69,30 @@
       this.opened = !this.opened;
     },
     
-    _openedChanged: function(open) {
-      this.async(function() {
-        if(open) this.async(function() {this.ready = open;});
-        else this.ready = open;
-      });
-    },
-
-    _readyChanged: function(ready) {
-      this.opened = this.ready;
+    refit: function() {
+      var dialog = this.$$("paper-dialog");
+      if(dialog) {
+        dialog.refit();
+        dialog.constrain();
+        dialog.center();
+      }
     }
+    // openedChanged: function(open) {
+    //   // this.$.dialog.refit();
+    //   console.log(this.$.asdf);
+    //   var dialog = this.$.dialog;
+    //   // this.refit();
+    //   // if(open) dialog.open();
+    //   // this.async(function() {
+    //   //   if(open) this.async(function() {dialog.open(); dialog.refit();});
+    //   //   else dialog.open();//this.ready = open;
+    //   // });
+    // },
+
+    // _readyChanged: function(ready) {
+    //   this.opened = this.ready;
+    //   // this.$.dialog.resizeHandler();
+    // },
 
   });
 

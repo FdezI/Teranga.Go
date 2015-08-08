@@ -2,11 +2,10 @@ var mysql = require('mysql');
 
 // REGISTERED
 exports.create = function(req, res) {
-	req.body.iduser = req.params.iduser;
 	mysql.pool.query('INSERT INTO package SET ?', req.body, function(err, result) {
 		if(err) throw err;
 		
-		res.json({id:result.insertId});
+		res.json({idpackage:result.insertId});
 	});
 };
 

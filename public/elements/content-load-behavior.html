@@ -13,9 +13,16 @@
         readOnly: true,
         notify: true
       },
-      needed: Boolean
+      needed: {
+        type: Boolean,
+        value: false
+        // readOnly: true
+      },
+      wtf: String
     },
-    ready: function() {
+    attached: function() {
+      console.log("ESTO NO LLLEGGGGGGGGAAAAAAAAA " + this.wtf);
+      // Esto no funciona, el ready no asegura datos, se supone que el domReady
     	if(this.force || (this.load && !this.data)) this.reloadData();
     },
     reloadData: function() {
@@ -23,10 +30,12 @@
       this.$.load.render();
       this.loading = true;
       this.$$("data-service").reload();
-      console.log(this.iduser + this.type)
+      console.log("Reloading " + this.type + " data for " + this.iduser);
     },
     loaded: function(e, data) {
       this.loading = false;
+      console.log("LOADED: ");
+      console.log(data);
       // this.$.dataRepeat.render();
       // this.set('data', pack);
       this.fire('loaded', data);

@@ -74,8 +74,8 @@
           <td>Salida</td> 
           <td>
           	<select value="{{d::input}}">
-		        	<template is="dom-repeat" items="[[trip.wps]]">
-		        		<option value="[[index]]">[[item.city]]</option>
+		        	<template id="depRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
+		        		<option value="[[indexof(item.order)]]">[[item.city]]</option>
 		        	</template>
 		        </select>
           </td>
@@ -89,8 +89,8 @@
           <td>Llegada</td> 
           <td>
           	<select value="{{a::input}}">
-		        	<template is="dom-repeat" items="[[trip.wps]]">
-		        		<option value="[[index]]"><span>[[item.city]]</span> (<span>[[getT(d, index, seat, pkn)]]</span>€)</option>
+		        	<template id="arrRepeat" is="dom-repeat" items="[[trip.wps]]" filter="arrivalFilter">
+		        		<option value="[[indexof(item.order)]]"><span>[[item.city]]</span> (<span>[[getT(d, item.order, seat, selectedpackages.length)]]</span>€)</option>
 		        	</template>
 		        </select>
           </td>
@@ -110,75 +110,82 @@
         <tr>
           <td>Asiento</td>
           <td><paper-checkbox checked="{{seat}}"></paper-checkbox></td>
-          <td>x<span>[[getc(d,a,seat)]]</span>€</td>
+          <td>+<span>[[getc(d,a,seat)]]</span>€</td>
         </tr>
-        <tr>
-          <td colspan="2">Paquetes</td>
-          <!-- <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td> -->
-          <td>x<span>[[getpkc(d,a,pkn)]]</span>€</td>
-        </tr>
-        <tr>
-          <td colspan="4">
-            
-              <div class="layout vertical add-package">
-                <div class="container-add-package">
-                  <!-- Meter los package-line aqui -->
-                  <template is="dom-repeat" items="{{selectedpackages}}">
-                    <package-line package="[[item]]" on-delete="removePackage"></package-line>
+
+        <template is="dom-if" if="[[packages(trip.packages)]]">
+
+          <tr>
+            <td colspan="2">Paquetes</td>
+            <!-- <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td> -->
+            <td>+<span>[[getpkc(d,a,selectedpackages.length)]]</span>€ (<span>[[selectedpackages.length]]</span>x <span>[[singlepkc(d, a)]]</span>€)</td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              
+                <div class="layout vertical add-package">
+                  <div class="container-add-package">
+                    <!-- Meter los package-line aqui -->
+                    <template is="dom-repeat" items="{{selectedpackages}}">
+                      <package-line package="[[item]]" on-delete="removePackage"></package-line>
+                    </template>
+                  </div>
+
+                  <template is="dom-if" if="[[!selectedpackage]]">
+                    <div class="layout horizontal header-add-package">
+                      <paper-button class="package-button" raised on-click="openAdd">Añadir paquete</paper-button>
+                      <div class="flex"></div>
+                      <div class="layout horizontal center"><paper-button class="package-button" raised on-click="openNew">Crear paquete</paper-button></div>
+                    </div>
+                  </template>
+
+                  <template is="dom-if" if="[[selectedpackage]]">
+                    <div class="layout vertical header-add-package">
+                    <span>Nombre del paquete</span>
+                    <div>
+                      <div class="layout horizontal" style="display: inline-flex;">
+                        <paper-input label="Receptor"></paper-input>
+                        <span class="y-o-span"> y/o </span>
+                        <paper-input label="DNI, NIF o NIE del receptor"></paper-input>
+                      </div>
+
+                      <div class="layout horizontal add-package-buttons">
+                        <paper-icon-button icon="accept"></paper-icon-button>
+                        <paper-icon-button icon="close"></paper-icon-button>
+                      </div>
+                    </div>
+                    </div>
                   </template>
                 </div>
+            </td>
+          </tr>
 
-                <template is="dom-if" if="[[!selectedpackage]]">
-                  <div class="layout horizontal header-add-package">
-                    <paper-button class="package-button" raised on-click="openAdd">Añadir paquete</paper-button>
-                    <div class="flex"></div>
-                    <div class="layout horizontal center"><paper-button class="package-button" raised on-click="openNew">Crear paquete</paper-button></div>
-                  </div>
-                </template>
+          <pop-up id="newPackage" with-backdrop>
+            <!-- <template is="dom-if" if="[[npopened]]"> -->
+              <package-new user="{{user}}" on-discard="discardNew" on-newpackage="addPackage"></package-new>
+            <!-- </template> -->
+          </pop-up>
 
-                <template is="dom-if" if="[[selectedpackage]]">
-                  <div class="layout vertical header-add-package">
-                  <span>Nombre del paquete</span>
-                  <div>
-                    <div class="layout horizontal" style="display: inline-flex;">
-                      <paper-input label="Receptor"></paper-input>
-                      <span class="y-o-span"> y/o </span>
-                      <paper-input label="DNI, NIF o NIE del receptor"></paper-input>
-                    </div>
-
-                    <div class="layout horizontal add-package-buttons">
-                      <paper-icon-button icon="accept"></paper-icon-button>
-                      <paper-icon-button icon="close"></paper-icon-button>
-                    </div>
-                  </div>
-                  </div>
-                </template>
-              </div>
-          </td>
-        </tr>
+          <!-- <template is="dom-if" if="[[apopened]]"> -->
+          <pop-up id="addPackage" with-backdrop>
+          <!-- <paper-dialog id="addPackage" opened="{{apopened}}" with-backdrop> -->
+            <!-- <template is="dom-if" if="[[apopened]]"> -->
+              <generic-container>
+                <package-content wtf="asdf" filterlist="[[selectedpackages]]" filterattrib="idpackage" iduser="[[user.iduser]]" on-select="addPackage" data="{{user.packages}}" load force></package-content>
+              </generic-container>
+            <!-- </template> -->
+          <!-- </paper-dialog> -->
+          </pop-up>
+          <!-- </template> -->
+        </template>
         <tr>
           <td colspan="2">Precio final</td>
-          <td><span>[[getTotal(d, a, seat, pkn)]]</span>€</td>
+          <td><span>[[getTotal(d, a, seat, selectedpackages.length)]]</span>€</td>
           <td><button>Solicitar</button></td>
         </tr>
 
       </table>
     </div>
-
-    <pop-up id="newPackage" with-backdrop>
-      <!-- <template is="dom-if" if="[[npopened]]"> -->
-        <package-new user="{{user}}" on-discard="discardNew" on-newpackage="addNew"></package-new>
-      <!-- </template> -->
-    </pop-up>
-    <pop-up id="addPackage" with-backdrop>
-    <!-- <paper-dialog id="addPackage" opened="{{apopened}}" with-backdrop> -->
-      <!-- <template is="dom-if" if="[[apopened]]"> -->
-        <generic-container>
-          <package-content filterlist="[[selectedpackages]]" filterattrib="idpackage" iduser="[[user.iduser]]" on-select="addPackage" data="{{user.packages}}" load></package-content>
-        </generic-container>
-      <!-- </template> -->
-    <!-- </paper-dialog> -->
-    </pop-up>
 	</template>
 	<script>
 		Polymer({
@@ -194,24 +201,30 @@
       	},
       	d: {
       		type: Number,
-      		value: 0
-      		// observer: 'dChanged'
+      		value: 0,
+      		observer: 'dChanged'
       	},
       	a: {
       		type: Number,
       		value: 0
       		// observer: 'aChanged'
       	},
-      	pkn: {
-      		type: Number,
-      		value: 0
-      	},
+      	// pkn: {
+      	// 	type: Number,
+      	// 	value: 0
+      	// },
       	seat: {
       		type: Boolean,
       		value: true
       	},
-      	priceUser: Number,
-      	pricePackages: Number,
+      	priceUser: {
+          type: Number,
+          value: 0
+        },
+      	pricePackages: {
+          type: Number,
+          value: 0
+        },
         user: {
           type: Object,
           notify: true
@@ -219,6 +232,10 @@
         selectedpackages: {
           type: Array,
           value: []
+        },
+        apopened: {
+          type: Boolean,
+          value: false
         }
       },
       // byIndex: function(index) {
@@ -253,8 +270,10 @@
 
       	if(s && this.trip && this.trip.wps) {
       		var wps = this.trip.wps;
+          console.log(d + " - " + a);
+          console.log(wps);
       		var cost = wps[a].cost - wps[d].cost;
-      		
+
       		if(cost >= 0) pu = cost;
       		// else throw "The cost can't be negative";
       	} 
@@ -265,8 +284,9 @@
       getpkc: function(d, a, pkn, unchanged) {
       	var pp = 0;
 
-      	if(this.trip && this.trip.wps) {
-      		var wps = this.trip.wps;
+        var trip = this.trip;
+      	if(trip && trip.wps) {
+      		var wps = trip.wps;
       		var cost =  wps[a].pkcost - wps[d].pkcost;
       		if(cost >= 0) pp = cost * pkn;
       		// else throw "The package cost can't be negative";
@@ -275,32 +295,66 @@
       	if(!unchanged) this.pricePackages = pp;
       	return pp;
       },
-      getT: function(d, a, s, pkn) {
-      	return this.getc(d, a, s, true) + this.getpkc(d, a, pkn, true);;
+      singlepkc: function(d, a) {
+        var trip = this.trip;
+        if(trip && trip.wps) {
+          var wps = trip.wps;
+          return wps[a].pkcost - wps[d].pkcost;
+        }
+
+        return 0;
+      },
+      getT: function(d, order, s, pkn) {
+        var a = this.indexof(order);
+      	return this.getc(d, a, s, true) + this.getpkc(d, a, pkn, true);
       },
       getTotal: function() {
-      	return this.priceUser + this.pricePackages;
+      	return this.priceUser + (this.trip.packages ? this.pricePackages : 0);
       },
       openNew: function() {
-        this.$.newPackage.open();
+        this.$$("newPackage").open();
       },
       openAdd: function() {
-        this.$.addPackage.open();
+        // this.apopened = true;
+        this.$$("#addPackage").open();
       },
       discardNew: function() {
-        this.$.newPackage.close();
+        this.$$("#newPackage").close();
       },
-      addNew: function(e, package) {
-        this.push('user.packages', package);
-        this.packageAdded(e, package);
-      },
+      // addNew: function(e, package) {
+      //   // this.push('user.packages', package);
+      //   this.addPackage(e, package);
+      // },
       removePackage: function(e, package) {
         this.splice('selectedpackages', this.selectedpackages.indexOf(package), 1);
       },
       addPackage: function(e, package) {
-        this.$.addPackage.close();
-        this.$.newPackage.close();
+        this.$$("#addPackage").close();
+        this.$$("#newPackage").close();
         this.push('selectedpackages', package);
+      },
+      dChanged: function() {
+        this.$.arrRepeat.render();
+      },
+      departureFilter: function(value) {
+        return value.stop;
+      },
+      arrivalFilter: function(value) {
+        return value.stop && value.order > this.trip.wps[this.d].order;
+      },
+      packages: function(value) {
+        return value || value === null;
+      },
+      indexof: function(order) {
+        var trip = this.trip;
+        if(trip && trip.wps) {
+          var wps = trip.wps;
+          var length = wps.length;
+          for(var i = 0; i < length; i++)
+            if(wps[i].order == order) return i;
+        }
+
+        return -1;
       }
     });
 	</script>

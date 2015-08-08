@@ -9,20 +9,21 @@
   </style>
   
   <template>
-    <iron-ajax id="loadAll"
+    <!-- <iron-ajax id="load"
       last-response="{{data}}"
       on-response="dataLoaded">
-    </iron-ajax>
+    </iron-ajax> -->
 
-    <iron-ajax id="loadOne"
+    <!-- <iron-ajax id="loadOne"
       last-response="{{data}}"
       on-response="dataLoaded">
-    </iron-ajax>
+    </iron-ajax> -->
     
-    <iron-ajax id="create"
-      body="{{update}}"
+    <iron-ajax id="req"
+      body="[[update]]"
+      params="[[filters]]"
       last-response="{{data}}"
-      on-response="createdResponse"
+      on-response="callDone"
       content-type="application/json"
       method="POST">
     </iron-ajax>

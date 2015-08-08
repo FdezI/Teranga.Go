@@ -7,7 +7,7 @@
   </style>
   <template>
     <data-service id="ts" type="trips" fetch="all" filters="[[filters]]" data="{{trips}}"></data-service>
-    <trip-table trips="{{trips}}" filters="{{filters}}" on-search="search"></trip-table>
+    <trip-table trips="{{trips}}" filters="{{filters}}" on-search="search" on-selected="tripSelected"></trip-table>
     <select value="{{selected::input}}">
       <option value="1">1</option>
       <option value="2">2</option>
@@ -42,6 +42,10 @@
 
       search: function() {
         this.$.ts.reload();
+      },
+
+      tripSelected: function(e, trip) {
+        this.set('selected', trip.idtrip);
       }
     });
   </script>

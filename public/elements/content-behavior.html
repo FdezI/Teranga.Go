@@ -22,7 +22,7 @@
       if(!matched && this.filterlist)
         matched = !this.filterlist.every(function(value){ return value[attrib] != itemValue});
       
-      console.log(!matched);
+      // console.log("Matched: " + !matched);
       return this.filtermode == "in" ? matched : !matched;
     },
     filterChanged: function() {

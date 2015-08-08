@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
+<link rel="import" href="data-service.html">
+
 <link rel="import" href="pop-up.html">
 <link rel="import" href="user-content.html">
 
@@ -71,7 +73,7 @@
   </style>
   
   <template>
-    <data-service id="ps" type="packages" user="[[user.iduser]]" update="[[update]]" on-created="saved"></data-service>
+    <data-service id="ps" type="packages" user="[[user.iduser]]" as="emitter" update="[[update]]" on-response="saved"></data-service>
     <!-- FAVORITOS - SERVICE -->
     <!-- <data-service id="fs" type="favorites" user="[[iduser]]" fetch="all" data="{{user.favorites}}"></data-service> -->
 
@@ -93,13 +95,13 @@
           <td colspan="2" class="comment-title">Descripción</td>
         <tr> 
         <tr>
-          <td colspan="2"><textarea class="comment-box" name="comment" rows="4" input="{{update.description::input}}"></textarea></td>
+          <td colspan="2"><textarea class="comment-box" name="comment" rows="4" value="{{update.description::input}}"></textarea></td>
         </tr>
         <tr>
           <td colspan="2">
             <div class="layout horizontal">
               <!-- <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input> -->
-              <paper-input label="Usuario receptor" eadonly always-float-label on-keypress="openFavorites" on-click="openFavorites" value="[[favorite]]"></paper-input>
+              <paper-input label="Usuario receptor" readonly on-keypress="openFavorites" on-click="openFavorites" value="[[fullName(favorite)]]"></paper-input>
               
               <span class="flex y-o-span"> y/o </span>
               <paper-input label="DNI, NIF o NIE del receptor" value="{{update.receiverID}}"></paper-input>
@@ -112,13 +114,13 @@
     </div>
 
     <!-- <paper-dialog id="addFavorite" with-backdrop> -->
-    <!-- <pop-up id="addFavorite" with-backdrop> -->
+    <pop-up id="addFavorite">
       <!-- <template is="dom-if" if="[[fopened]]"> -->
-        <!-- <generic-container> -->
-          <!-- <user-content type="favorites" iduser="[[user.iduser]]" on-select="selectFavorite" data="{{user.favorites}}" load></user-content> -->
-        <!-- </generic-container> -->
+        <generic-container>
+          <user-content type="favorites" iduser="[[user.iduser]]" on-select="selectFavorite" data="{{user.favorites}}" load></user-content>
+        </generic-container>
       <!-- </template> -->
-    <!-- </pop-up> -->
+    </pop-up>
     <!-- </paper-dialog> -->
   </template>
 
@@ -127,7 +129,10 @@
     is: "package-new",
     properties: {
       // iduser: Number,
-      update: Object,
+      update: {
+        type: Object,
+        value: {}
+      },
       loading: Boolean,
       favorite: Object,
       user: {
@@ -137,7 +142,9 @@
     },
     saveData: function() {
       this.loading = true;
-      this.$.ps.saveData();
+      this.update.receiver = this.favorite.iduser;
+      console.log("LLEGA A SAVE");
+      this.$.ps.saveData(true);
     },
     discardData: function() {
       this.update = {};
@@ -155,16 +162,21 @@
         package[key] = data[key];
       });
 
+      if(!this.user.packages) this.set('user.packages', [package]);
+      else this.push('user.packages', package);
+
       this.fire('newpackage', package);
     },
     selectFavorite: function(e, user) {
       this.$.addFavorite.close();
       this.favorite = user;
-      this.update.receiver = user.iduser;
     },
     openFavorites: function() {
       console.log("USER: " + this.user.iduser);
       this.$.addFavorite.open();
+    },
+    fullName: function(user) {
+      return user.name + " " + user.surnames;
     }
   });
   </script>

@@ -8,7 +8,7 @@
 <dom-module name="package-content">
 	<template>
 		<template id="load" is="dom-if" if="[[needed]]">
-      <data-service type="packages" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></data-service>
+      <data-service type="packages" user="[[iduser]]" data="{{data}}" on-response="loaded" fetch="all"></data-service>
     </template>
 
     <!-- <generic-content-load iduser="[[iduser]]" data="{{data}}"> -->

@@ -1,3 +1,5 @@
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
 <link rel="import" href="../elements/stars-rating.html">
 
 <dom-module name="trip-card">
@@ -69,21 +71,21 @@
       text-align: center;
     }
   </style>
-  
+
   <template>
     <div class="trip-card-div layout horizontal">
       <div class="layout vertical center trip-card-1">
         <img src="[[imguser]]" class="trip-card-img">
         <stars-rating score="[[score]]"></stars-rating>
-        <a href="[[userurl]]">[[username]]</a>
+        <a href="[[userurl]]">[[trip.driverName]]</a>
       </div>
 
       <div class="horizontal-separator"></div>
 
       <div class="layout vertical trip-card-2">
         <div>
-          <template id="citiesRepeat" is="dom-repeat" items="[[cities]]" as="city">
-            <span strong$="[[isSearched(index)]]">[[city]]</span><span>[[dash(index, cities)]]</span>
+          <template id="citiesRepeat" is="dom-repeat" items="[[trip.cities]]" as="city">
+            <span strong$="[[isSearched(index)]]">[[city]]</span><span>[[dash(index, trip.cities)]]</span>
           </template>
           <!-- <span>[[cities.departure]]</span><span> - </span>
           <template is="dom-if" if="[[departure]]">
@@ -93,27 +95,27 @@
         </div>
         <div class="layout horizontal center">
           <div class="layout vertical center">
-            <span>[[day]]</span>
-            <span>[[month]]</span>
+            <span>[[day(trip)]]</span>
+            <span>[[month(trip)]]</span>
           </div>
           <div>
-            <span>[[hour]]</span>
+            <span>[[time(trip)]]</span>
           </div>
         </div>
         <div>
           <img class="trip-card-seat" src="../images/seat-icon.png">
-          <span>[[seats]]</span><span> plazas libres</span>
+          <span>[[trip.free]]</span><span> plazas libres</span>
         </div>
       </div>
 
       <div class="trip-card-3">
-        <div><span>[[price]]</span>€</div>
+        <div><span>[[trip.cost]]</span>€</div>
         <span>por persona</span>
         <div class="layout horizontal center">
-          <img class="trip-card-options" src="[[petf(pets)]]">
-          <img class="trip-card-options" src="[[packagef(packages)]]">
+          <img class="trip-card-options" src="[[imageURL('pet', allow(trip.animals))]]">
+          <img class="trip-card-options" src="[[imageURL('package', allow(trip.packages))]]">
         </div>
-        <button>Ver</button>
+        <paper-button raised on-click="openTrip">Ver</paper-button>
       </div>
     </div>
     
@@ -148,48 +150,37 @@
   Polymer({
     is: "trip-card",
     properties: {
-      url: String,
-      imguser: String,
-      username: String,
-      userurl: String,
-      score: Number,
-      cities: Array,
-      departure: Number,
-      arrival: Number,
-      day: String,
-      month: String,
-      hour: String,
-      seats: Number,
-      price: Number,
-      pets: String,
-      packages: String
+      trip: Object
     },
-    petf: function(trip) {
-      // var img;
-      // var pet = trip.animals;
-      
-      // // if(pet) img = "allow";
-      // // else if (pet === null) img = "unknown";
-      // // else img = "deny";
-
-      // console.log("PET: " + pet);
-      // return Teranga.image.URL + "pet-" + (pet ? "allow" : ((pet == false || pet == 0) ? "deny" : "unknown")) + ".png";
-      return Teranga.image.URL + "pet-" + trip + ".png";
-    },
-    packagef: function(trip) {
-      // var pck = trip.packages;
-
-      // return Teranga.image.URL + "package-" + (pck ? "allow" : ((pck == false || pck == 0) ? "deny" : "unknown")) + ".png";
-      return Teranga.image.URL + "package-" + trip + ".png";
+    imageURL: function(type, mode) {
+      return Teranga.image.URL + type + "-" + mode + ".png";
     },
     isSearched: function(i) {
       return i == this.departure || i == this.arrival;
     },
     dash: function(i) {
-      console.log(this.cities);
-      console.log("Length: " + this.cities.length + ", Index: " + i);
-      return i < this.cities.length - 1 ? " - " : "";
-    }
+      // console.log(this.cities);
+      // console.log("Length: " + this.cities.length + ", Index: " + i);
+      return i < this.trip.cities.length - 1 ? " - " : "";
+    },
+
+    day: function(trip) {
+      return Teranga.day(trip.date);
+    },
+    month: function(trip) {
+     return Teranga.month(trip.date);
+    },
+    time: function(trip) {
+      return Teranga.time(trip.date);
+    },
+    allow: function(attrib) {
+      return attrib ? "allow" : ((attrib == false || attrib == 0) ? "deny" : "unknown");
+    },
+    openTrip: function() {
+      this.fire('selected', this.trip);
+    },
+
+
 
 //     publish: {
 //       selected: {

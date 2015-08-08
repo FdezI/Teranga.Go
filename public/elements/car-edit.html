@@ -54,7 +54,7 @@
   </style>
   
   <template>
-    <data-service id="cs" type="cars" user="[[iduser]]" update="[[update]]" on-created="saved"></data-service>
+    <data-service id="cs" type="cars" user="[[iduser]]" update="[[update]]" on-response="saved"></data-service>
 
     <div class="container-car-edit layout vertical center-justified">
       <template is="dom-if" if="[[newcar]]">

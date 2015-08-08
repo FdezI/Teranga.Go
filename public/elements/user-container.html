@@ -5,9 +5,9 @@
 
 <dom-module name="user-container">
   <template>
-    <box-container name="Usuarios favoritos" on-reload="reloadUsers" open="{{open}}" reloading="{{loading}}">
+    <box-container name="Usuarios favoritos" on-response="reloadUsers" open="{{open}}" reloading="{{loading}}">
       <!-- <template is="dom-if" if="[[open]]">
-        <package-service user="[[iduser]]" response="{{packages}}" on-loaded="loaded" fetch="all"></package-service>
+        <package-service user="[[iduser]]" response="{{packages}}" on-response="loaded" fetch="all"></package-service>
       </template> -->
 
       <template id="usersRepeat" is="dom-repeat" items="[[users]]" as="user">

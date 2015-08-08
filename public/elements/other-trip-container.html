@@ -6,7 +6,7 @@
 <dom-module name="other-trip-container">
   <template>
     <box-container name="[[titlename()]]" open="{{open}}">
-      <trip-service user="[[iduser]]" data="{{trips}}" on-loaded="loaded" fetch="all"></trip-service>
+      <trip-service user="[[iduser]]" data="{{trips}}" on-response="loaded" fetch="all"></trip-service>
       
       <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
         <travel-box trip="[[trip]]"></travel-box>

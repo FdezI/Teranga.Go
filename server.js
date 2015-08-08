@@ -122,13 +122,13 @@ apiRouter.route('/users/:iduser/favorites')
 // 	.get(db.tripController.get)
 // 	.put(db.tripController.addPassenger);
 	
-apiRouter.route('/users/:iduser/packages')
-	.post(db.userController.create)
-	.get(db.userController.getAll);
-apiRouter.route('/users/:iduser/packages/:idpackage') // Maybe should this be deleted and use unlinked instead
-	.get(db.userController.get)
-	.put(db.userController.update)
-	.delete(db.userController.delete);
+// apiRouter.route('/users/:iduser/packages')
+// 	.post(db.userController.create)
+// 	.get(db.userController.getAll);
+// apiRouter.route('/users/:iduser/packages/:idpackage') // Maybe should this be deleted and use unlinked instead
+// 	.get(db.userController.get)
+// 	.put(db.userController.update)
+// 	.delete(db.userController.delete);
 	
 apiRouter.route('/routes')
 	.post(db.routeController.create)
@@ -169,7 +169,8 @@ apiRouter.route('/locations')
 apiRouter.route('/locations/:idlocation')
 	.get(db.locationController.get);
 apiRouter.route('/packages')
-	.get(db.packageController.getAll);
+	.get(db.packageController.getAll)
+	.post(db.packageController.create);
 apiRouter.route('/packages/:idpackage')
 	.get(db.packageController.get);
 

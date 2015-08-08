@@ -1,33 +1,33 @@
 BUILD LOG
 ---------
-Build Time: 2015-07-09T14:48:58-0700
+Build Time: 2015-08-05T16:50:03-0700
 
 NODEJS INFORMATION
 ==================
-nodejs: v2.3.3
+nodejs: v2.5.0
 gulp: 3.9.0
 gulp-audit: 1.0.0
 gulp-concat: 2.6.0
 gulp-header: 1.2.2
 gulp-uglify: 1.2.0
-run-sequence: 1.1.1
-web-component-tester: 3.2.0
+run-sequence: 1.1.2
+web-component-tester: 3.3.10
 
 REPO REVISIONS
 ==============
-webcomponentsjs: b0f4eff3e501b07960de40386bcac47c2afeb851
+webcomponentsjs: 51c337b2327ef63ee50ee1b69f50dc19966f1483
 
 BUILD HASHES
 ============
-CustomElements.js: 1ff9c23ef55581aadb5a50655991fcba1636d2a6
-CustomElements.min.js: 6e0b479f58c532480dfd1d3dc139c473f52e294c
-HTMLImports.js: a90ec72d207a969c56c4ff90913ec2b39a8b3bf9
-HTMLImports.min.js: 564b11763a82f4cd1264be0573201692b5c50948
-MutationObserver.js: e3321d300deb7a866867338be3adce94bb23abb1
-MutationObserver.min.js: 3a46adba0a5cdbb3a715a67bce650360e6698615
-ShadowDOM.js: bfe2d7926de503650f95396e7e86f08bc052dbe2
-ShadowDOM.min.js: 10349ae64abd33583e70938a988e557b974e31bb
-webcomponents-lite.js: c43501d2096a2df3f09b371683ee8ba40e78afea
-webcomponents-lite.min.js: e609a0b6f32ff4563b96b4f2a0729cf330ed708c
-webcomponents.js: ebc995d9ff946a4cf0777ab04351aad28bc3ea03
-webcomponents.min.js: 88447a12ec66927d1159fd9ead01bf87a2fdd927
+CustomElements.js: f54f03134b1410a6036689d3c1e198baa2f9d338
+CustomElements.min.js: b4ec02f3d7dc19910ed489375890ff7fc564b6ff
+HTMLImports.js: a04dbf19d9b3df6115851d1ee3f6b2443576f33b
+HTMLImports.min.js: ff45d19bc284f5a483b77f72c71c1193806e9251
+MutationObserver.js: fd273a53b51173190178c709ff90f62204ef00ae
+MutationObserver.min.js: 40ab029acc5c35875d554aadd88bed5e3ff28d81
+ShadowDOM.js: d76c6e2119585a548a11af9e5c92a28914cfe17c
+ShadowDOM.min.js: e61510ebc0cf92335a4c9c24ed14305c81ecdf62
+webcomponents-lite.js: 09eba3b2d8461151e3fc7276038409b454ce66cd
+webcomponents-lite.min.js: 0b2fe9465bcb32800f2b28d3cb32263b22ca83e2
+webcomponents.js: 50185bab5ea50c5a652c9e4db606dd5d22c871c6
+webcomponents.min.js: f64077a367d3634c1796043d3f57192ffa758350

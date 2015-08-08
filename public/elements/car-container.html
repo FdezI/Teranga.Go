@@ -10,7 +10,7 @@
   <template>
     <!-- <box-container on-reload="reloadCars" open="{{open}}" reloading="{{loading}}" name="Coches">
       <template is="dom-if" if="[[open]]">
-        <car-service user="[[iduser]]" response="{{cars}}" on-loaded="loaded" fetch="all"></car-service>
+        <car-service user="[[iduser]]" response="{{cars}}" on-response="loaded" fetch="all"></car-service>
       </template>
 
       <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
@@ -19,7 +19,7 @@
       
     </box-container> -->
     <div class="car-container">
-      <data-service id="ds" type="cars" user="[[iduser]]" data="{{cars}}" on-loaded="loaded" fetch="all"></data-service>
+      <data-service id="ds" type="cars" user="[[iduser]]" data="{{cars}}" on-response="loaded" fetch="all"></data-service>
       <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
         <car-box car="[[car]]" on-click="carSelect"></car-box>
       </template>

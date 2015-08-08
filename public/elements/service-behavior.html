@@ -11,6 +11,7 @@
       },
       fetch: String,
       user: Number,
+      as: String,
       update: Object,
       type: String,
       filters: Object,
@@ -20,39 +21,65 @@
       console.log(this.type + "-service ready");
     },
     
-    dataLoaded: function() {
-      this.fire('loaded', this.data);
+    callDone: function(e) {
+      console.log("CALL DONE");
+      e.stopPropagation();
+      this.fire('response', this.data);
     },
 
-    saveData: function() {
+    saveData: function(create) {
       console.log("saveData: " + this.update);
 
-      if(!this.update) return;
+      var req = this.$.req;
+      var update = this.update;
+      var user = this.user;
+
+      req.method = create ? 'POST' : 'PUT';
+
       
-      this.$.save.url = Teranga.restAPI + "users/" + this.fetch;
-      this.$.save.body = JSON.stringify(this.update);
+      if(!update) return;
       
-      console.log("BODY: " + this.$.save.body + ", for " + this.user + ": " + this.fetch);
+      req.url = Teranga.restAPI + this.type; //"users/" + this.user + "/" + this.type;
+      if(user) {
+        if(this.as) update[this.as] = user;
+        else update.user = user;
+      }
+
+      req.body = JSON.stringify(update);
       
-      this.$.save.generateRequest();
+      console.log("Requesting: " + req.url);
+      console.log("With params: " + JSON.stringify(req.params));
+      console.log("And body: " + req.body);
+      req.generateRequest();
     },
 
     reload: function() {
       console.log("reloading: " + this.fetch);
-      if(this.fetch == "all") { 
-        if(this.user) {
-          this.$.loadAll.url = Teranga.restAPI + "users/" + this.user + "/" + this.type;
-        } else this.$.loadAll.url = Teranga.restAPI + this.type;
-        
-        // console.log(this.$.loadAll.params);
-        this.$.loadAll.generateRequest();
-      } else if(this.fetch !== "") {
-        console.log("fetching " + this.fetch);
-        this.$.loadOne.url = Teranga.restAPI + this.type + "/" + this.fetch;
+      var req = this.$.req;
+      var api = Teranga.restAPI;
+      var fetch = this.fetch;
+      var type = this.type;
+      var user = this.user;
 
-        console.log(this.$.loadOne.url);
-        this.$.loadOne.generateRequest();
+      req.method = 'GET';
+
+      if(fetch == "all" || fetch == "list") { 
+        if(user) {
+          req.url = api + "users/" + user + "/" + type;
+        } else req.url = api + type;
+        
+        if(fetch == "list") req.url += "?list";
+      } else {//if(fetch !== "") {
+        console.log("fetching " + fetch);
+        req.url = api + type + "/" + fetch;
+
+        req.generateRequest();
       }
+
+      console.log("Requesting: " + req.url);
+      console.log("With params: " + JSON.stringify(req.params));
+      console.log("And body: " + req.body);
+      req.generateRequest();
     }
   };
 </script>

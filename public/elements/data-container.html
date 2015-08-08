@@ -5,10 +5,10 @@
 
 <dom-module name="data-container">
   <template>
-    <box-container name="[[name]]" on-reload="reloadData" on-open="loadData" opened="{{open}}" reloading="[[loading]]" reloadable$="[[reloadable]]" additable$="[[additable]]">
+    <box-container name="[[name]]" on-response="reloadData" on-open="loadData" opened="{{open}}" reloading="[[loading]]" reloadable$="[[reloadable]]" additable$="[[additable]]">
       <template id="open" is="dom-if" if="[[open]]">
         <!-- <content select="service"></content> -->
-        <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-loaded="loaded" fetch="all"></trip-service>
+        <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-response="loaded" fetch="all"></trip-service>
 
         
       </template>

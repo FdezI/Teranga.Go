@@ -130,7 +130,8 @@
     <div class="trip-table-content">
       <trip-list>
         <template is="dom-repeat" items="{{trips}}" as="trip">
-          <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]" departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card>
+          <!-- <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]" departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card> -->
+          <trip-card trip="[[trip]]"></trip-card>
         </template>
       </trip-list>
     </div>
@@ -162,15 +163,7 @@
       this.set('filters.from', this.today());
       this.set('filters.to', this.today());
     },
-    day: function(trip) {
-      return Teranga.day(trip.date);
-    },
-    month: function(trip) {
-     return Teranga.month(trip.date);
-    },
-    time: function(trip) {
-      return Teranga.time(trip.date);
-    },
+    
     search: function() {
       var wps = this.wps,
           length = wps.length,
@@ -188,9 +181,6 @@
       if(!this.filters.to) this.set('filters.to', this.today());
 
       this.fire('search');
-    },
-    allow: function(attrib) {
-      return attrib ? "allow" : ((attrib == false || attrib == 0) ? "deny" : "unknown");
     },
     fromChanged: function(from) {
       var to = this.filters.to;

@@ -113,7 +113,7 @@
     }
   </style>
   <template>
-    <data-service id="ts" type="trips" fetch="[[idtrip]]" on-loaded="tripTweak"></data-service>
+    <data-service id="ts" type="trips" fetch="[[idtrip]]" on-response="tripTweak"></data-service>
     <div class="layout horizontal">
       <travel-line>
         <template is="dom-repeat" items="{{trip.wps}}" as="wp">

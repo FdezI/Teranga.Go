@@ -1,7 +1,8 @@
 <link rel="import" href="trip.html">
 <link rel="import" href="../elements/trip-table.html">
 <!-- <link rel="import" href="../elements/trip-service.html"> -->
-<link rel="import" href="../elements/route-service.html">
+<!-- <link rel="import" href="../elements/route-service.html"> -->
+<link rel="import" href="../elements/data-service.html">
 
 <link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -59,8 +60,7 @@
     }
   </style>
   <template>
-    <route-service id="rs" fetch="list" data="{{routes}}"></route-service>
-    <!-- <route-service id="r2" fetch="{{rte}}" data="{{routes}}"></route-service> -->
+    <data-service id="rs" type="routes" fetch="list" data="{{routes}}"></data-service>
 
     <datalist id="routes">
       <template is="dom-repeat" items="[[routes]]">
@@ -86,7 +86,7 @@
 
       <div class="basic-info">
         <div>
-          <route-service id="rs2" fetch="[[selectedRoute.idroute]]" data="{{selectedRoute}}" on-loaded="routeLoaded"></route-service>
+          <data-service id="rs2" type="routes" fetch="[[selectedRoute.idroute]]" data="{{selectedRoute}}" on-response="routeLoaded"></data-service>
           <trip-edit-route-validator items="[[routes]]" attrib="name" ></trip-edit-route-validator>
           <paper-input id="routeInput" label="Ruta" list="routes" value="{{fakefilters.route}}" validator="trip-edit-route-validator" required auto-validate on-input="routeSelected"></paper-input>
         </div>
@@ -185,7 +185,7 @@
         },
         items: Object
       },
-      ready: function() {
+      attached: function() {
         console.log("create-trip ready!");
         this.$.rs.reload();
       },

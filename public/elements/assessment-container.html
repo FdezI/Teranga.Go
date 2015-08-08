@@ -4,7 +4,7 @@
   <template>
     <!-- <box-container name="Opiniones" on-reload="reloadAssessments" on-open="loadAssessments" open="{{open}}" reloading="{{loading}}">
       <template id="open" is="dom-if" if="[[open]]">
-        <data-service type="assessments" user="[[iduser]]" data="{{assessments}}" on-loaded="loaded" fetch="all"></data-service>
+        <data-service type="assessments" user="[[iduser]]" data="{{assessments}}" on-response="loaded" fetch="all"></data-service>
       </template>
 
       <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
