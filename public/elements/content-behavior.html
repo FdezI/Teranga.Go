@@ -2,6 +2,10 @@
   Teranga.ContentBehavior = {
     properties: {
       data: Object,
+      selected: {
+        type: Object,
+        notify: true
+      },
       filtertext: String,
       filterattrib: String,
       filterlist: Array,
@@ -10,7 +14,9 @@
     observers: ['filterChanged(filterlist.splices)', 'filterChanged(filtertext)'],
 
     select: function(e) {
-      this.fire('select', e.model.__data__.item);
+      var selected = e.model.__data__.item;
+      this.selected = selected;
+      this.fire('select', selected);
     },
 
     filter: function(item) {

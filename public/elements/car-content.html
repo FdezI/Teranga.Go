@@ -1,0 +1,28 @@
+<link rel="import" href="content-behavior.html">
+<link rel="import" href="content-load-behavior.html">
+
+<link rel="import" href="data-service.html">
+
+<link rel="import" href="car-box.html">
+
+<dom-module name="car-content">
+	<template>
+		<template id="load" is="dom-if" if="[[needed]]">
+      <data-service type="cars" user="[[iduser]]" data="{{data}}" on-response="loaded" fetch="all"></data-service>
+    </template>
+
+		<template id="repeat" is="dom-repeat" items="[[data]]" filter="filter">
+	    <car-box car="[[item]]" on-click="select"></car-box>
+	  </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: "car-content",
+      properties: {
+	      iduser: Number
+      },
+     	behaviors: [Teranga.ContentBehavior, Teranga.ContentLoadBehavior]
+    });
+  </script>
+</dom-module>

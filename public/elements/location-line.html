@@ -21,17 +21,20 @@
   <template>
   <div>
     <div class="location-name">
-      <span>Localizacion</span>
-      <paper-icon-button src="../images/stop.png"></paper-icon-button>
+      <span>[[name]]</span>
+      <!-- <paper-button toggles><img src="../images/stop.png"></paper-button> -->
+      <paper-icon-button src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
     </div>
 
     <div class="extra-info">
       <input class="input-location" type="text">
       <div class="other-info layout horizontal">
-        <div class="layout horizontal">
-          <span>Retardo</span>
-          <input type="time">
-        </div>
+        <template is="dom-if" if="[[retardation]]">
+          <div class="layout horizontal">
+            <span>Retardo</span>
+            <input type="time">
+          </div>
+        </template>
         <div class="layout horizontal">
           <span>Salida</span>
           <div class="layout vertical">
@@ -49,8 +52,9 @@
     Polymer({
       is: "location-line",
       properties: {
-        user: Object,
-        filters: Object
+        name: String,
+        stop: Boolean,
+        retardation: Boolean
       }
     });
   </script>
