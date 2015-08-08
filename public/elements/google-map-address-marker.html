@@ -1,0 +1,44 @@
+<link rel="import" href="../bower_components/google-apis/google-maps-api.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
+
+<dom-module name="google-map-address-marker">
+
+<template>
+	<google-map-marker map="{{map}}" latitude="[[loc.lat]]" longitude="[[loc.lng]]" title="[[address]]" click-events on-google-map-marker-click="select">
+		<content></content>
+	</google-map-marker>
+</template>
+
+<script>
+	Polymer({
+    is: "google-map-address-marker",
+    properties: {
+  		address: String,
+  		identifier: String,
+  		map: Object,
+  		loc: {
+  			type: Object,
+  			value: {}
+  		}
+    },
+    attached: function() {
+    	console.log(this.$$("google-map-marker").$);
+    	var self = this;
+    	new google.maps.Geocoder().geocode({address: this.address}, function(results, status) {
+    			if (status == google.maps.GeocoderStatus.OK) {
+		        var loc = results[0].geometry.location;
+
+		        self.set('loc.lat', loc.lat());
+		        self.set('loc.lng', loc.lng());
+
+		      } else console.log("Geocode was not successful for the following reason: " + status);
+    	});
+    },
+    select: function() {
+    	console.log("SELECTING");
+    	this.fire('selected', this.identifier);
+    }
+  });
+</script>
+
+</dom-module>

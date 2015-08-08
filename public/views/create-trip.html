@@ -16,6 +16,15 @@
 <link rel="import" href="../elements/filter-selector.html">
 <link rel="import" href="../elements/location-line.html">
 
+<link rel="import" href="../elements/pop-up.html">
+<link rel="import" href="../elements/generic-container.html">
+<link rel="import" href="../elements/car-content.html">
+
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<!-- <link rel="import" href="../bower_components/google-map/google-map-directions.html"> -->
+<link rel="import" href="../patched_components/google-map-directions.html">
+<link rel="import" href="../elements/google-map-address-marker.html">
+
 <dom-module name="create-trip">
   <style>
     .trip-map {
@@ -81,7 +90,18 @@
     
     <div>
       <div class="trip-map">
-        
+        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617" fit-to-markers></google-map>
+        <template is="dom-if" if="[[map]]">
+          <google-map-directions map="{{map}}" start-address="[[mapData.origin]]" end-address="[[mapData.destination]]" waypoint-addresses="[[mapData.waypoints]]">
+          </google-map-directions>
+
+          <template is="dom-repeat" items="[[origins]]">
+            <google-map-address-marker map="{{map}}" address="[[address(item)]]" identifier="[[item.city]]" on-selected="selectMarkOrig"></google-map-address-marker>
+          </template>
+          <template is="dom-repeat" items="[[destinations]]">
+            <google-map-address-marker map="{{map}}" address="[[address(item)]]" identifier="[[item.city]]" on-selected="selectMarkDest"></google-map-address-marker>
+          </template>
+        </template>
       </div>
 
       <div class="basic-info">
@@ -93,23 +113,23 @@
 
         <div>
           <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
-          <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.departure}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
-          <input class="create-trip-input-extra" placeholder="Direccion" value="">
+          <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.origin}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
+          <input class="create-trip-input-extra" placeholder="Direccion" value="{{filters.address::input}}">
         </div>
         <div>
           <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
-          <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.arrival}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
+          <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.destination}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
           <input class="create-trip-input-extra" placeholder="Direccion" value="">
         </div>
 
         <div class="layout horizontal">
           <div class="layout vertical">
             <span>Fecha</span>
-            <input type="date">
+            <input type="date" min="[[today()]]" required>
           </div>
           <div class="layout vertical">
             <span>Hora</span>
-            <input type="time">
+            <input type="time" required>
           </div>
         </div>
       </div>
@@ -123,7 +143,7 @@
       </div>
 
       <div class="column2-3 layout vertical">
-        <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[idcar]]"></paper-input>
+        <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[car.idcar]]"></paper-input>
         <div class="layout vertical">
           <span>Asientos libres</span>
           <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
@@ -148,22 +168,28 @@
 
     <div class="create-trip-other-locations">
       <span>Paradas intermedias</span>
-      <location-line></location-line>
-      <location-line></location-line>
+      <location-line name="[[fakefilters.origin]]" stop></location-line>
+      <template is="dom-repeat" items="[[others]]">
+        <location-line name="[[item.city]]" retardation></location-line>
+      </template>
+      <location-line name="[[fakefilters.destination]]" stop></location-line>
     </div>
 
 
 
 
     <div>
-      <paper-button rised on-click="saveData">Guardar</paper-button>
-      <paper-button rised on-click="discardData">Cancelar</paper-button>
+      <paper-button raised on-click="saveData">Guardar</paper-button>
+      <paper-button raised on-click="discardData">Cancelar</paper-button>
     </div>
 
 
-    <paper-dialog id="car_select" with-backdrop>
+    <pop-up id="car_select" with-backdrop>
+      <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
+    </pop-up>
+    <!-- <paper-dialog id="car_select" with-backdrop>
       <car-container iduser="[[user.iduser]]" cars="[[user.cars]]" on-select="selectCar"></car-container>
-    </paper-dialog>
+    </paper-dialog> -->
   </template>
 
   <script>
@@ -171,8 +197,7 @@
       is: "create-trip",
       properties: {
         user: Object,
-        filters: Object,
-        idcar: Number,
+        car: Object,
         routes: Array,
         selectedRoute: Object,
         origins: Array,
@@ -183,8 +208,18 @@
           value: {},
           readOnly: true
         },
-        items: Object
+        filters: {
+          type: Object,
+          value: {}
+        },
+        items: Object,
+        mapData: {
+          type: Object,
+          value: {origin: "Madrid, España", destination: "Dakar, Senegal"}
+        }
       },
+      observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)'],
+
       attached: function() {
         console.log("create-trip ready!");
         this.$.rs.reload();
@@ -195,10 +230,10 @@
       hideCarSelect: function() {
         this.$.car_select.close();
       },
-      selectCar: function(e, car) {
-        this.idcar = car.idcar;
-        this.hideCarSelect();
-      },
+      // selectCar: function(e, car) {
+      //   this.idcar = car.idcar;
+      //   this.hideCarSelect();
+      // },
       routeSelected: function(e) {
         var routes = this.routes;
         if(!e.target.invalid) {
@@ -207,13 +242,13 @@
           if(!route.wps) this.$.rs2.reload();
         }
         else {
-          this.origins = [];
-          this.destinations = [];
-          this.others = [];
+          this.set('origins', []);
+          this.set('destinations', []);
+          this.set('others', []);
         }
 
-        this.set('fakefilters.departure', "");// = "";
-        this.set('fakefilters.arrival', "");
+        this.set('fakefilters.origin', "");// = "";
+        this.set('fakefilters.destination', "");
         // this.$.origInput.validate();
         // this.$.destInput.validate();
       },
@@ -221,31 +256,78 @@
         // this.origins = [];
         // this.destinations = [];
         // this.others = [];
-        var wps = route.wps,
-            origins = [],
-            destinations = []
-            others = [];
+        var wps = route.wps;
 
+        this.origins = [];
+        this.destinations = [];
+        this.others = [];
+
+        // this.mapData.waypoints = [];
+        this.set('mapData.waypoints', []);
         if(wps && wps.length > 1) {
           var first = wps[0].order,
               last = wps[wps.length - 1].order,
               self = this;
 
-          route.wps.forEach(function(value) {
-            var order = value.order;
-            if(order == first) origins.push(value);//self.push('origins', value);
-            else if(order == last) destinations.push(value);
-            else others.push(value);
+          route.wps.forEach(function(loc) {
+            var order = loc.order;
+            if(order == first) self.push('origins', loc);
+            else if(order == last) self.push('destinations', loc);
+            else {
+              self.push('mapData.waypoints', {location: self.address(loc), stopover: false});
+              self.push('others', loc);
+            }
           });
         }
 
-        this.origins = origins;
-        this.destinations = destinations;
-        this.others = others;
+
+        
+
+
+
+        // this.origins = origins;
+        // this.destinations = destinations;
+        // this.others = others;
       },
+
+      selectMarkOrig: function(e, identifier) {
+        this.set('fakefilters.origin', identifier);
+      },
+      selectMarkDest: function(e, identifier) {
+        this.set('fakefilters.destination', identifier);
+      },
+      locSelected: function(type) {
+        console.log("BLUR");
+        var rte = this.selectedRoute;
+        if(rte) {
+          console.log("BLUR 1");
+          var wps = rte.wps;
+          if(wps) {
+            console.log("BLUR 2: type: " + type + ", filter: " + this.fakefilters[type]);
+            var index = Teranga.indexOf(this.fakefilters[type], wps, 'city');
+            if(index >= 0) {
+              var loc = this.selectedRoute.wps[index];
+
+              console.log("LLEGA CON BLUR (" + type + ") = " + loc.city);
+              this.set('mapData.' + type, this.address(loc));
+            }
+          }
+        }
+      },
+
+      // origSelected: function() {return this.locSelected('origin')},
+      // destSelected: function() {return this.locSelected('destination')},
 
       discardData: function() {
         this.fire('discard');
+      },
+
+      today: function() {
+        return Teranga.today();
+      },
+
+      address: function(wp) {
+        return wp.city + "," + wp.country;
       }
     });
   </script>

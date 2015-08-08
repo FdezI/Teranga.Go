@@ -25,6 +25,9 @@
     return size < sizes.length ? sizes[size] : "Sin tamaño";
   }
 
+  Teranga.today = function() {
+    return new Date().toISOString().substring(0, 10);
+  }
   Teranga.day = function(date) {
     return new Date(Date.parse(date)).getDay();
   };

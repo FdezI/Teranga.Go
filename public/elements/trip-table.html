@@ -191,7 +191,7 @@
       if(!from || from > to) this.set('filters.from', to);
     },
     today: function() {
-      return new Date().toISOString().substring(0, 10);
+      return Teranga.today();
     },
     validate: function() {
         this.$.origin.validate();
