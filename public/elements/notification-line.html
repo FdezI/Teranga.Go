@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+
+<dom-module name="notification-line">
+  <style>
+    .notification {
+      color: #ddd;
+      font-size: 17px;
+      font-family: "FunctionCapsBookRegular","Helvetica Neue",Helvetica,sans-serif;
+      padding: 10px;
+      border-bottom: 1px solid #4D4D4D;
+    }
+    .notification:hover {
+      background: #555;
+      cursor: pointer;
+    }
+    .new-notification {
+      background: #444;
+    }
+    .notification-time {
+      float: right;
+      color: #888;
+      font-size: 13px;
+      margin: 5px 0;
+    }
+    .notification-img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      background: #ccc;
+      margin: 5px 10px 5px 5px;
+      align-self: center;
+    }
+    .new-notification-icon {
+      align-self: center;
+      color: #FF831C; /* Queda cambiar el color*/
+    }
+  </style>
+  <template>
+    <li class$="[[readable(read)]]">
+      <img class="notification-img" src="../images/user.png"/>
+      <div class="vertical layout flex">
+        <span class="notification-info"><span>Carmen</span> quiere viajar contigo</span>
+        <span class="notification-time">Hace <span>2 horas</span></span>
+      </div>
+      <template is="dom-if" if="[[!read]]">
+      	<iron-icon class="new-notification-icon" icon="av:new-releases"></iron-icon>
+      </template>
+    </li>
+  </template>
+
+  <script>
+    Polymer({
+      is: "notification-line",
+      properties: {
+        user: Object,
+        read: {
+        	type: Boolean,
+        	value: false
+        }
+      },
+      readable: function(read) {
+      	return "horizontal layout notification" + (read ? "" : " new-notification");
+      }
+    });
+  </script>
+</dom-module>

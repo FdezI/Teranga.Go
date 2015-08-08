@@ -5,19 +5,34 @@
       background: #121212;
       position: absolute;
       padding: 10px 0;
+      width: 200px;
+      right: 0;
+      top: 0;
     }
     .container > ul {
       padding: 0 20px;
+      list-style: none outside none;
+      margin: 0;
     }
     .container > ul > li {
-      line-height: 20px;
+      line-height: 2em;
+      text-transform: uppercase;
+      color: #ccc;
+      font-size: 17px;
+      font-family: "FunctionCapsBookRegular","Helvetica Neue",Helvetica,sans-serif;
+    }
+    .container > ul > li:hover {
+      color: #fff;
+      cursor: pointer;
     }
   </style>
   <template>
-    <ul>
-      <li>Ver perfil</li>
-      <li>Cerrar sesión</li>
-    </ul>
+    <div class="container">
+      <ul>
+        <li>Ver perfil</li>
+        <li>Cerrar sesión</li>
+      </ul>
+    </div>
   </template>
 
   <script>
