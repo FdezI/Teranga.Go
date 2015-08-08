@@ -1,14 +1,27 @@
 <!--TODO modify to create profile-box so when loged-in show profile configurations and such things  -->
-
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <!-- <link rel="import" href="../bower_components/polymer/polymer.html"> -->
 <link rel="import" href="login-service.html">
 
 <dom-module name="login-box">
   <style>
+  	.login-button {
+  		background: #FF6A1D;
+  	}
+  	.login-container {
+  		background: #fff;
+  		border: 1px solid #ccc;
+  	}
   </style>
   
   <template>
-    <div class="container">
+  	<div class="layout vertical center login-container">
+  		<paper-input label="Nombre" always-float-label></paper-input>
+  		<paper-input label="Contraseña" always-float-label></paper-input>
+  		<paper-button class="login-button" raised>Iniciar</paper-button>
+  	</div>
+    <!-- <div class="container">
 			<div id="card" class="card">
 			  <template is="dom-if" if="[[session.user]]">
 			    <section>
@@ -16,7 +29,7 @@
 			      <button class='toggle' on-click="onExit">Salir</button>
 			    </section>
 			  </template>
-			  <!-- <template is="dom-if" if="[[!session.user]]"">
+			  <template is="dom-if" if="[[!session.user]]"">
 			    <login-service id="loginserv" session="{{session}}" data="{{data}}"></login-service>
 			    <section class='back'>
 			      <form>
@@ -51,9 +64,9 @@
 							<button class='toggle' on-click="onClick">Registrar</button>
 						</form>
 					</section>
-			  </template> -->
+			  </template>
 			</div>
-  	</div>
+  	</div> -->
   </template>
   <script>
 		Polymer({
