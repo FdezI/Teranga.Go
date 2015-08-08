@@ -25,6 +25,7 @@
 <link rel="import" href="../styles/app-theme.html">
 
 <link rel="import" href="../elements/login-box.html">
+<!-- <link rel="import" href="../elements/todelete.html"> -->
 
 <link rel="import" href="../elements/server-config.html">
 
@@ -55,14 +56,7 @@
 	right: 45px;
 	display: {{displayLogin}};
       };
-    }*/
-    login-box {
-      position: absolute;
-      top: 45px;
-      right: 45px;
-/*       display: {{displayLogin}}; */ /*YA NO FUNCIONA, SOLO EN LA 0.5*/
-    }
-  </style>
+    }*/  </style>
   
   <template id="app">
     
@@ -271,6 +265,11 @@
       showLogin: function() {
       	console.log("OPEN");
       	this.$.login.open();
+      },
+
+      register: function(e, user) {
+      	console.log("REGISTERING WITH DATA:");
+      	console.log(user);
       }
     });    
   </script>
