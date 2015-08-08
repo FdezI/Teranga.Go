@@ -1,6 +1,7 @@
 <!-- <link rel="import" href="../bower_components/iron-pages/iron-pages.html"> -->
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../elements/generic-collapse-container.html">
 <!-- <link rel="import" href="../bower_components/iron-icon-button/iron-icon-button.html"> -->
 
 <!-- <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html"> -->
@@ -11,9 +12,9 @@
 <link rel="import" href="../elements/car-info.html">
 <link rel="import" href="../elements/trip-info.html">
 
-<link rel="import" href="../elements/trip-container.html">
-<link rel="import" href="../elements/assessment-container.html">
-<link rel="import" href="../elements/package-container.html">
+<!-- <link rel="import" href="../elements/trip-container.html"> -->
+<!-- <link rel="import" href="../elements/assessment-container.html"> -->
+<!-- <link rel="import" href="../elements/package-container.html"> -->
 <link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../elements/user-container.html">
 <link rel="import" href="../elements/request-container.html">
@@ -22,7 +23,10 @@
 <link rel="import" href="../elements/car-edit.html">
 <link rel="import" href="../elements/trip-card.html">
 
-<link rel="import" href="../elements/travel-box.html">
+<link rel="import" href="../elements/package-content.html">
+<link rel="import" href="../elements/trip-content.html">
+<link rel="import" href="../elements/assessment-content.html">
+<!-- <link rel="import" href="../elements/travel-box.html"> -->
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/car-box.html">
 <link rel="import" href="../elements/package-box.html">
@@ -36,6 +40,8 @@
 <link rel="import" href="./other-profile.html">
 <link rel="import" href="./create-trip.html">
 <link rel="import" href="./tracking.html">
+
+
 
 <dom-module name="profile-view">
 
@@ -126,7 +132,10 @@
             <template id="moreInfo" is="dom-if" if="[[!edit]]">
               <div>
                 <div class="profile-container-half">
-                  <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container>
+                   <generic-collapse-container name="Viajes" reloadable additable>
+                      <trip-content iduser="[[session.user.iduser]]" on-select="tripSelected" data="{{session.user.trips}}"></trip-content>
+                    </generic-collapse-container>
+                  <!-- <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container> -->
                 </div>
                 <div class="profile-container-half" style="float: right;">
                   <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
@@ -141,7 +150,10 @@
               <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
               
               <template is="dom-if" if="[[showdriver]]">
-                <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container>
+                <generic-collapse-container name="Opiniones" reloadable additable>
+                  <assessment-content iduser="[[session.user.iduser]]" on-select="assessmentSelected" data="{{session.user.assessments}}"></assessment-content>
+                </generic-collapse-container>
+                <!-- <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container> -->
               </template>
             </template>
 
