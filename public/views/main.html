@@ -39,6 +39,8 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../elements/pop-up.html">
 
+<link rel="import" href="../elements/data-service.html">
+
 <!-- <link rel="import" href="../elements/login-box.html"> -->
 
 <dom-module name="main-view">
@@ -76,6 +78,7 @@
     </iron-ajax>-->
     
     <iron-localstorage name="session3" value="{{session}}"></iron-localstorage>
+    <data-service id="as" type="auth" data="{{session.user}}" update="[[]]"></data-service>
     
     <paper-drawer-panel id="paperDrawerPanel">
       <!-- Drawer Scroll Header Panel -->
@@ -266,6 +269,11 @@
       	console.log("OPEN");
       	this.$.login.open();
       },
+
+      login: function(e, authData) {
+      	this.$.as.$.update = authData;
+      	this.$.as.reload();
+      }
 
       register: function(e, user) {
       	console.log("REGISTERING WITH DATA:");
