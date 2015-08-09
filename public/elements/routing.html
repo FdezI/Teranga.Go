@@ -5,18 +5,23 @@
     // client-side router inspired by the Express router
     // More info: https://visionmedia.github.io/page.js/
     page('/', function () {
+      app.route = '';
       app.route = 'home';
     });
     page('/profile', function () {
+      app.route = '';
       app.route = 'profile';
     });
     page('/trips', function () {
+      app.route = '';
       app.route = 'trips';
     });
      page('/tracking', function () {
+      app.route = '';
       app.route = 'tracking';
     });
     page('/tracking/:idpackage', function (data) {
+      app.route = '';
       app.route = 'tracking';
       app.params = data.params; 
     });

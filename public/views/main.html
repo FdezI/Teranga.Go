@@ -49,6 +49,9 @@
 
 <dom-module name="main-view" on-logout="logout">
   <style>
+  	#popupIcons {
+  		height: 100%;
+  	}
   </style>
   
   <template id="app">
@@ -72,8 +75,8 @@
     
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
-    <notification-popup id="np" index="1"></notification-popup>
-    <account-popup id="ap" on-logout="logout" index="0"></account-popup>
+    <notification-popup id="np" opened="{{openPopups.np}}" index="1"></notification-popup>
+    <account-popup id="ap" opened="{{openPopups.ap}}" on-logout="logout" on-show-site="setPage" index="0"></account-popup>
 
 
     <paper-drawer-panel id="paperDrawerPanel">
@@ -112,7 +115,8 @@
 				  
 				  <!-- Toolbar icons -->
 				  <template is="dom-if" if="[[session.user]]">
-				  	<iron-selector id="popupIcons" attr-for-selected="name" selected="{{selectedIcon}}" selectedClass="selected">
+				  	<iron-selector id="popupIcons" class="layout horizontal justified" attr-for-selected="name" selected="{{selectedIcon}}" on-iron-select="updatePopups" selected-class="selected">
+				  		<div name="a"></div>
 						  <div name="notif" class="paper-icon-header-div layout horizontal center" on-tap="toggleNotif">
 						  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
 						  </div>
@@ -209,10 +213,17 @@
 				  value: {}
 				},
 				selectedIcon: {
-					type: String,
-					observer: '_selectedIconChanged'
+					type: String
+					// observer: '_selectedIconChanged'
+				},
+				openPopups: {
+					type: Object,
+					value: {},
+					observer: '_openPopupsChanged'
 				}
       },
+
+      observers: ['_openPopupsChanged(openPopups.*)'],
       
       ready: function() {
 			// 	if(!this.session) this.session = {};
@@ -251,13 +262,18 @@
 			// 	console.log(this.session);
       },
 
+      setPage: function(e, route) {
+      	// this.set('route', route);
+      	page("/" + route);
+      	this.closePopups();
+      },
+
       routeChanged: function() {
       	if(this.route === "profile") {
       		var profile = this.$$("profile-view");
       		profile.edit = false;
       		profile.page = "profile";
-      	}
-      	else if(this.route === "tracking") this.$$("tracking-view").back();
+      	} else if(this.route === "tracking") this.$$("tracking-view").back();
       },
 
       showLogin: function() {
@@ -302,11 +318,20 @@
       	delete this.session.user;
       	this.session = {};
 
+      	this.closePopups();
       },
 
-      _selectedIconChanged: function() {
+      closePopups: function() {
+      	this.$.ap.close();
+      	this.$.np.close();
+      },
+      updatePopups: function() {
       	if(!this.$.ap.opened && !this.$.np.opened) this.set('selectedIcon', "");
+      },
+
+      _openPopupsChanged: function() {
+      	this.updatePopups();
       }
-    });    
+    });
   </script>
 </dom-module>

@@ -6,6 +6,7 @@
 
 <link rel="import" href="../elements/car-container.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
@@ -90,9 +91,9 @@
     
     <div>
       <div class="trip-map">
-        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617" fit-to-markers></google-map>
+        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617"></google-map>
         <template is="dom-if" if="[[map]]">
-          <google-map-directions map="{{map}}" start-address="[[mapData.origin]]" end-address="[[mapData.destination]]" waypoint-addresses="[[mapData.waypoints]]">
+          <google-map-directions map="{{map}}" start-address="[[mapData.origin]]" end-address="[[mapData.destination]]" waypoint-addresses="[[mapData.waypoints]]" on-google-map-response="directions" not-stopover-style-waypoints>
           </google-map-directions>
 
           <template is="dom-repeat" items="[[origins]]">
@@ -106,7 +107,7 @@
 
       <div class="basic-info">
         <div>
-          <data-service id="rs2" type="routes" fetch="[[selectedRoute.idroute]]" data="{{selectedRoute}}" on-response="routeLoaded"></data-service>
+          <data-service id="rs2" type="routes" fetch="[[selected.route.idroute]]" data="{{selected.route}}" on-response="routeLoaded"></data-service>
           <trip-edit-route-validator items="[[routes]]" attrib="name" ></trip-edit-route-validator>
           <paper-input id="routeInput" label="Ruta" list="routes" value="{{fakefilters.route}}" validator="trip-edit-route-validator" required auto-validate on-input="routeSelected"></paper-input>
         </div>
@@ -114,22 +115,22 @@
         <div>
           <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
           <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.origin}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
-          <input class="create-trip-input-extra" placeholder="Direccion" value="{{fakefilters.origin.address::input}}">
+          <input id="originAddress" class="create-trip-input-extra" placeholder="Direccion" readonly$="[[!canAddress(selected.origin)]]" value="{{selected.origin.address::input}}">
         </div>
         <div>
           <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
           <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.destination}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
-          <input class="create-trip-input-extra" placeholder="Direccion" value="{{fakefilters.origin.destination::input}}">
+          <input id="destinationAddress" class="create-trip-input-extra" placeholder="Direccion" value="{{selected.destination.address::input}}" readonly$="[[!canAddress(selected.destination)]]">
         </div>
 
         <div class="layout horizontal">
           <div class="layout vertical">
             <span>Fecha</span>
-            <input type="date" min="[[today()]]" required>
+            <input type="date" value="{{filters.date}}" min="[[today()]]" required>
           </div>
           <div class="layout vertical">
             <span>Hora</span>
-            <input type="time" required>
+            <input type="time" value="{{filters.time}}" required>
           </div>
         </div>
       </div>
@@ -166,13 +167,17 @@
 
     <div class="vertical-separator"></div>
 
+    <paper-textarea label="Comentario" char-counter maxlength="200" max-rows="10" value="{{filters.comment}}"></paper-textarea>
+
+    <div class="vertical-separator"></div>
+
     <div class="create-trip-other-locations">
-      <span>Paradas intermedias</span>
-      <location-line name="[[fakefilters.origin]]" stop></location-line>
+      <span>Trayecto completo</span>
+      <location-line location="[[selected.origin]]" stop lock-address></location-line>
       <template is="dom-repeat" items="[[others]]">
         <location-line location="[[item]]" retardation></location-line>
       </template>
-      <location-line name="[[fakefilters.destination]]" stop></location-line>
+      <location-line location="[[selected.destination]]" stop lock-address arrival></location-line>
     </div>
 
 
@@ -199,7 +204,12 @@
         user: Object,
         car: Object,
         routes: Array,
-        selectedRoute: Object,
+        // selectedRoute: Object,
+        selected: {
+          type: Object,
+          value: {origin: {}, destination: {}, route: {}}
+        },
+        destination: Object,
         origins: Array,
         destinations: Array,
         others: Array,
@@ -220,6 +230,9 @@
       },
       observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)'],
 
+      ready: function() {
+        this.set('filters.date',  Teranga.today());
+      },
       attached: function() {
         console.log("create-trip ready!");
         this.$.rs.reload();
@@ -236,10 +249,11 @@
       // },
       routeSelected: function(e) {
         var routes = this.routes;
+        console.log("UNA VEZ");
         if(!e.target.invalid) {
-          var route = this.selectedRoute = routes[Teranga.indexOf(e.target.value, routes, "name")];
+          this.set('selected.route', routes[Teranga.indexOf(e.target.value, routes, "name")]);
 
-          if(!route.wps) this.$.rs2.reload();
+          if(!this.selected.route.wps) this.$.rs2.reload();
         }
         else {
           this.set('origins', []);
@@ -274,7 +288,7 @@
             if(order == first) self.push('origins', loc);
             else if(order == last) self.push('destinations', loc);
             else {
-              self.push('mapData.waypoints', {location: self.address(loc), stopover: false});
+              self.push('mapData.waypoints', {location: self.address(loc), stopover: true});
               self.push('others', loc);
             }
           });
@@ -296,8 +310,11 @@
         this.set('fakefilters.destination', identifier);
       },
       locSelected: function(type) {
-        console.log("BLUR");
-        var rte = this.selectedRoute;
+        console.log("BLUR: " + type);
+        this.$[type + "Address"].value = "";
+        this.set('selected.' + type, 'undefined');
+
+        var rte = this.selected.route;
         if(rte) {
           console.log("BLUR 1");
           var wps = rte.wps;
@@ -305,10 +322,11 @@
             console.log("BLUR 2: type: " + type + ", filter: " + this.fakefilters[type]);
             var index = Teranga.indexOf(this.fakefilters[type], wps, 'city');
             if(index >= 0) {
-              var loc = this.selectedRoute.wps[index];
+              var loc = this.selected.route.wps[index];
 
               console.log("LLEGA CON BLUR (" + type + ") = " + loc.city);
               this.set('mapData.' + type, this.address(loc));
+              this.set('selected.' + type, loc);
             }
           }
         }
@@ -325,34 +343,47 @@
         return Teranga.today();
       },
 
+      canAddress: function(loc) {
+        return loc.order ? true : false; 
+      },
+
       address: function(wp) {
         return wp.city + "," + wp.country;
       },
 
       saveData: function() {
-        var rte = this.selectedRoute;
+        var rte = this.selected.route;
         if(!rte) return;
 
         var wps = rte.wps,
+          selected = this.selected,
           length = wps.length,
           f = this.filters,
           ff = this.fakefilters;
 
-        Object.keys(ff).forEach(function(key) {
-          var i = -1;
-          delete f[key];
-          while(++i < length && !f[key])
-            if(wps[i].city == ff[key]) {
-              var loc = f[key];
-              loc.idlocation = wps[i].idlocation;
-              loc.address = wps[i].address;
-            }
+        // console.log("WPSss-----");
+        // console.log(wps);
+        // ['origin', 'destination'].forEach(function(key) {
+        //   var i = -1;
+        //   delete f[key];
+        //   while(++i < length && !f[key])
+        //     if(wps[i].city == ff[key]) {
+        //       var loc = f[key] = {};
+
+        //       loc.order = wps[i].order;
+        //       loc.address = wps[i].address;
+        //     }
+        // });
+
+        ['origin', 'destination'].forEach(function(key) {
+          var sel = selected[key];
+          f[key] = {order: sel.order, address: sel.address, retardation: sel.retardation};
         });
 
         f.wps = [];
         this.others.forEach(function(loc) {
           // GREAT IF THE attribs GROWS
-          // var attribs = ["idlocation", "address", "retardation"];
+          // var attribs = ["order", "address", "retardation"];
           // var obj = {}
           // attribs.forEach(function(value) {
           //   obj[value] = loc[value];
@@ -360,31 +391,44 @@
           // f.wps.push(obj);
 
           // GREATER WITH FEW ATTRIBS
-          f.wps.push({idlocation: loc.idlocation, address: loc.address, retardation: loc.retardation});
+          f.wps.push({order: loc.order, address: loc.address, retardation: loc.retardation});
         });
 
         var car = this.car;
         if(!car) return;
 
+        console.log("TIENE COCHE");
+
         f.car = car.idcar;
+        f.iduser = this.user.iduser;
         //TODO coste
 
-        var neededAttribs = ["origin", "destination", "wps"];
-        var neededAttribsLoc = ["idlocation", "address"];
+        var neededAttribs = ["origin", "destination", "wps", "date", "time", "iduser"];
+        var neededAttribsLoc = ["order", "address"];
 
         if(!neededAttribs.every(function(attrib){
-          if(!f[attrib]) return false;
+          return f[attrib] ? true : false;
         })) return;
 
+        console.log("PASADO EL PRIMER FILTRO");
+        console.log(f);
         if(!neededAttribsLoc.every(function(attrib){
-          if(!f.wps.every(function(wp) {
-            return wp[attrib];
-          })) return false;
+          return f.wps.every(function(wp) {
+            return wp[attrib] ? true : false;
+          }) ? true : false;
         })) return;
+
+          console.log("PASADO EL SEGUNDO FILTRO");
 
         console.log("SAVE FILTERS: ");
         console.log(this.filters);
 
+      },
+
+
+      directions: function(e, data) {
+        console.log("DIRECTIONS: ");
+        console.log(data.response);
       }
     });
   </script>

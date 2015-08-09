@@ -27,7 +27,7 @@
     </div>
 
     <div class="extra-info">
-      <input class="input-location" type="text" value="{{location.address::input}}">
+      <input class="input-location" type="text" value="{{location.address::input}}" readonly$="[[lockAddress]]">
       <div class="other-info layout horizontal">
         <template is="dom-if" if="[[retardation]]">
           <div class="layout horizontal">
@@ -36,7 +36,7 @@
           </div>
         </template>
         <div class="layout horizontal">
-          <span>Salida</span>
+          <span>[[tag(arrival)]]</span>
           <div class="layout vertical">
             <span>10</span>
             <span>Jun</span>
@@ -56,7 +56,15 @@
         // name: String,
         // address: String,
         stop: Boolean,
-        retardation: Boolean
+        lockAddress: Boolean,
+        retardation: Boolean,
+        arrival: {
+          type: Boolean,
+          value: false
+        }
+      },
+      tag: function(arrival) {
+        return arrival ? "Llegada" : "Salida";
       }
     });
   </script>
