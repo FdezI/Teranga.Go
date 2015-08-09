@@ -3,15 +3,16 @@
 
 <dom-module name="account-popup">
   <style>
+    :host {
+      top: 64px;
+      position: fixed;
+      /*right: 0px;*/
+    }
     .container {
       color: white;
       background: #121212;
-      position: absolute;
       padding: 10px 0;
       width: 200px;
-      right: 1%;
-      top: 100%;
-      /*z-index: 10;*/
     }
     .container > ul {
       padding: 0 20px;
