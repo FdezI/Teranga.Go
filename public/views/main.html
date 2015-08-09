@@ -72,7 +72,8 @@
     
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
-    
+    <notification-popup id="np" index="1"></notification-popup>
+    <account-popup id="ap" on-logout="logout" index="0"></account-popup>
 
 
     <paper-drawer-panel id="paperDrawerPanel">
@@ -111,16 +112,13 @@
 				  
 				  <!-- Toolbar icons -->
 				  <template is="dom-if" if="[[session.user]]">
-					  <div class="paper-icon-header-div layout horizontal center">
+					  <div class="paper-icon-header-div layout horizontal center" on-tap="toggleNotif">
 					  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
-					  	<div>7</div>
-							<notification-popup id="np"></notification-popup>
 					  </div>
 					  <div class="paper-icon-header-div layout horizontal center" on-tap="toggleAccount">
 					  	<iron-selector attr-for-selected="name" selected="account">
 				  			<paper-icon-button name="account" class="paper-icon-header" icon="account-circle"></paper-icon-button>
 					  	</iron-selector>
-					  	<account-popup id="ap" on-logout="logout" index="2"></account-popup>
 					  </div>
 				  </template>
 
@@ -263,11 +261,11 @@
       },
 
       toggleAccount: function() {
-      	this.$$("#ap").toggle();
+      	this.$.ap.toggle();
       },
 
       toggleNotif: function() {
-      	this.$$("#np").toggle();
+      	this.$.np.toggle();
       },
 
       register: function(e, user) {
