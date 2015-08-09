@@ -112,14 +112,14 @@
 				  
 				  <!-- Toolbar icons -->
 				  <template is="dom-if" if="[[session.user]]">
-					  <div class="paper-icon-header-div layout horizontal center" on-tap="toggleNotif">
-					  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
-					  </div>
-					  <div class="paper-icon-header-div layout horizontal center" on-tap="toggleAccount">
-					  	<iron-selector attr-for-selected="name" selected="account">
-				  			<paper-icon-button name="account" class="paper-icon-header" icon="account-circle"></paper-icon-button>
-					  	</iron-selector>
-					  </div>
+				  	<iron-selector id="popupIcons" attr-for-selected="name" selected="{{selectedIcon}}">
+						  <div name="notif" class="paper-icon-header-div layout horizontal center" on-tap="toggleNotif">
+						  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
+						  </div>
+						  <div name="account" class="paper-icon-header-div layout horizontal center" on-tap="toggleAccount">
+				  			<paper-icon-button class="paper-icon-header" icon="account-circle"></paper-icon-button>
+						  </div>
+					  </iron-selector>
 				  </template>
 
     
@@ -207,6 +207,10 @@
 				session: {
 				  type: Object,
 				  value: {}
+				},
+				selectedIcon: {
+					type: String,
+					observer: '_selectedIconChanged'
 				}
       },
       
@@ -262,10 +266,12 @@
 
       toggleAccount: function() {
       	this.$.ap.toggle();
+      	// if(!this.$.ap.opened) this.set('selectedIcon', "");
       },
 
       toggleNotif: function() {
       	this.$.np.toggle();
+      	// if(!this.$.np.opened) this.set('selectedIcon', "");
       },
 
       register: function(e, user) {
@@ -296,6 +302,10 @@
       	delete this.session.user;
       	this.session = {};
 
+      },
+
+      _selectedIconChanged: function() {
+      	if(!this.$.ap.opened && !this.$.np.opened) this.set('selectedIcon', "");
       }
     });    
   </script>
