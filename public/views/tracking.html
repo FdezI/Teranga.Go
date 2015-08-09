@@ -67,7 +67,7 @@
         filters: Object,
         page: {
           type: String,
-          value: "search"
+          value: "tracking"
         },
         idpackage: {
           type: Number,
@@ -84,19 +84,24 @@
         }
       },
       idpackageChanged: function() {
-        console.log(2);
-        this.loading = true;
-        this.$.ds.reload();
+        // console.log(2);
+        if(this.idpackage) {
+          this.loading = true;
+          this.$.ds.reload();
+        }
       },
       search: function(e) {
         if((!(e instanceof KeyboardEvent) || e.keyCode === 13)) {
           var input = this.$$("#input");
-          if(!input.invalid) page("/tracking/" + input.value);
+          if(!input.invalid) {
+            console.log("PONIENDO Página a: " + input.value);
+            page("/tracking/" + input.value);
+          }
         }
       },
       back: function() {
-        this.package = null;
-        this.idpackage = null;
+        this.set('package', null);
+        this.set('idpackage', null);
         this.$$("#input").value = "";
         page("/tracking");
       },
@@ -105,7 +110,10 @@
       },
       packageChanged: function() {
         if(this.package) this.page = "package";
-        else this.page = "search";
+        else {
+          // page("/tracking");
+          this.page = "tracking";
+        }
       }
     });
   </script>
