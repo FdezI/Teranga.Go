@@ -259,7 +259,11 @@
       },
 
       routeChanged: function() {
-      	if(this.route === "profile") this.$$("profile-view").edit = false;
+      	if(this.route === "profile") {
+      		var profile = this.$$("profile-view");
+      		profile.edit = false;
+      		profile.page = "profile";
+      	}
       	else if(this.route === "tracking") this.$$("tracking-view").back();
       },
 
