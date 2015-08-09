@@ -32,8 +32,8 @@
   <template>
     <div class="container">
       <ul>
-        <li>Ver perfil</li>
-        <li>Cerrar sesión</li>
+        <li on-click="">Ver perfil</li>
+        <li on-click="logout">Cerrar sesión</li>
       </ul>
     </div>
   </template>
@@ -44,7 +44,12 @@
       properties: {
         package: Object
       },
-      behaviors: [Teranga.PopupBehavior]
+      behaviors: [Teranga.PopupBehavior],
+
+      logout: function() {
+        console.log("LOGOUT");
+        this.fire("logout");
+      }
     });
   </script>
 </dom-module>

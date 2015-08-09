@@ -24,12 +24,12 @@
   </style>
   
   <template>
-  	<data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
+  	<!-- <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service> -->
 
   	<div class="layout vertical center login-container">
   		<form>
 	  		<paper-input label="Email" always-float-label value="{{data.email}}"></paper-input>
-	  		<paper-input label="Contraseña" always-float-label value="{{data.password}}"></paper-input>
+	  		<paper-input type="password" label="Contraseña" always-float-label value="{{data.password}}"></paper-input>
 	  		<paper-button class="login-button" raised on-click="login">Iniciar</paper-button>
   		</form>
   	</div>
@@ -69,9 +69,9 @@
       	this.fire("logout");
       },
 
-			authTreat: function(e, data) {
-      	console.log(data);
-      },
+			// authTreat: function(e, data) {
+   //    	console.log(data);
+   //    },
       
 			onExit: function() {
 				delete this.data;

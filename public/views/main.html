@@ -47,7 +47,7 @@
 
 <!-- <link rel="import" href="../elements/login-box.html"> -->
 
-<dom-module name="main-view">
+<dom-module name="main-view" on-logout="logout">
   <style>
   </style>
   
@@ -73,7 +73,7 @@
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
     <notification-popup id="np"></notification-popup>
-    <account-popup id="ap"></account-popup>
+    <account-popup id="ap" on-logout="logout"></account-popup>
 
 
     <paper-drawer-panel id="paperDrawerPanel">
@@ -288,6 +288,14 @@
 
       	this.$.as.set('update', authData);
       	this.$.as.saveData(true);
+      },
+
+      authTreat: function(e, message) {
+      	// console.log("AUTH THINGS");
+      	// console.log(e);
+      	// console.log(message);
+      	if(message.iduser) this.$.login.close();
+      	else console.log("ERROR on login!, please contact with an administrator");
       },
 
       logout: function(e) {
