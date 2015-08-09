@@ -48,6 +48,20 @@ body {
 	background: #FF6A1D;
 }
 
+.menu-notification-alert {
+	position: absolute;
+	color: white;
+	background: #f00;
+	padding-top: 4px;
+	border-radius: 50%;
+	height: 16px;
+	width: 20px;
+	font-size: 11px;
+	text-align: center;
+	right: 84px;
+	top: 12px;
+}
+
 .paper-font-title {
 	color: #fff;
 }
