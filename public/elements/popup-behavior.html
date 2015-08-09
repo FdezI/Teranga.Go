@@ -1,0 +1,25 @@
+<script>
+  Teranga.PopupBehavior = {
+    properties: {
+      opened: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: '_openedChanged'
+      }
+    },
+    open: function() {
+      this.opened = true;
+    },
+    close: function() {
+      this.opened = false;
+    },
+    toggle: function() {
+      this.opened = !this.opened;
+    },
+    _openedChanged: function() {
+      if(this.opened) this.removeAttribute('hidden');
+      else this.setAttribute('hidden', true);
+    }
+  };
+</script>

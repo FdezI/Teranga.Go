@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../elements/notification-line.html">
+<link rel="import" href="../elements/notification-line.html">ç
+
+<link rel="import" href="popup-behavior.html">
 
 <dom-module name="notification-popup">
   <style>
@@ -13,6 +15,7 @@
       min-height: 250px;
       right: 0;
       top: 0;
+      z-index: 10;
     }
     .notification-title {
       background: #222;
@@ -56,7 +59,8 @@
       is: "notification-popup",
       properties: {
         package: Object
-      }
+      },
+      behaviors: [Teranga.PopupBehavior]
     });
   </script>
 </dom-module>

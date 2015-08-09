@@ -24,25 +24,25 @@
   </style>
   
   <template>
+  	<data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
+
   	<div class="layout vertical center login-container">
-  		<paper-input label="Email" always-float-label></paper-input>
-  		<paper-input label="Contraseña" always-float-label></paper-input>
-  		<paper-button class="login-button" raised>Iniciar</paper-button>
+  		<form>
+	  		<paper-input label="Email" always-float-label value="{{data.email}}"></paper-input>
+	  		<paper-input label="Contraseña" always-float-label value="{{data.password}}"></paper-input>
+	  		<paper-button class="login-button" raised on-click="login">Iniciar</paper-button>
+  		</form>
   	</div>
   </template>
   <script>
 		Polymer({
 			is: "login-box",
 			properties: {
-				session: {
+				data: {
 					type: Object,
+					value: {},
 					notify: true
-				},
-				item: {
-					type: Object,
-					value: {}
-				},
-				data: Object
+				}
 			},
 
 			observers: [
@@ -52,10 +52,23 @@
 			ready: function() {
 				console.log("login-box ready: " + this.session.user);
 			},
-			onClick: function() {
+			// login: function() {
+			// 	this.fire("login", this.data);
+			// },
+			login: function(e, authData) {
 				event.preventDefault();
-				event.stopPropagation();
-			},
+
+      	console.log("authData");
+      	console.log(authData);
+
+      	this.$.as.set('update', authData);
+      	this.$.as.saveData(true);
+      },
+
+			authTreat: function(e, data) {
+      	console.log(data);
+      },
+      
 			onExit: function() {
 				delete this.data;
 				delete this.session.user;

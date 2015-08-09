@@ -71,7 +71,7 @@
         if(fetch == "list") req.url += "?list";
       } else {//if(fetch !== "") {
         console.log("fetching " + fetch);
-        req.url = api + type + "/" + fetch;
+        req.url = api + type + (fetch ? "/" + fetch : "");
 
         req.generateRequest();
       }
