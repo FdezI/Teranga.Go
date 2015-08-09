@@ -112,7 +112,7 @@
 				  
 				  <!-- Toolbar icons -->
 				  <template is="dom-if" if="[[session.user]]">
-				  	<iron-selector id="popupIcons" attr-for-selected="name" selected="{{selectedIcon}}">
+				  	<iron-selector id="popupIcons" attr-for-selected="name" selected="{{selectedIcon}}" selectedClass="selected">
 						  <div name="notif" class="paper-icon-header-div layout horizontal center" on-tap="toggleNotif">
 						  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
 						  </div>
