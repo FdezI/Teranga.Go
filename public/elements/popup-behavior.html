@@ -1,25 +1,25 @@
+<style>
+</style>
+
 <script>
-  Teranga.PopupBehavior = {
+  Teranga.PopupBehaviorImpl = {
     properties: {
-      opened: {
-        type: Boolean,
-        value: false,
-        notify: true,
-        observer: '_openedChanged'
+      index: {
+        type: Number,
+        value: 0,
+        observer: '_indexChanged'
       }
+      // opened: {
+      //   type: Boolean,
+      //   value: false,
+      //   notify: true,
+      //   observer: '_openedChanged'
+      // }
     },
-    open: function() {
-      this.opened = true;
-    },
-    close: function() {
-      this.opened = false;
-    },
-    toggle: function() {
-      this.opened = !this.opened;
-    },
-    _openedChanged: function() {
-      if(this.opened) this.removeAttribute('hidden');
-      else this.setAttribute('hidden', true);
+    _indexChanged: function() {
+      this.setAttribute('style', "right: " + (this.index * 60) + "px;");
     }
   };
+
+  Teranga.PopupBehavior = [Polymer.IronOverlayBehavior, Teranga.PopupBehaviorImpl];
 </script>
