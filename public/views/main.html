@@ -70,6 +70,8 @@
     
     <iron-localstorage name="session3" value="{{session}}"></iron-localstorage>
     
+    <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
+
     <notification-popup id="np"></notification-popup>
     <account-popup id="ap"></account-popup>
 
@@ -276,6 +278,23 @@
       register: function(e, user) {
       	console.log("REGISTERING WITH DATA:");
       	console.log(user);
+      },
+
+      login: function(e, authData) {
+				e.preventDefault();
+
+      	console.log("authData");
+      	console.log(authData);
+
+      	this.$.as.set('update', authData);
+      	this.$.as.saveData(true);
+      },
+
+      logout: function(e) {
+      	e.preventDefault();
+      	delete this.session.user;
+      	this.session = {};
+
       }
     });    
   </script>

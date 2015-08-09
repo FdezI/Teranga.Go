@@ -52,18 +52,22 @@
 			ready: function() {
 				console.log("login-box ready: " + this.session.user);
 			},
-			// login: function() {
-			// 	this.fire("login", this.data);
-			// },
-			login: function(e, authData) {
-				event.preventDefault();
+			login: function() {
+				this.fire("login", this.data);
+			},
+			// login: function(e, authData) {
+			// 	event.preventDefault();
 
-      	console.log("authData");
-      	console.log(authData);
+   //    	console.log("authData");
+   //    	console.log(authData);
 
-      	this.$.as.set('update', authData);
-      	this.$.as.saveData(true);
-      },
+   //    	this.$.as.set('update', authData);
+   //    	this.$.as.saveData(true);
+   //    },
+
+      logout: function() {
+      	this.fire("logout");
+      }
 
 			authTreat: function(e, data) {
       	console.log(data);
