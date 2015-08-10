@@ -1,0 +1,72 @@
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="time-validator.html">
+
+<dom-module id="time-input">
+
+  <style>
+
+    :host {
+      display: inline-block;
+    }
+
+    input[is="iron-input"] {
+      font: inherit;
+      outline: none;
+      box-shadow: none;
+      border: none;
+      width: 45px;
+      text-align: center;
+    }
+
+  </style>
+
+  <template>
+
+    <time-validator></time-validator>
+
+    <input is="iron-input" type="number" maxlength="3" bind-value="{{hours}}" size="3" aria-label="Hours">
+    :
+    <input is="iron-input" type="number" maxlength="2" bind-value="{{minutes}}" size="2" aria-label="Minutes">
+  </template>
+
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: 'time-input',
+
+    behaviors: [Polymer.IronValidatableBehavior],
+
+    properties: {
+      value: {
+      	type: String,
+        notify: true
+      },
+      hours: {
+      	type: String,
+      	value: "0"
+      },
+      minutes: {
+      	type: String,
+      	value: "0"
+      },
+
+      validator: {
+        type: String,
+        value: 'time-validator'
+      }
+
+    },
+
+    observers: ['_computeValue(hours, minutes)'],
+
+    _computeValue: function(hours, minutes) {
+      this.value = hours + ':' + minutes;
+    }
+
+  })
+})();
+</script>

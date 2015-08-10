@@ -62,10 +62,15 @@
 				selected: {
 					type: String,
 					notify: true
+				},
+				checked: {
+					type: Boolean,
+	        value: false,
+	        reflectToAttribute: true
 				}
 			},
 			ready: function() {
-				this.set('selected', "");
+				if(this.checked) this.set('selected', "");
 			},
 			img: function(type, mode) {
 				return Teranga.image.URL + type + "-" + mode + ".png";

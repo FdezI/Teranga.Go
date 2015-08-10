@@ -25,6 +25,7 @@
       console.log("CALL DONE");
       e.stopPropagation();
       this.fire('response', this.data);
+      console.log("CALL FIRED");
     },
 
     saveData: function(create) {

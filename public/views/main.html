@@ -71,7 +71,7 @@
 	      on-iron-response="{{onResponse}}">
     </iron-ajax>-->
     
-    <iron-localstorage name="session3" value="{{session}}"></iron-localstorage>
+    <iron-localstorage name="session3" value="{{session}}" on-iron-localstorage-load-empty="noStorage"></iron-localstorage>
     
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
@@ -229,6 +229,9 @@
 			// 	if(!this.session) this.session = {};
 			// 	this.session = null;
       },
+      noStorage: function() {
+      	if(!this.session) this.set('session', {});
+      },
       
     //   loginIconClicked: function(e, detail, sender) {
 				// console.log("loginIconClicked");
@@ -306,9 +309,10 @@
       },
 
       authTreat: function(e, message) {
-      	// console.log("AUTH THINGS");
+      	console.log("AUTH THINGS");
       	// console.log(e);
-      	// console.log(message);
+      	console.log(message);
+      	console.log(this.session.user);
       	if(message.iduser) this.$.login.close();
       	else console.log("ERROR on login!, please contact with an administrator");
       },

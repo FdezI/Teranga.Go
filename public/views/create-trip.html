@@ -25,6 +25,8 @@
 <!-- <link rel="import" href="../bower_components/google-map/google-map-directions.html"> -->
 <link rel="import" href="../patched_components/google-map-directions.html">
 <link rel="import" href="../elements/google-map-address-marker.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
+
 
 <dom-module name="create-trip">
   <style>
@@ -91,9 +93,20 @@
     
     <div>
       <div class="trip-map">
-        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617"></google-map>
+        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617">
+          <google-map-marker latitude="[[legs.0.start_location.G]]" longitude="[[legs.0.start_location.K]]" icon="https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1" z-index="1">
+          </google-map-marker>
+
+          <template is="dom-repeat" items="[[legs]]">
+            <google-map-marker latitude="[[item.end_location.G]]" longitude="[[item.end_location.K]]" icon="https://maps.gstatic.com/mapfiles/dd-via.png" z-index="0">
+            </google-map-marker>
+          </template>
+
+          <google-map-marker latitude="[[lastLeg.end_location.G]]" longitude="[[lastLeg.end_location.K]]" icon="https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-b.png&text=B&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1">
+          </google-map-marker z-index="1">
+        </google-map>
         <template is="dom-if" if="[[map]]">
-          <google-map-directions map="{{map}}" start-address="[[mapData.origin]]" end-address="[[mapData.destination]]" waypoint-addresses="[[mapData.waypoints]]" on-google-map-response="directions" not-stopover-style-waypoints>
+          <google-map-directions map="{{map}}" start-address="[[mapData.origin]]" end-address="[[mapData.destination]]" waypoint-addresses="[[mapData.waypoints]]" on-google-map-response="directions" suppress-markers>
           </google-map-directions>
 
           <template is="dom-repeat" items="[[origins]]">
@@ -113,88 +126,98 @@
         </div>
 
         <div>
-          <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
-          <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.origin}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
-          <input id="originAddress" class="create-trip-input-extra" placeholder="Direccion" readonly$="[[!canAddress(selected.origin)]]" value="{{selected.origin.address::input}}">
+          <template is="dom-if" if="[[selected.route]]">
+            <trip-edit-origin-validator items="[[origins]]" attrib="city" ></trip-edit-origin-validator>
+            <paper-input id="origInput" class="create-trip-input" label="De:" list="origins" placeholder="Salida" value="{{fakefilters.origin}}" validator="trip-edit-origin-validator" required auto-validate></paper-input>
+            <input id="originAddress" class="create-trip-input-extra" placeholder="Direccion" readonly$="[[!canAddress(selected.origin)]]" value="{{selected.origin.address::input}}">
+          </template>
         </div>
         <div>
-          <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
-          <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.destination}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
-          <input id="destinationAddress" class="create-trip-input-extra" placeholder="Direccion" value="{{selected.destination.address::input}}" readonly$="[[!canAddress(selected.destination)]]">
+          <template is="dom-if" if="[[selected.origin]]">
+            <trip-edit-destination-validator items="[[destinations]]" attrib="city" ></trip-edit-destination-validator>
+            <paper-input id="destInput" class="create-trip-input"  label="A:" list="destinations" placeholder="Llegada" value="{{fakefilters.destination}}" validator="trip-edit-destination-validator" required auto-validate></paper-input>
+            <input id="destinationAddress" class="create-trip-input-extra" placeholder="Direccion" value="{{selected.destination.address::input}}" readonly$="[[!canAddress(selected.destination)]]">
+          </template>
         </div>
 
         <div class="layout horizontal">
-          <div class="layout vertical">
-            <span>Fecha</span>
-            <input type="date" value="{{filters.date}}" min="[[today()]]" required>
-          </div>
-          <div class="layout vertical">
-            <span>Hora</span>
-            <input type="time" value="{{filters.time}}" required>
-          </div>
+          <template is="dom-if" if="[[selected.destination]]">
+            <div class="layout vertical">
+              <span>Fecha</span>
+              <input type="date" value="{{fakefilters.date::input}}" min="[[today()]]" required>
+            </div>
+            <div class="layout vertical">
+              <span>Hora</span>
+              <input type="time" value="{{fakefilters.time::input}}" required>
+            </div>
+          </template>
         </div>
       </div>
 
     </div>
 
     <div class="extra-info">
-      <div class="column1-3 layout vertical">
-        <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
-        <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
-      </div>
-
-      <div class="column2-3 layout vertical">
-        <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[car.idcar]]"></paper-input>
-        <div class="layout vertical">
-          <span>Asientos libres</span>
-          <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+      <template is="dom-if" if="[[fakefilters.time]]">
+        <div class="column1-3 layout vertical">
+          <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
+          <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
         </div>
-      </div>
-
-      <div class="column3-3 layout vertical">
-        <span>Precio</span>
-        <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
-        <div class="layout horizontal">
-          <span class="flex">Asiento</span>
-          <div>x <span>13</span>€</div>
-        </div>
-        <div class="layout horizontal">
-          <span class="flex">Paquete</span>
-          <div>x <span>10</span>€</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="vertical-separator"></div>
-
-    <paper-textarea label="Comentario" char-counter maxlength="200" max-rows="10" value="{{filters.comment}}"></paper-textarea>
-
-    <div class="vertical-separator"></div>
-
-    <div class="create-trip-other-locations">
-      <span>Trayecto completo</span>
-      <location-line location="[[selected.origin]]" stop lock-address></location-line>
-      <template is="dom-repeat" items="[[others]]">
-        <location-line location="[[item]]" retardation></location-line>
       </template>
-      <location-line location="[[selected.destination]]" stop lock-address arrival></location-line>
+
+      <template id="aaa" is="dom-if" if="[[petsAndPackages(filters.animals, filters.packages)]]">
+        <div class="column2-3 layout vertical">
+          <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[car.idcar]]"></paper-input>
+          <div class="layout vertical">
+            <span>Asientos libres</span>
+            <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+          </div>
+        </div>
+
+        <pop-up id="car_select" with-backdrop>
+          <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
+        </pop-up>
+      </template>
+
+      <template is="dom-if" if="[[car.idcar]]">
+        <div class="column3-3 layout vertical">
+          <span>Precio</span>
+          <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+          <div class="layout horizontal">
+            <span class="flex">Asiento</span>
+            <div>x <span>13</span>€</div>
+          </div>
+          <div class="layout horizontal">
+            <span class="flex">Paquete</span>
+            <div>x <span>10</span>€</div>
+          </div>
+        </div>
+      </template>
     </div>
 
+    <template is="dom-if" if="[[car.idcar]]">
+      <div class="vertical-separator"></div>
+
+      <paper-textarea label="Comentario" char-counter maxlength="200" max-rows="10" value="{{filters.comment}}"></paper-textarea>
+
+      <div class="vertical-separator"></div>
+
+      <div class="create-trip-other-locations">
+        <span>Trayecto completo</span>
+        <location-line location="[[selected.origin]]" stop lock-address></location-line>
+        <template is="dom-repeat" items="[[others]]">
+          <location-line location="[[item]]" retardation on-retardation-changed="recalculateDate"></location-line>
+        </template>
+        <location-line location="[[selected.destination]]" stop lock-address arrival></location-line>
+      </div>
 
 
 
-    <div>
-      <paper-button raised on-click="saveData">Guardar</paper-button>
-      <paper-button raised on-click="discardData">Cancelar</paper-button>
-    </div>
 
-
-    <pop-up id="car_select" with-backdrop>
-      <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
-    </pop-up>
-    <!-- <paper-dialog id="car_select" with-backdrop>
-      <car-container iduser="[[user.iduser]]" cars="[[user.cars]]" on-select="selectCar"></car-container>
-    </paper-dialog> -->
+      <div>
+        <paper-button raised on-click="saveData">Guardar</paper-button>
+        <paper-button raised on-click="discardData">Cancelar</paper-button>
+      </div>
+    </template>
   </template>
 
   <script>
@@ -207,7 +230,7 @@
         // selectedRoute: Object,
         selected: {
           type: Object,
-          value: {origin: {}, destination: {}, route: {}}
+          value: {}
         },
         destination: Object,
         origins: Array,
@@ -226,22 +249,27 @@
         mapData: {
           type: Object,
           value: {origin: "Madrid, España", destination: "Dakar, Senegal"}
-        }
+        },
+        legs: Array,
+        lastLeg: Object
       },
-      observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)'],
-
+      observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)', 'timeChanged(filters.time)', 'recalculateDate(selected.origin.order, selected.destination.order, legs.splices, lastLeg, fakefilters.date, fakefilters.time)', 'recalculateDate(others.*.retardation)'],
+      timeChanged: function() {
+        console.log("time: " + this.filters.time);
+      },
       ready: function() {
-        this.set('filters.date',  Teranga.today());
+        this.set('fakefilters.date',  Teranga.today());
       },
       attached: function() {
         console.log("create-trip ready!");
         this.$.rs.reload();
       },
       showCarSelect: function() {
-        this.$.car_select.open();
+        // console.log(this.$);
+        this.$$("#car_select").open();
       },
       hideCarSelect: function() {
-        this.$.car_select.close();
+        this.$$("#car_select").close();
       },
       // selectCar: function(e, car) {
       //   this.idcar = car.idcar;
@@ -311,7 +339,7 @@
       },
       locSelected: function(type) {
         console.log("BLUR: " + type);
-        this.$[type + "Address"].value = "";
+        this.$$("#" + type + "Address").value = "";
         this.set('selected.' + type, 'undefined');
 
         var rte = this.selected.route;
@@ -344,7 +372,7 @@
       },
 
       canAddress: function(loc) {
-        return loc.order ? true : false; 
+        return loc && loc.order ? true : false; 
       },
 
       address: function(wp) {
@@ -429,7 +457,63 @@
       directions: function(e, data) {
         console.log("DIRECTIONS: ");
         console.log(data.response);
+        var legs = data.response.routes[0].legs;
+        var i = 1;
+
+        this.set('legs', legs.map(function(leg){ return leg; }));
+        this.set('lastLeg', this.pop('legs'));
+        
+        // this.recalculateDate();
+        // var date = this.selected.origin.date = new Date(Date.parse(this.fakefilters.date + " " + this.fakefilters.time));
+
+        // var others = this.others;
+        // var length = others.length;
+        // for(var i = 0; i < length; i++)
+        //   date = others[i].date = addTime(date, legs[i].duration.value);
+
+        // this.selected.destination.date = addTime(date, this.lastLeg.duration.value);
+      },
+
+      recalculateDate: function() {
+        var ff = this.fakefilters;
+        var d = ff.date;
+        var t = ff.time;
+
+        if(!t || !d) return;
+
+        var date = new Date(Date.parse(d + " " + t));
+        console.log("ORIG: " + this.selected.origin);
+        this.set('selected.origin.date', date);
+
+        console.log("DATE: ");
+        console.log("date: " + this.fakefilters.date + " " + this.fakefilters.time);
+        console.log(date);
+        var others = this.others;
+        var legs = this.legs;
+        var length = legs.length;
+        for(var i = 0; i < length; i++) {
+          var retardation = others[i].retardation;
+          console.log("For " + others[i].city + ", retardation: " + retardation);
+          console.log(others[i]);
+          if(retardation) var retValues = retardation.split(":");
+          else retValues = null;
+          if(retValues) console.log((((retValues[0] * 60) + retValues[1])));
+          date = addTime(date, legs[i].duration.value + (retValues ? ((Number(retValues[0] * 60) + Number(retValues[1])) * 60) : 0));
+          this.set('others.' + i + '.date', date);
+          console.log(date);
+        }
+
+        this.set('selected.destination.date', addTime(date, this.lastLeg.duration.value));
+      },
+
+      petsAndPackages: function(pets, pack) {
+        return true;
+        // return typeof pets != 'undefined' && typeof pack != 'undefined';
       }
     });
+
+    addTime = function(date, seconds) {
+      return new Date(date.getTime() + (seconds * 1000));
+    }
   </script>
 </dom-module>

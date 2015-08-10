@@ -100,10 +100,10 @@
       <template is="dom-if" if="[[petsAndPackages]]">
         <tr>
           <td>
-            <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
+            <filter-selector type="pet" selected="{{filters.animals}}" checked></filter-selector>
           </td>
           <td>
-            <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
+            <filter-selector type="package" selected="{{filters.packages}}" checked></filter-selector>
           </td>
         </tr>
       </template>
@@ -129,8 +129,8 @@
         </div>
       </div>
       <template is="dom-if" if="[[!petsAndPackages]]">
-        <filter-selector type="pet" selected="{{localFilters.animals}}"></filter-selector>
-        <filter-selector type="package" selected="{{localFilters.packages}}"></filter-selector>
+        <filter-selector type="pet" selected="{{localFilters.animals}}" checked></filter-selector>
+        <filter-selector type="package" selected="{{localFilters.packages}}" checked></filter-selector>
       </template>
     </div>
     <div class="trip-table-content">
