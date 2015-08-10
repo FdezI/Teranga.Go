@@ -93,7 +93,7 @@
     
     <div>
       <div class="trip-map">
-        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617">
+        <google-map map="{{map}}" latitude="27.2785308" longitude="-6.7255617" fit-to-markers>
           <google-map-marker latitude="[[legs.0.start_location.G]]" longitude="[[legs.0.start_location.K]]" icon="https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1" z-index="1">
           </google-map-marker>
 
@@ -181,7 +181,7 @@
       <template is="dom-if" if="[[car.idcar]]">
         <div class="column3-3 layout vertical">
           <span>Precio</span>
-          <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+          <paper-slider class="price-slider" always-float-label min="1" max="4" value="{{filters.seats}}" pin snaps editable></paper-slider>
           <div class="layout horizontal">
             <span class="flex">Asiento</span>
             <div>x <span>13</span>€</div>
@@ -253,7 +253,7 @@
         legs: Array,
         lastLeg: Object
       },
-      observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)', 'timeChanged(filters.time)', 'recalculateDate(selected.origin.order, selected.destination.order, legs.splices, lastLeg, fakefilters.date, fakefilters.time)', 'recalculateDate(others.*.retardation)'],
+      observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)', 'timeChanged(filters.time)', 'recalculateDate(selected.origin.idlocation, selected.destination.idlocation, legs.splices, lastLeg, fakefilters.date, fakefilters.time)', 'recalculateDate(others.*.retardation)'],
       timeChanged: function() {
         console.log("time: " + this.filters.time);
       },
@@ -372,7 +372,7 @@
       },
 
       canAddress: function(loc) {
-        return loc && loc.order ? true : false; 
+        return loc && loc.idlocation ? true : false; 
       },
 
       address: function(wp) {
@@ -405,13 +405,13 @@
 
         ['origin', 'destination'].forEach(function(key) {
           var sel = selected[key];
-          f[key] = {order: sel.order, address: sel.address, retardation: sel.retardation};
+          f[key] = {idlocation: sel.idlocation, address: sel.address, retardation: sel.retardation};
         });
 
         f.wps = [];
         this.others.forEach(function(loc) {
           // GREAT IF THE attribs GROWS
-          // var attribs = ["order", "address", "retardation"];
+          // var attribs = ["idlocation", "address", "date", "stop"];
           // var obj = {}
           // attribs.forEach(function(value) {
           //   obj[value] = loc[value];
@@ -419,7 +419,7 @@
           // f.wps.push(obj);
 
           // GREATER WITH FEW ATTRIBS
-          f.wps.push({order: loc.order, address: loc.address, retardation: loc.retardation});
+          f.wps.push({idlocation: loc.idlocation, address: loc.address, date: loc.date, stop: loc.stop});
         });
 
         var car = this.car;
@@ -428,13 +428,14 @@
         console.log("TIENE COCHE");
 
         f.car = car.idcar;
-        f.iduser = this.user.iduser;
+        f.driver = this.user.iduser;
         //TODO coste
 
-        var neededAttribs = ["origin", "destination", "wps", "date", "time", "iduser"];
-        var neededAttribsLoc = ["order", "address"];
+        var neededAttribs = ["origin", "destination", "wps", "driver", "car", "seats"];
+        var neededAttribsLoc = ["idlocation", "address", "date", "cost", "pkcost"];
 
-        if(!neededAttribs.every(function(attrib){
+        if(!neededAttribs.every(function(attrib) {
+          if(!f[attrib]) console.log("Falta: " + attrib);
           return f[attrib] ? true : false;
         })) return;
 
@@ -442,6 +443,7 @@
         console.log(f);
         if(!neededAttribsLoc.every(function(attrib){
           return f.wps.every(function(wp) {
+            if(!wp[attrib]) console.log("Falta: " + attrib);
             return wp[attrib] ? true : false;
           }) ? true : false;
         })) return;

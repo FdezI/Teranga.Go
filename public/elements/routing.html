@@ -17,7 +17,7 @@
       app.route = 'trips';
     });
      page('/tracking', function () {
-      app.route = '';
+      // app.route = ''; // Infinite loop
       app.route = 'tracking';
     });
     page('/tracking/:idpackage', function (data) {
