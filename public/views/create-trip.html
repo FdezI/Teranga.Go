@@ -173,8 +173,12 @@
           </div>
         </div>
 
+        
+
         <pop-up id="car_select" with-backdrop>
-          <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
+          <generic-container>
+            <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
+          </generic-container>
         </pop-up>
       </template>
 

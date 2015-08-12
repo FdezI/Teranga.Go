@@ -1,6 +1,8 @@
 <!-- <link rel="import" href="../bower_components/iron-pages/iron-pages.html"> -->
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../elements/generic-collapse-container.html">
 <!-- <link rel="import" href="../bower_components/iron-icon-button/iron-icon-button.html"> -->
 
@@ -48,9 +50,11 @@
 
   <template>
 
-      <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service>
+      <!-- <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service> -->
+      <data-service id="uss" type="users" update="[[update]]" fetch="[[session.user.iduser]]" on-response="profileSaved"></data-service>
+      <data-service id="usl" type="users" data="{{session.user}}" fetch="[[session.user.iduser]]" on-response="profileLoaded"></data-service>
 
-      <template id="profileTemplate" is="dom-if" if="[[session.user]]">
+      <template id="profileTemplate" is="dom-if" if="[[session.user.iduser]]">
         <template id="profileTemplate" is="dom-if" if="[[isPage('profile', page)]]">
         <!-- <iron-pages attr-for-selected="page" selected="{{page}}"> -->
           <!-- <other-profile showdriver="true"></other-profile> -->
@@ -76,6 +80,14 @@
                     <div class="profile-photo-div"><img src="../images/edit.png"></div>
                   </template>
                 </div>
+                <template is="dom-if" if="[[edit]]">
+                  <table>
+                    <tr>
+                      <td>Carnet:</td>
+                      <td><paper-toggle-button name="carnet" value="{{update.carnet}}"></paper-toggle-button></td>
+                    </tr>
+                  </table>
+                </template>
                 <template is="dom-if" if="[[showdriver]]">
                   <div class="profile-stars" onclick=""><stars-rating score="[[session.user.karma]]"></stars-rating></div>
                 </template>
@@ -86,28 +98,32 @@
                 <div class="profile-age"><span>XX</span> años</div>
                 <template is="dom-if" if="[[edit]]">
                   <form>
-                    <table style="width:100%">
-                      <tr>
-                        <td>E-mail:</td>
-                        <td><input type="text" name="email" value="{{update.email::input}}"></td>
-                      </tr>
-                      <tr> 
-                        <td>Teléfono:</td> 
-                        <td><input type="text" name="phone" value="{{update.phone::input}}"></td>
-                      </tr>
-                      <tr> 
-                        <td>Contraseña:</td>
-                        <td><input type="password" name="pass"></td>
-                      </tr>
-                      <tr> 
-                        <td>Repetir contraseña:</td>
-                        <td><input type="password" name="pass2" value="{{update.password::input}}"></td>
-                      </tr>
-                      <tr> 
-                        <td>Carnet de conducir:</td>
-                        <td><input type="checkbox" name="carnet" value="{{update.carnet::input}}"></td> 
-                      </tr>
-                    </table>
+                    <!-- <table style="width:100%"> -->
+                      <!-- <tr> -->
+                        <!-- <td>E-mail:</td> -->
+                        <!-- <td> -->
+                          <paper-input label="E-mail" always-float-label name="email" value="{{update.email}}"></paper-input>
+                        <!-- </td> -->
+                      <!-- </tr> -->
+                      <!-- <tr>  -->
+                        <!-- <td>Teléfono:</td>  -->
+                        <!-- <td> -->
+                          <paper-input label="Teléfono" always-float-label name="phone" value="{{update.phone}}"></paper-input>
+                        <!-- </td> -->
+                      <!-- </tr> -->
+                      <!-- <tr>  -->
+                        <!-- <td>Contraseña:</td> -->
+                        <!-- <td> -->
+                          <paper-input label="Contraseña" always-float-label type="password" name="pass"></paper-input>
+                        <!-- </td> -->
+                      <!-- </tr> -->
+                      <!-- <tr>  -->
+                        <!-- <td>Repetir contraseña:</td> -->
+                        <!-- <td> -->
+                          <paper-input label="Repetir contraseña" always-float-label type="password" name="pass2" value="{{update.password}}"></paper-input>
+                        <!-- </td> -->
+                      <!-- </tr> -->
+                    <!-- </table> -->
                   </form>
                 </template>
               </div>
@@ -159,7 +175,7 @@
             </template>
 
             <template is="dom-if" if="[[edit]]">
-              <car-container iduser="[[session.user.iduser]]" cars="{{session.user.cars}}" add-allow></car-container>
+              <car-container iduser="[[session.user.iduser]]" data="{{session.user.cars}}" allow-new></car-container>
             </template>
           </article>
         </template>
@@ -170,9 +186,11 @@
         </template>
       </template>
 
-      <template is="dom-if" if="[[!session.user]]">
+      <template is="dom-if" if="[[!session.user.iduser]]">
         <register-view></register-view>
       </template>
+
+      <paper-toast id="pSaved" text="Cambios guardados."></paper-toast>
   </template>
 
   <script>
@@ -217,6 +235,12 @@
 
       observers: ['tripsUpdated(session.user.trips)', 'updateShow(session.user)'],
 
+      // userChanged: function() {
+      //   if(this.session.user.iduser && !this.lastUserId) {
+      //     this.set('userLoadedFirstTime', true);
+      //     this.$.usl.reload();
+      //   }
+      // },
       editProfile: function() {
 
         var update = {};
@@ -246,8 +270,17 @@
         });
         
 
-        this.$$("user-service").saveData();
+        // this.$$("user-service").saveData();
+        this.$.uss.saveData();
         this.edit = false;
+      },
+      dataChanged: function() {
+
+      },
+      profileSaved: function(e, data) {
+        console.log("PROFILE SAVED");
+        console.log(e, data);
+        this.$.pSaved.show();
       },
       updateShow: function() {
         if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;

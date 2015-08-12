@@ -21,11 +21,14 @@
       console.log(this.type + "-service ready");
     },
     
-    callDone: function(e) {
+    callDone: function(e, a, b) {
       console.log("CALL DONE");
+      // console.log(e);
+      // console.log(a);
+      // console.log(b);
       e.stopPropagation();
       this.fire('response', this.data);
-      console.log("CALL FIRED");
+      // console.log("CALL FIRED");
     },
 
     saveData: function(create) {
@@ -36,8 +39,10 @@
       var user = this.user;
 
       req.method = create ? 'POST' : 'PUT';
-
       
+      req.url = Teranga.restAPI + this.type;
+
+
       if(!update) return;
       
       req.url = Teranga.restAPI + this.type; //"users/" + this.user + "/" + this.type;
@@ -46,9 +51,11 @@
         else update.user = user;
       }
 
+      if(!create) req.url += ("/" + this.fetch);
+
       req.body = JSON.stringify(update);
       
-      console.log("Requesting: " + req.url);
+      console.log("Requesting: " + req.method + " " + req.url);
       console.log("With params: " + JSON.stringify(req.params));
       console.log("And body: " + req.body);
       req.generateRequest();

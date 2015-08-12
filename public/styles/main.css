@@ -21,6 +21,10 @@ body {
 	margin-top: 15px;
 }
 
+paper-toast {
+	z-index: 20;
+}
+
 .hidden {
 	display: none;
 }

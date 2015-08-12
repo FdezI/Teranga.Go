@@ -12,7 +12,7 @@ exports.create = function(req, res) {
 	else delete req.body.iduser;
 
 	if(!user) return;
-
+console.log("llegaaaaa");
 	// if(!req.body.iduser && req.params.iduser) req.body.iduser = req.params.iduser;
 	
 	pool.getConnection(function(err, connection) {
@@ -52,6 +52,7 @@ exports.create = function(req, res) {
 		 					throw err;
 		 				}
 		 				
+		 				console.log("ANSWERING");
 		 				res.json(rows[0]);
 		 				
 		 				connection.release();

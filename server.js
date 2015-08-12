@@ -150,6 +150,7 @@ apiRouter.route('/trips/:idtrip')
 	.put(db.tripUnlinkedController.addPassenger);
 
 apiRouter.route('/cars')
+	.post(db.carUnlinkedController.create)
 	.get(db.carUnlinkedController.getAll);
 apiRouter.route('/cars/:idcar')
 	.get(db.carUnlinkedController.get)

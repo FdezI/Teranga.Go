@@ -1,0 +1,57 @@
+<script>
+  Teranga.ContainerBehavior = {
+  	properties: {
+  		loading: {
+  			type: Boolean,
+  			notify: true
+  		},
+  		// type: String,
+      data: {
+        type: Array,
+        notify: true
+      },
+      selected: {
+      	type: Object,
+      	notify: true
+      },
+      iduser: Number,
+      allowNew: Boolean,
+      collapse: {
+      	type: Boolean,
+      	value: false,
+      	reflectToAttribute: true
+      }
+
+  	},
+  	// ready: function() {
+  	// },
+  	reload: function() {
+  		this.$.content.reloadData();
+  	},
+  	edit: function() {
+      this.$.edit.setAttribute("new-object", false);
+      this.$.dialog.open();
+    },
+    create: function() {
+      this.$.edit.setAttribute("new-object", true);
+      this.$.dialog.open();
+    },
+    onEdited: function(e, object) {
+      this.$.edited.show();
+    },
+    onCreated: function(e, object) {
+    	// console.log("AAAAAQUI");
+    	// console.log(this);
+      this.push('data', object);
+      this.$.created.show();
+      this.closePopup();
+    },
+    closePopup: function() {
+    	this.$.dialog.close();
+    }
+
+  	// on-loaded: function() {
+  	// 	console.log("EN SERIO FUNCTIONA xD");
+  	// }
+  };
+</script>

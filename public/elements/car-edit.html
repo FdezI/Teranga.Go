@@ -54,7 +54,7 @@
   </style>
   
   <template>
-    <data-service id="cs" type="cars" user="[[iduser]]" update="[[update]]" on-response="saved"></data-service>
+    <data-service id="cs" type="cars" user="[[iduser]]" as="iduser" update="[[update]]" on-response="saved"></data-service>
 
     <div class="container-car-edit layout vertical center-justified">
       <template is="dom-if" if="[[newcar]]">
@@ -121,7 +121,7 @@
         value: {}
       },
       iduser: Number,
-      newcar: {
+      newObject: {
         type: Boolean,
         value: false
       }
@@ -137,7 +137,8 @@
       }
     },
     saveData: function() {
-      this.$.cs.saveData();
+      console.log("SAVING DATA IN CAR EDIT");
+      this.$.cs.saveData(true);
     },
     discardData: function() {
       this.fire('discard');
@@ -151,7 +152,8 @@
 
       car.owners = data.owners;
       console.log("PERSONAS: " + car.owners);
-      if(this.newcar) this.fire('newcar', car);
+      if(this.newcar) this.fire('created', car);
+      else this.fire('edited', car);
     }
   });
   </script>
