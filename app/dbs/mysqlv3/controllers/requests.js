@@ -112,7 +112,7 @@ exports.requestTravel = function(req, res) {
 			});
 		});
 
-	};
+	});
 	// var tripId = pool.escape(req.body.idtrip);
 	// var sql = '\
 	// SELECT null as used, seats FROM userTrips, car, trip WHERE userTrips.idtrip=' + tripId +' AND userTrips.idtrip=trip.idtrip AND trip.idcar=car.idcar AND accepted=true\
