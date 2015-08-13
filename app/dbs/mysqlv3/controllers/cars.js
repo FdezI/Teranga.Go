@@ -12,11 +12,18 @@ exports.create = function(req, res) {
 	else delete req.body.iduser;
 
 	if(!user) return;
-console.log("llegaaaaa");
 	// if(!req.body.iduser && req.params.iduser) req.body.iduser = req.params.iduser;
 	
 	pool.getConnection(function(err, connection) {
+		if(err) {
+			connection.release();
+      throw err;
+		}
 		connection.beginTransaction(function(err) {
+			if(err) {
+				connection.release();
+	      throw err;
+			}
 			connection.query('INSERT INTO car SET ?', req.body, function(err, result) {
 				if (err) {
 		      return connection.rollback(function() {

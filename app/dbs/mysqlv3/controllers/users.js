@@ -3,7 +3,9 @@ var pool = require('mysql').pool;
 // UNREGISTERED
 exports.create = function(req, res) {
 	console.log(req.body);
-	pool.query('INSERT INTO user SET ?', req.body, function(err, result) {
+	var password = req.body.password; delete req.body.password;
+
+	pool.query('INSERT INTO user SET ?, `password`=UNHEX(SHA2(?, 256))', [req.body, password], function(err, result) {
 		if(err) throw err;
 		
 		res.json({id:result.insertId});

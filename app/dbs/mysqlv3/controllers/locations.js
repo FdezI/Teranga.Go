@@ -4,7 +4,7 @@ exports.create = function(req, res) {
 };
 
 exports.getAll = function(req, res) {
-	if(req.query.list || req.query.hasOwnProperty('list')) var select = "idlocation, city, country";
+	if(req.query.list || req.query.hasOwnProperty('list')) var select = "idlocation, city, country, utcoffset";
 	else select = "*";
 
 	if(req.query.route) {

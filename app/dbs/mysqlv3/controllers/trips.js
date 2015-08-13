@@ -1,69 +1,181 @@
 var pool = require('mysql').pool;
+var tripConfig = require('../../../config').trips;
 
 exports.create = function(req, res) {
-	pool.query('INSERT INTO trip SET ?',req.body, function(err, result) {
-		if(err) throw err;
-		
-		res.json({id:result.insertId});
+	var trip = req.body;
+	var wps = trip.wps; delete trip.wps;
+
+	if(!trip || !wps || wps.length < 2) {
+		res.json({error:"mensaje de error"});
+		return;
+	}
+
+	var x = trip.animals;
+	if(x === "null" || x === null || x === "") delete trip.animals;
+	else trip.animals = x ? 1 : 0;
+
+	x = trip.packages;
+	if(x === "null" || x === null || x === "") delete trip.packages;
+	else trip.packages = x ? 1 : 0;
+
+
+	// trip.animals = trip.animals ? 1 : 0;
+	// trip.packages = trip.packages ? 1 : 0;
+
+
+	pool.getConnection(function(err, connection) {
+		if(err) {
+			connection.release();
+      throw err;
+		}
+		connection.beginTransaction(function(err) {
+			if(err) {
+				connection.release();
+	      throw err;
+			}
+
+			connection.query('INSERT INTO trip SET ?', trip, function(err, result) {
+				if (err) {
+		      return connection.rollback(function() {
+		      	connection.release();
+		        throw err;
+		      });
+		    }
+
+		    var length = wps.length;
+		    var i = 0;
+		    var idtrip = result.insertId;
+		    var insertPoint = function() {
+		    	var wp = wps[i];
+		    	wp.order = (i < length - 1 ? i : 99);
+
+		    	// ATTENTION! - LAST_INSERT_ID() only 'connection safe' so if using the connection for multiple
+		    	// 									thread at the same time, use previous result.insertId instead.
+					connection.query('INSERT INTO tripPoints SET trip=LAST_INSERT_ID(),?', wps[i], function(err, result) {
+						if (err) {
+				      return connection.rollback(function() {
+				      	connection.release();
+				        throw err;
+				      });
+				    }
+
+				    if(++i < length) {
+				    	insertPoint();
+				    	return;
+				    }
+
+			 			connection.commit(function(err) {
+			        if (err) {
+			          return connection.rollback(function() {
+			          	connection.release();
+			            throw err;
+			          });
+			        }
+
+			        connection.release();
+
+			        res.json({id: idtrip});
+			      });
+					});
+				}
+
+				insertPoint();
+			});
+		});
 	});
+
+	// pool.query('INSERT INTO trip SET ?',req.body, function(err, result) {
+	// 	if(err) throw err;
+		
+	// 	res.json({id:result.insertId});
+	// });
 };
 
 // AUTHENTICATED
 exports.getAll = function(req, res) {
-	if(req.query && Object.keys(req.query).length > 0) {
-		var offset = Number(req.query.offset);
-		if(offset || offset === 0) delete req.query.offset;
-
-		var where = " WHERE ";
-		Object.keys(req.query).forEach(function(key) {
-      where += pool.escapeId(key) + "=" + pool.escape(req.query[key]) + "AND";
-    });
-    where = where.substring(0, where.length - 3);
-	} else where = "";
-
-
-	pool.query('SELECT idtrip, driver, car, seats, packages = 1 as packages, animals = 1 as animals,\
-											TP.order as oA, TP2.order as oB\
-							FROM trip AS T\
-								JOIN tripPoints AS TP ON TP.stop = true AND TP.order != 99\
-								JOIN tripPoints AS TP2 ON TP2.trip = TP.trip AND TP2.stop = true AND TP2.order != 0\
-							WHERE idtrip = TP.trip ORDER BY idtrip ASC', function(err, rows, fields) {
+	// TODO
+	pool.query('SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+							FROM trip AS T, car, user\
+							WHERE T.car = idcar AND driver = iduser', function(err, rows, fields) {
 		if(err) throw err;
+	
+		var trips = rows[0];
 
-		var trips = rows;
-		var tripIds = trips.map(function(value) {
-			return value.idtrip;
-		});
-
-		pool.query('SELECT TP.order, address, date, L.city, stop = 1 AS stop,\
-									SUM(CASE WHEN pointA = TP.order THEN 1 ELSE 0 END) as up,\
-									SUM(CASE WHEN pointB = TP.order THEN 1 ELSE 0 END) as down\
+		if(trips) pool.query('SELECT TP.order, address, L.city, stop = 1 AS stop, cost, pkcost, date,\
+													SUM(CASE WHEN pointA = TP.order THEN 1 ELSE 0 END) as up,\
+													SUM(CASE WHEN pointB = TP.order THEN 1 ELSE 0 END) as down\
 								FROM tripPoints AS TP\
 									LEFT JOIN location AS L ON idlocation = location\
 									LEFT JOIN (\
-												SELECT trip, pointA, pointB\
+												SELECT trip\
+													,pointA, pointB\
 												FROM userTrips AS ut\
-												) AS C ON C.trip = TP.trip AND (C.pointA = TP.order OR C.pointB = TP.order)\
-								WHERE TP.trip IN (?)\
-								GROUP BY TP.trip, TP.order\
-								ORDER BY TP.trip, TP.order ASC;', [tripIds], function(err, rows, fields) {
-			if(err) throw err;
+												) AS C ON C.trip = TP.trip AND (C.pointA = TP.order OR C.pointB = TP.order\
+									)\
+								GROUP BY TP.order\
+								ORDER BY TP.order ASC;', function(err, rows, fields) {
+			
+			trips.wps = rows;
 
-			var i = 0;
-			var last;
-			rows.forEach(function(value) {
-				if(value.order == 0) {
-					last = trips[i++];
-					last.wps = [];
-				}
-				last.wps.push(value);
-			});
-			
-			
 			res.json(trips);
-		});
 
+		});
+		else res.json({});
 	});
+	// if(req.query && Object.keys(req.query).length > 0) {
+	// 	var offset = Number(req.query.offset);
+	// 	if(offset || offset === 0) delete req.query.offset;
+
+	// 	var where = " WHERE ";
+	// 	Object.keys(req.query).forEach(function(key) {
+ //      where += pool.escapeId(key) + "=" + pool.escape(req.query[key]) + "AND";
+ //    });
+ //    where = where.substring(0, where.length - 3);
+	// } else where = "";
+
+
+	// pool.query('SELECT idtrip, driver, car, seats, packages = 1 as packages, animals = 1 as animals,\
+	// 										TP.order as oA, TP2.order as oB\
+	// 						FROM trip AS T\
+	// 							JOIN tripPoints AS TP ON TP.stop = true AND TP.order != 99\
+	// 							JOIN tripPoints AS TP2 ON TP2.trip = TP.trip AND TP2.stop = true AND TP2.order != 0\
+	// 						WHERE idtrip = TP.trip ORDER BY idtrip ASC', function(err, rows, fields) {
+	// 	if(err) throw err;
+
+	// 	var trips = rows;
+	// 	var tripIds = trips.map(function(value) {
+	// 		return value.idtrip;
+	// 	});
+
+	// 	pool.query('SELECT TP.order, address, date, L.city, stop = 1 AS stop,\
+	// 								SUM(CASE WHEN pointA = TP.order THEN 1 ELSE 0 END) as up,\
+	// 								SUM(CASE WHEN pointB = TP.order THEN 1 ELSE 0 END) as down\
+	// 							FROM tripPoints AS TP\
+	// 								LEFT JOIN location AS L ON idlocation = location\
+	// 								LEFT JOIN (\
+	// 											SELECT trip, pointA, pointB\
+	// 											FROM userTrips AS ut\
+	// 											) AS C ON C.trip = TP.trip AND (C.pointA = TP.order OR C.pointB = TP.order)\
+	// 							WHERE TP.trip IN (?)\
+	// 							GROUP BY TP.trip, TP.order\
+	// 							ORDER BY TP.trip, TP.order ASC;', [tripIds], function(err, rows, fields) {
+	// 		if(err) throw err;
+
+	// 		var i = 0;
+	// 		var last;
+	// 		rows.forEach(function(value) {
+	// 			if(value.order == 0) {
+	// 				last = trips[i++];
+	// 				last.wps = [];
+	// 			}
+	// 			last.wps.push(value);
+	// 		});
+			
+			
+	// 		res.json(trips);
+	// 	});
+
+	// });
 };
 
 exports.get = function(req, res) {
@@ -124,7 +236,9 @@ exports.search = function(req, res) {
 	var l2 = req.query.destination; delete req.query.destination;
 
 	if(!l1 && !l2) {
-		//TODO and return
+		// TODO complete and only if admin
+		exports.getAll(req, res);
+		return;
 	}
 
 	var where = "";
