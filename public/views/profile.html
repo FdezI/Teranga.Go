@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../bower_components/gold-phone-input/gold-phone-input.html">
 <link rel="import" href="../elements/generic-collapse-container.html">
 <!-- <link rel="import" href="../bower_components/iron-icon-button/iron-icon-button.html"> -->
 
@@ -102,13 +104,13 @@
                       <!-- <tr> -->
                         <!-- <td>E-mail:</td> -->
                         <!-- <td> -->
-                          <paper-input label="E-mail" always-float-label name="email" value="{{update.email}}"></paper-input>
+                          <gold-email-input label="E-mail" always-float-label name="email" value="{{update.email}}"></gold-email-input>
                         <!-- </td> -->
                       <!-- </tr> -->
                       <!-- <tr>  -->
                         <!-- <td>Teléfono:</td>  -->
                         <!-- <td> -->
-                          <paper-input label="Teléfono" always-float-label name="phone" value="{{update.phone}}"></paper-input>
+                          <gold-phone-input label="Teléfono" always-float-label name="phone" value="{{update.phone}}" phone-number-pattern="XXX-XXX-XXX" country-code="0"></gold-phone-input>
                         <!-- </td> -->
                       <!-- </tr> -->
                       <!-- <tr>  -->
