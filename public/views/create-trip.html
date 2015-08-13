@@ -73,6 +73,7 @@
   </style>
   <template>
     <data-service id="rs" type="routes" fetch="list" data="{{routes}}"></data-service>
+    <data-service id="ts" type="trips"></data-service>
 
     <datalist id="routes">
       <template is="dom-repeat" items="[[routes]]">
@@ -169,7 +170,7 @@
           <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[car.idcar]]"></paper-input>
           <div class="layout vertical">
             <span>Asientos libres</span>
-            <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+            <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="[[freeSeats(car)]]" value="{{filters.seats}}" pin snaps editable></paper-slider>
           </div>
         </div>
 
@@ -184,15 +185,17 @@
 
       <template is="dom-if" if="[[car.idcar]]">
         <div class="column3-3 layout vertical">
+          <data-service id="cc" type="config" fetch="trips" data="{{costs}}" load-on-attach></data-service>
+
           <span>Precio</span>
-          <paper-slider class="price-slider" always-float-label min="1" max="4" value="{{filters.seats}}" pin snaps editable></paper-slider>
+          <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
           <div class="layout horizontal">
             <span class="flex">Asiento</span>
-            <div>x <span>13</span>€</div>
+            <div>x <span>[[userCost(costs, legs.splices, lastLeg)]]</span>€</div>
           </div>
           <div class="layout horizontal">
             <span class="flex">Paquete</span>
-            <div>x <span>10</span>€</div>
+            <div>x <span>[[packageCost(costs, legs.splices, lastLeg)]]</span>€</div>
           </div>
         </div>
       </template>
@@ -229,7 +232,10 @@
       is: "create-trip",
       properties: {
         user: Object,
-        car: Object,
+        car: {
+          type: Object,
+          value: {seats: 3}
+        },
         routes: Array,
         // selectedRoute: Object,
         selected: {
@@ -247,7 +253,7 @@
         },
         filters: {
           type: Object,
-          value: {origin:{}, destination:{}, wps:[]}
+          value: {wps:[]}
         },
         items: Object,
         mapData: {
@@ -255,9 +261,15 @@
           value: {origin: "Madrid, España", destination: "Dakar, Senegal"}
         },
         legs: Array,
-        lastLeg: Object
+        lastLeg: Object,
+        costs: Object
       },
       observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)', 'timeChanged(filters.time)', 'recalculateDate(selected.origin.idlocation, selected.destination.idlocation, legs.splices, lastLeg, fakefilters.date, fakefilters.time)', 'recalculateDate(others.*.retardation)'],
+      freeSeats: function(car) {
+        var free = car.seats - 1;
+        this.set('filters.seats', free);
+        return free;
+      },
       timeChanged: function() {
         console.log("time: " + this.filters.time);
       },
@@ -343,7 +355,10 @@
       },
       locSelected: function(type) {
         console.log("BLUR: " + type);
-        this.$$("#" + type + "Address").value = "";
+        var element = this.$$("#" + type + "Address");
+        if(!element) return; // PATCH - not tested
+        
+        element.value = "";
         this.set('selected.' + type, 'undefined');
 
         var rte = this.selected.route;
@@ -389,9 +404,11 @@
 
         var wps = rte.wps,
           selected = this.selected,
-          length = wps.length,
+          others = this.others,
+          legs = this.legs,
           f = this.filters,
-          ff = this.fakefilters;
+          ff = this.fakefilters,
+          costs = this.costs;
 
         // console.log("WPSss-----");
         // console.log(wps);
@@ -407,55 +424,96 @@
         //     }
         // });
 
-        ['origin', 'destination'].forEach(function(key) {
-          var sel = selected[key];
-          f[key] = {idlocation: sel.idlocation, address: sel.address, retardation: sel.retardation};
-        });
+        // ['origin', 'destination'].forEach(function(key) {
+        //   var sel = selected[key];
+        //   f[key] = {location: sel.location, address: sel.address, date: sel.date};
+        // });
+        // var mult = this.costs['KmCost'];
+        // var multpk = this.costs['KmPkCost'];
 
         f.wps = [];
-        this.others.forEach(function(loc) {
-          // GREAT IF THE attribs GROWS
-          // var attribs = ["idlocation", "address", "date", "stop"];
-          // var obj = {}
-          // attribs.forEach(function(value) {
-          //   obj[value] = loc[value];
-          // });
-          // f.wps.push(obj);
+        
+        var prepare = function(loc, leg) {
+          if(leg) {
+            var wp = f.wps[f.wps.length - 1];
+            var ccost = Number(wp.cost) + (costs['KmCost'] * leg.distance.value / 1000.0);
+            var cpkcost = Number(wp.pkcost) + (costs['KmPkCost'] * leg.distance.value / 1000.0);
+          }
+          console.log("Ccost: " + ccost + ", cpkcost: " + cpkcost);
+          f.wps.push({location: loc.idlocation, address: loc.address, date: loc.date, stop: loc.stop, cost:Number(ccost ? ccost.toFixed(2) : 0), pkcost:Number(cpkcost ? cpkcost.toFixed(2) : 0)});
+        };
 
-          // GREATER WITH FEW ATTRIBS
-          f.wps.push({idlocation: loc.idlocation, address: loc.address, date: loc.date, stop: loc.stop});
-        });
+        
+        // var sel = selected.origin;
+        // f.wps = [{location: sel.idlocation, address: sel.address, date: sel.date, cost:0}];
+        prepare(selected.origin);
+
+        
+        var oLength = others.length;
+        
+        for(var i = 0; i < oLength; i++) {
+          // ccost += (mult * legs[i].distance.value / 1000.0);
+          // cpkcost += (multpk * legs[i].distance.value / 1000.0);
+          prepare(others[i], legs[i]);
+          // ccost = others[i].cost;
+          // cpkcost = others[i].pkcost;
+          // f.wps.push({location: loc.idlocation, address: loc.address, date: loc.date, stop: loc.stop, cost:ccost});
+        }
+        // this.others.forEach(function(loc) {
+        //   // GREAT IF THE attribs GROWS but need to do something with location and idlocation then
+        //   // var attribs = ["location", "address", "date", "stop"];
+        //   // var obj = {}
+        //   // attribs.forEach(function(value) {
+        //   //   obj[value] = loc[value];
+        //   // });
+        //   // f.wps.push(obj);
+
+        //   // GREATER WITH FEW ATTRIBS
+        //   f.wps.push({location: loc.idlocation, address: loc.address, date: loc.date, stop: loc.stop, cost:});
+        // });
+        // sel = selected.destination;
+        // ccost += mult * this.lastLeg.distance.value / 1000.0;
+        // cpkcost += multpk * this.lastLeg.distance.value / 1000.0;
+        prepare(selected.destination, this.lastLeg);
+        // f.wps.push({location: sel.idlocation, address: sel.address, date: sel.date, cost:ccost});
 
         var car = this.car;
         if(!car) return;
 
-        console.log("TIENE COCHE");
+        f.wps.forEach(function(wp) {
+          wp.stop = wp.stop ? 1 : 0;
+        });
+
+        console.log("--- EMPIEZAN LOS FILTROS ---");
 
         f.car = car.idcar;
         f.driver = this.user.iduser;
-        //TODO coste
 
-        var neededAttribs = ["origin", "destination", "wps", "driver", "car", "seats"];
-        var neededAttribsLoc = ["idlocation", "address", "date", "cost", "pkcost"];
+        var neededAttribs = ["wps", "driver", "car", "seats"]; // ALL OF THEM MUST BE BIGGER THAN 0 (ATTENTION TO THE FIRST FILTER)
+        var neededAttribsLoc = ["location", "address", "date", "cost"];
 
+        console.log("DATOS a guardar: ");
+        console.log(f);
+        console.log("1. EJECUTANDO EL PRIMER FILTRO... ");
         if(!neededAttribs.every(function(attrib) {
           if(!f[attrib]) console.log("Falta: " + attrib);
           return f[attrib] ? true : false;
         })) return;
 
-        console.log("PASADO EL PRIMER FILTRO");
-        console.log(f);
+        
+        console.log("2. EJECUTANDO EL SEGUNDO FILTRO... ");
         if(!neededAttribsLoc.every(function(attrib){
           return f.wps.every(function(wp) {
-            if(!wp[attrib]) console.log("Falta: " + attrib);
-            return wp[attrib] ? true : false;
-          }) ? true : false;
+            if(typeof wp[attrib] !== undefined) console.log("Falta: " + attrib);
+            return typeof wp[attrib] !== undefined;
+          });
         })) return;
 
-          console.log("PASADO EL SEGUNDO FILTRO");
+        console.log("--- TERMINAN LOS FILTROS ---");
 
-        console.log("SAVE FILTERS: ");
-        console.log(this.filters);
+        var ts = this.$.ts;
+        ts.update = f;
+        ts.saveData(true);
 
       },
 
@@ -488,6 +546,8 @@
         if(!t || !d) return;
 
         var date = new Date(Date.parse(d + " " + t));
+        date.setTime(date.getTime() - ((d.getTimezoneOffset() - (this.selected.origin.utcoffset * 60)) * 60 * 1000));
+
         console.log("ORIG: " + this.selected.origin);
         this.set('selected.origin.date', date);
 
@@ -496,15 +556,18 @@
         console.log(date);
         var others = this.others;
         var legs = this.legs;
+        if(!legs) return; //Patch - not tested
+
         var length = legs.length;
         for(var i = 0; i < length; i++) {
-          var retardation = others[i].retardation;
+          var loc = others[i];
+          var retardation = loc.retardation;
           console.log("For " + others[i].city + ", retardation: " + retardation);
           console.log(others[i]);
           if(retardation) var retValues = retardation.split(":");
           else retValues = null;
           if(retValues) console.log((((retValues[0] * 60) + retValues[1])));
-          date = addTime(date, legs[i].duration.value + (retValues ? ((Number(retValues[0] * 60) + Number(retValues[1])) * 60) : 0));
+          date = addTime(date, (loc.utcoffset * 60 * 60) + legs[i].duration.value + (retValues ? ((Number(retValues[0] * 60) + Number(retValues[1])) * 60) : 0));
           this.set('others.' + i + '.date', date);
           console.log(date);
         }
@@ -515,6 +578,25 @@
       petsAndPackages: function(pets, pack) {
         return true;
         // return typeof pets != 'undefined' && typeof pack != 'undefined';
+      },
+
+      userCost: function() {
+        return this.cost("Km");
+      },
+      packageCost: function() {
+        return this.cost("KmPk");
+      },
+      cost: function(type) {
+        if(!this.costs) return;
+
+        var mult = this.costs[type + "Cost"];
+        var cost = 0;
+        this.legs.forEach(function(leg) {
+          cost += (mult * leg.distance.value / 1000.0);
+        });
+        cost += mult * this.lastLeg.distance.value / 1000.0;
+
+        return cost.toFixed(2);
       }
     });
 

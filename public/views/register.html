@@ -1,6 +1,12 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../bower_components/gold-phone-input/gold-phone-input.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../elements/first-password-validator.html">
+<link rel="import" href="../elements/second-password-validator.html">
+<link rel="import" href="../elements/data-service.html">
 
 <dom-module name="register-view">
   <style>
@@ -53,56 +59,70 @@
 		}
   </style>
   <template>
-    <div>
-	  	<div class="register-title">
-	  		<span>¿Todavía no te has registrado? ¡Hazlo gratis!</span>
-	  	</div>
-	  	<div class="register-login">
-  			<span>¿Ya tienes una cuenta?</span>
-  			<paper-button raised on-click="logIn">Logueate</paper-button>
-	  	</div>
-	  	<div class="vertical-separator"></div>
-	  	<div>
-	  		<div class="register-img-div">
-	  			<img class="register-img" src="../images/user.png">
-	  			<div>
-	  				<span>Conductor</span>
-	  				<paper-toggle-button></paper-toggle-button>
-	  			</div>
-	  		</div>
+    <data-service id="rs" type="users" update="[[data]]" on-response="onRegister"></data-service>
 
-	  		<div class="register-info-div">
-	  			<div>
-	  				<paper-input class="register-half-input" label="Nombre"></paper-input>
-	  				<paper-input class="register-half-input" label="Apellidos"></paper-input>
-					</div>
-					<div>
-	  				<paper-input class="register-half-input" label="email"></paper-input>
-	  				<paper-input class="register-half-input" label="telefono"></paper-input>
-					</div>
-					<div class="register-half-input register-date layout vertical">
-						<span>Fecha de nacimiento</span>
-						<input type="date">
-					</div>
-					<div>
-	  				<paper-input class="register-half-input" always-float-label type="password" label="Contraseña"></paper-input>
-					</div>
-					<div>
-	  				<paper-input class="register-half-input" always-float-label  type="password" label="Repetir contraseña"></paper-input>
-					</div>
-	  		</div>
+    <template is="dom-if" if="[[!regis]]">
+      <first-password-validator></first-password-validator>
+      <second-password-validator pass-one="[[data.password]]"></second-password-validator>
+      <div>
+  	  	<div class="register-title">
+  	  		<span>¿Todavía no te has registrado? ¡Hazlo gratis!</span>
+  	  	</div>
+  	  	<div class="register-login">
+    			<span>¿Ya tienes una cuenta?</span>
+    			<paper-button raised on-click="logIn">Logueate</paper-button>
+  	  	</div>
+  	  	<div class="vertical-separator"></div>
+  	  	<div>
+  	  		<div class="register-img-div">
+  	  			<img class="register-img" src="../images/user.png">
+  	  			<div>
+  	  				<span>Conductor</span>
+  	  				<paper-toggle-button checked="{{data.carnet}}"></paper-toggle-button>
+  	  			</div>
+  	  		</div>
 
-	  		<div>
-	  			<paper-button raised>Guardar</paper-button>
-	  		</div>
-	  	</div>
-	  </div>
+  	  		<div class="register-info-div">
+  	  			<div>
+  	  				<paper-input id="n" class="register-half-input" label="Nombre" value="{{data.name}}" required auto-validate></paper-input>
+  	  				<paper-input id="s" class="register-half-input" label="Apellidos" value="{{data.surnames}}" required auto-validate></paper-input>
+  					</div>
+  					<div>
+  	  				<gold-email-input id="e" class="register-half-input" label="E-mail" value="{{data.email}}" required auto-validate></gold-email-input>
+  	  				<gold-phone-input id="t" class="register-half-input" label="Teléfono" value="{{data.phone}}" phone-number-pattern="XXX-XXX-XXX" country-code="0" auto-validate></gold-phone-input>
+  					</div>
+  					<div class="register-half-input register-date layout vertical">
+  						<span>Fecha de nacimiento</span>
+  						<input type="date" auto-validate>
+  					</div>
+  					<div>
+  	  				<paper-input id="p" class="register-half-input" always-float-label type="password" label="Contraseña" value="{{data.password}}" validator="first-password-validator" error-message="La contraseña debe tener un mínimo de 8 caractéres" required auto-validate></paper-input>
+  					</div>
+  					<div>
+  	  				<paper-input id="p2" class="register-half-input" always-float-label type="password" label="Repetir contraseña" value="{{verify}}" validator="second-password-validator" required auto-validate error-message="Las contraseñas no coinciden"></paper-input>
+  					</div>
+  	  		</div>
+
+  	  		<div>
+  	  			<paper-button raised on-down="register">Guardar</paper-button>
+  	  		</div>
+  	  	</div>
+  	  </div>
+    </template>
+    <template is="dom-if" if="[[regis]]">
+      Usuario registrado: <paper-button raised on-click="logIn">Logueate</paper-button>
+    </template>
+    <paper-toast id="uRegistered" text="Usuario registrado."></paper-toast>
   </template>
 
   <script>
     Polymer({
       is: "register-view",
       properties: {
+        data: {
+          type: Object,
+          value: {phone:""}
+        },
         selected: {
           type: Number,
           value: 0,
@@ -113,11 +133,21 @@
           notify: true
         },
         filters: Object,
-        session: Object
+        session: Object,
+        regis: {
+          type: Boolean,
+          value: false
+        }
       },
+      // observers: ['passChanged(data.password, verify)'],
       ready: function() {
-        console.log("trips-view ready!");
+        // this.passChanged();
       },
+
+      // passChanged: function(p, p2) {
+      //   this.$.p.validate();
+      //   this.$.p2.validate();
+      // },
 
       selectedChanged: function() {
         console.log("CHANGED SELECTED");
@@ -133,6 +163,27 @@
 
       logIn: function() {
         this.fire("show-login");
+      },
+
+      validate: function() {
+        console.log("VALKDA");
+        return false;
+      },
+      register: function() {
+        if(this.$$("#n").invalid || this.$$("#s").invaid || this.$$("#e").invalid || this.$$("#p").invalid || this.$$("#p2").invalid) {
+          console.log("Not validated");
+        } else {
+          // console.log(this.data);
+          this.$.rs.saveData(true);
+          console.log("registering");
+        }
+        
+      },
+      onRegister: function(e, data) {
+        if(data.id) {
+          this.$.uRegistered.show();
+          this.set('regis', true);
+        } else console.log("Ha fallado el registro, por favor, contacte con un administrador");
       }
     });
   </script>

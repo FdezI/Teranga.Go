@@ -15,10 +15,15 @@
       update: Object,
       type: String,
       filters: Object,
+      loadOnAttach: Boolean
     },
     
     ready: function() {
       console.log(this.type + "-service ready");
+    },
+
+    attached: function() {
+      if(this.loadOnAttach) this.reload();
     },
     
     callDone: function(e, a, b) {

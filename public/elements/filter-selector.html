@@ -76,7 +76,7 @@
 				return Teranga.image.URL + type + "-" + mode + ".png";
 			},
 			select: function() {
-				this.fire('selected', this.selected);
+				this.fire('selected', this.selected === "" ? null : Number(this.selected));
 			}
 		});
 	</script>

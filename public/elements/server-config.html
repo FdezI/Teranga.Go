@@ -20,20 +20,31 @@
 
   Teranga.pSizes = ['Muy Pequeño', 'Pequeño', 'Mediano', 'Grande', 'Muy Grande'];
 
+  Teranga.minPasswordLength = 8;
+
   Teranga.packageSizes = function(size) {
     var sizes = Teranga.pSizes;
     return size < sizes.length ? sizes[size] : "Sin tamaño";
-  }
+  };
+
+  Teranga.toLocalDate = function(date) {
+    return date.setTime(date.getTime() + (date.getTimezoneOffset() * 60 * 1000));
+  };
+
+  Teranga.parseUTC = function(utcDate) {
+    return Date.parse(utcDate) + (new Date().getTimezoneOffset() * 60 * 1000);
+  },
 
   Teranga.today = function() {
     return new Date().toISOString().substring(0, 10);
-  }
-  Teranga.day = function(date) {
-    return new Date(Date.parse(date)).getDay();
   };
 
-  Teranga.month = function(date) {
-    var month = new Date(Date.parse(date)).getMonth();
+  Teranga.day = function(utcDate) {
+    return new Date(Teranga.parseUTC(utcDate)).getDate();
+  };
+
+  Teranga.month = function(utcDate) {
+    var month = new Date(Teranga.parseUTC(utcDate)).getMonth();
     
     if(month >= 1 && month <= 12 )
       return Teranga.months[month - 1].substring(0, 3);
@@ -41,13 +52,13 @@
     return month;
   };
 
-  Teranga.time = function(date) {
-  	return new Date(Date.parse(date)).toTimeString().substring(0,5);
+  Teranga.time = function(utcDate) {
+  	return new Date(Teranga.parseUTC(utcDate)).toTimeString().substring(0,5);
   };
 
-  Teranga.age = function(date) {
+  Teranga.age = function(utcDate) {
     var today = new Date();
-    var birthDate = new Date(Date.parse(date));
+    var birthDate = new Date(Teranga.parseUTC(utcDate));
     var age = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {

@@ -44,6 +44,8 @@
     "paper-slider": "PolymerElements/paper-slider#~1.0.3",
     "paper-radio-group": "PolymerElements/paper-radio-group#~1.0.4",
     "paper-radio-button": "PolymerElements/paper-radio-button#~1.0.5",
-    "paper-toast": "PolymerElements/paper-toast#~1.0.0"
+    "paper-toast": "PolymerElements/paper-toast#~1.0.0",
+    "gold-email-input": "PolymerElements/gold-email-input#~1.0.3",
+    "gold-phone-input": "PolymerElements/gold-phone-input#~1.0.5"
   }
 }

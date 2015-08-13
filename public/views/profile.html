@@ -84,7 +84,7 @@
                   <table>
                     <tr>
                       <td>Carnet:</td>
-                      <td><paper-toggle-button name="carnet" value="{{update.carnet}}"></paper-toggle-button></td>
+                      <td><paper-toggle-button name="carnet" checked="{{update.carnet}}"></paper-toggle-button></td>
                     </tr>
                   </table>
                 </template>
@@ -230,7 +230,8 @@
         page: {
           type: String,
           value: "profile"
-        }
+        },
+        proposed: Object
       },
 
       observers: ['tripsUpdated(session.user.trips)', 'updateShow(session.user)'],
@@ -262,11 +263,14 @@
       },
       saveProfile: function() {
         console.log("saveChanges");
-        var user = this.session.user;
+        // var user = this.session.user;
         var update = this.update;
-        //TODO only do this if the change has been really made
+        // var self = this;
+        var propose = this.propose = {};
+
         Object.keys(update).forEach(function(key) {
-          user[key] = update[key];
+          propose[key] = update[key];
+          // self.set('user.' + key, update[key]);
         });
         
 
@@ -274,12 +278,16 @@
         this.$.uss.saveData();
         this.edit = false;
       },
-      dataChanged: function() {
-
-      },
       profileSaved: function(e, data) {
-        console.log("PROFILE SAVED");
-        console.log(e, data);
+        var propose = this.propose;
+        var self = this;
+
+        Object.keys(propose).forEach(function(key) {
+          self.set('session.user.' + key, propose[key]);
+        });
+
+        this.propose = undefined;
+
         this.$.pSaved.show();
       },
       updateShow: function() {
