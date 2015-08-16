@@ -20,20 +20,32 @@
     .request-box-button {
       width: 100%;
     }
+    .delete-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      position: relative;
+      left: 62px;
+      top: -5px;
+      font-size: 23px;
+      padding: 0px;
+    }
   </style>
   
   <template>  
     <div class="request">
-        <table>
-          <tr>
-            <td colspan="4">[[departure]]</td>
-          </tr>
-          <tr>
-            <td colspan="4">/</td>
-          </tr>
-          <tr>
-            <td colspan="4">[[arrival]]</td>
-          </tr>
+      <table>
+        <tr>
+          <td colspan="4">[[departure]]</td>
+        </tr>
+        <tr>
+          <td colspan="4">/</td>
+        </tr>
+        <tr>
+          <td colspan="4">[[arrival]]</td>
+        </tr>
+
+        <template is="dom-if" if="[[isOwner(request)]]">
           <tr>
             <td><img class="request-box-img" src="../images/user.png"></td>
             <td><span>[[seats]]</span></td>
@@ -41,8 +53,19 @@
             <td><span>[[packages]]</span></td>
           </tr>
           <tr><td colspan="4"><button class="request-box-button" on-click="redirect">Ver</button></td></tr>
-        </table>
-      </div>
+        </template>
+        <template is="dom-if" if="[[isOwner(request)]]">
+          <span>[[status]]</span>
+          <div class="layout horizontal">
+            <div class="layout vertical center">
+            <span>[[day]]</span>
+            <span>[[month]]</span>
+            </div>
+            <span>[[hour]]</span>
+          </div>
+        </template>
+      </table>
+    </div>
   </template>
 
   <script>
@@ -58,6 +81,10 @@
     },
     redirect: function() {
       window.location='/';
+    },
+
+    isOwner: function() {
+      return this.request.driverName == "You";
     }
   });
   </script>
