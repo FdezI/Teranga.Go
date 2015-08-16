@@ -31,6 +31,8 @@ exports.routeController = require('./controllers/routes');
 exports.packageController = require('./controllers/packages');
 exports.requestController = require('./controllers/requests');
 
+exports.favoriteController = require('./controllers/favorites');
+
 exports.carUnlinkedController = require('./controllers/cars');
 exports.tripUnlinkedController = require('./controllers/trips');
 
