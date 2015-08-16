@@ -22,7 +22,7 @@ exports.get = function(req, res) {
 		if(err) throw err;
 		
 		var route = rows[0];
-		if(route) pool.query('SELECT idlocation, city, country, RP.order\
+		if(route) pool.query('SELECT idlocation, city, country, utcoffset, RP.order\
 													FROM route, location, routePoints RP\
 													WHERE route=? AND idroute=route AND location=idlocation\
 													ORDER BY RP.order ASC', req.params.idroute, function(err, rows, fields) {

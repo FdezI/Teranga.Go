@@ -60,7 +60,7 @@ exports.requestTravel = function(req, res) {
 					connection.release();
 		      throw err;
 				}
-				connection.query('INSERT INTO Requests SET ?', req.body, function(err, result) {
+				connection.query('INSERT INTO requests SET ?', req.body, function(err, result) {
 					if (err) {
 			      return connection.rollback(function() {
 			      	connection.release();
@@ -70,7 +70,7 @@ exports.requestTravel = function(req, res) {
 
 					if(packages && packages.length > 0) {
 						var insertPackage = function() {
-							connection.query('INSERT INTO PackageRequest SET ?, user=' + user + ', trip=' + trip, packages.pop(), function(err, result) {
+							connection.query('INSERT INTO packageRequest SET ?, user=' + user + ', trip=' + trip, packages.pop(), function(err, result) {
 								if (err) {
 						      return connection.rollback(function() {
 						      	connection.release();
