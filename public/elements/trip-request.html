@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
@@ -211,6 +213,8 @@
       <!-- </template> -->
     <!-- </paper-dialog> -->
     </pop-up>
+
+    <paper-toast id="tCreated" text="Creación de viaje fallida."></paper-toast>
 	</template>
 	<script>
 		Polymer({
@@ -459,6 +463,10 @@
         this.$.tr.update = req;
         this.$.tr.saveData(true);
 
+      },
+      onRequested: function(e, data) {
+        if(data.id) this.fire('trip-requested', data);
+        else this.$.rFailed.show();
       },
       indexof: function(order) {
 

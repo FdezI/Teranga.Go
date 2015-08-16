@@ -29,23 +29,24 @@
   </style>
   
   <template>
-    <a id="linkuser" href="[[user.url]]">
-      <div class="user">
-        <img class="user-box-img" src="[[user.img]]">
-        <stars-rating score="[[user.score]]"></stars-rating>
+    <!-- <a id="linkuser" href="[[user.url]]"> -->
+      <div id="linkuser" class="user">
+        <img class="user-box-img" src="[[user.avatar]]">
+        <template is="dom-if" if="[[user.driver]]">
+          <stars-rating score="[[user.karma]]"></stars-rating>
+          <span>[[user.name]]</span>
+          <div><span>3</span> viajes programados</div>
+        </template>
         <span>[[user.name]]</span>
-        <div><span>3</span> viajes programados</div>
       </div>
-    </a>
+    <!-- </a> -->
   </template>
 
   <script>
   Polymer({
     is: "user-box",
     properties: {
-      user: {
-        type: Object
-      }
+      user: Object
       // name: String,
       // img: String,
       // score: String,

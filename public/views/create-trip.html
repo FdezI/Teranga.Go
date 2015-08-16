@@ -225,7 +225,7 @@
       </generic-container> -->
     </pop-up>
 
-    <paper-toast id="tCreated" text="Viaje creado."></paper-toast>
+    <paper-toast id="tCreated" text="Creación de viaje fallida."></paper-toast>
   </template>
 
   <script>
@@ -524,10 +524,8 @@
       },
 
       onTripCreated: function(e, data) {
-        if(data.id) {
-          page("/profile");
-          this.$.tCreated.show();
-        }
+        if(data.id) this.fire('trip-created', data);
+        else this.$.tFailed.show();
       },
 
       directions: function(e, data) {

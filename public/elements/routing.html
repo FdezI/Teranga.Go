@@ -12,11 +12,16 @@
       app.route = '';
       app.route = 'profile';
     });
+    page('/profile/:iduser', function (data) {
+      app.route = '';
+      app.route = 'other';
+      app.params = data.params;
+    });
     page('/trips', function () {
       app.route = '';
       app.route = 'trips';
     });
-     page('/tracking', function () {
+    page('/tracking', function () {
       // app.route = ''; // Infinite loop
       app.route = 'tracking';
     });

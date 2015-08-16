@@ -99,7 +99,7 @@ apiRouter.route('/users')
 	.get(db.userController.getAll);
 apiRouter.route('/users/:iduser')
 	.get(db.userController.get)
-	.put(db.userController.update)
+	.put(db.userController.update);
 	// .delete(db.userController.delete);
 	
 apiRouter.route('/users/:iduser/cars')
@@ -132,7 +132,14 @@ apiRouter.route('/users/:iduser/favorites')
 // 	.get(db.userController.get)
 // 	.put(db.userController.update)
 // 	.delete(db.userController.delete);
-	
+
+apiRouter.route('/favorites')
+	.get(db.favoriteController.getAll)
+	.post(db.favoriteController.create)
+	.delete(db.favoriteController.delete);
+apiRouter.route('/favorites/:iduser')
+	.get(db.favoriteController.get);
+
 apiRouter.route('/routes')
 	// .post(db.routeController.create)
 	.get(db.routeController.getAll);
