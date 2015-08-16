@@ -21,7 +21,7 @@
 <!-- <link rel="import" href="../elements/package-container.html"> -->
 <link rel="import" href="../elements/car-container.html">
 <!-- <link rel="import" href="../elements/user-container.html"> -->
-<link rel="import" href="../elements/request-container.html">
+<!-- <link rel="import" href="../elements/request-container.html"> -->
 
 <link rel="import" href="../elements/stars-rating.html">
 <link rel="import" href="../elements/car-edit.html">
@@ -31,6 +31,7 @@
 <link rel="import" href="../elements/trip-content.html">
 <link rel="import" href="../elements/assessment-content.html">
 <link rel="import" href="../elements/user-content.html">
+<link rel="import" href="../elements/request-content.html">
 <!-- <link rel="import" href="../elements/travel-box.html"> -->
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/car-box.html">
@@ -158,7 +159,10 @@
                 <!-- <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container> -->
               </div>
               <div class="profile-container-half" style="float: right;">
-                <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
+                <generic-collapse-container name="Solicitudes" reloadable>
+                  <request-content iduser="[[session.user.iduser]]" on-select="requestSelected" data="{{session.user.requests}}"></request-content>
+                </generic-collapse-container>
+                <!-- <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container> -->
               </div>
             </div>
 
