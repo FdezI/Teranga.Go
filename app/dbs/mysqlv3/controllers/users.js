@@ -165,13 +165,13 @@ exports.getFavorites = function(req, res) {
 
 exports.getRequests = function(req, res) {
 	var user = pool.escape(req.params.iduser);
-	pool.query("SELECT R.*, driver, (CASE WHEN R.user != " + user + " THEN (SELECT CONCAT_WS(' ', name, surnames) FROM user WHERE iduser=" + user + ") ELSE 'You' END) driverName FROM requests R\
+	pool.query("SELECT R.*, driver, (CASE WHEN R.user != driver THEN (SELECT CONCAT_WS(' ', name, surnames) FROM user WHERE iduser=driver) ELSE 'You' END) driverName FROM requests R\
 								LEFT JOIN tripPoints PA ON PA.trip = R.trip AND PA.order = R.pointA\
 								LEFT JOIN tripPoints PB ON PB.trip = R.trip AND PB.order = R.pointB\
 								INNER JOIN location LA ON LA.idlocation = PA.location\
 								INNER JOIN location LB ON LB.idlocation = PB.location\
 								INNER JOIN trip T ON idtrip = R.trip\
-							WHERE R.user = " + user +" OR R.trip IN (SELECT idtrip FROM trip WHERE driver=" + user + ")", function(err, rows, fields) {
+							WHERE R.user = " + user + " OR R.trip IN (SELECT idtrip FROM trip WHERE driver=" + user + ")", function(err, rows, fields) {
 		if(err) throw err;
 
 		res.json(rows);
