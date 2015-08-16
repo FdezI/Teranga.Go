@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
@@ -84,18 +85,20 @@
       <table class="edit-table">
         <tr>
           <td class="column1">Nombre</td>
-          <td class="column2"><input name="name" value="{{update.name::input}}"></td>
+          <td class="column2"><paper-input name="name" value="{{update.name}}"></paper-input></td>
         <tr> 
         <tr>
           <td class="column1">Tamaño</td>
           <!-- <template is="dom-if" if="[[newcar]]"> -->
           <td class="column2"><paper-slider value="{{update.size}}" min="1" max="5" pin snaps editable></paper-slider></td>
         <tr> 
-        <tr>
+        <!-- <tr>
           <td colspan="2" class="comment-title">Descripción</td>
-        <tr> 
+        <tr>  -->
         <tr>
-          <td colspan="2"><textarea class="comment-box" name="comment" rows="4" value="{{update.description::input}}"></textarea></td>
+          <td colspan="2">
+          <paper-textarea label="Descripción" char-counter maxlength="200" max-rows="4" value="{{update.description}}"></paper-textarea>
+          <!-- <textarea class="comment-box" name="comment" rows="4" value="{{update.description::input}}"></textarea></td> -->
         </tr>
         <tr>
           <td colspan="2">
@@ -109,8 +112,8 @@
           </td>
         <tr/>
       </table>
-      <button class="primary-button-edit" on-click="saveData">Crear</button>
-      <button class="secondary-button-edit" on-click="discardData">Cancelar</button>
+      <paper-button raised class="primary-button-edit" on-click="saveData">Crear</paper-button>
+      <paper-button raised class="secondary-button-edit" on-click="discardData">Cancelar</paper-button>
     </div>
 
     <!-- <paper-dialog id="addFavorite" with-backdrop> -->

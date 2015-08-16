@@ -4,12 +4,18 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+
 <link rel="import" href="pop-up.html">
 <link rel="import" href="generic-container.html">
 
 <link rel="import" href="package-line.html">
 <link rel="import" href="package-new.html">
 <link rel="import" href="package-content.html">
+
+<link rel="import" href="data-service.html">
 
 <dom-module name="trip-request">
 	<style>
@@ -53,7 +59,7 @@
       content: " ";
       height: 0;
       width: 0;
-      position: absolute;
+      position: absolute; 
       pointer-events: none;
     }
 
@@ -71,37 +77,52 @@
     }
   </style>
 	<template>
+    <data-service id="tr" type="request" fetch="travel" on-response="onRequested"></data-service>
 		<div class="request layout vertical">
       <table class="table-request">
         <tr> 
           <td>Salida</td> 
           <td>
-          	<select value="{{d::input}}">
+            <!-- <paper-dropdown-menu label="Seleccione un origen" selectedItemLabel="{{pointA}}">
+              <paper-menu class="dropdown-content">
+                <template id="depRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
+                  <paper-item label="[[item.order]]">[[item.city]]</paper-item>
+                </template>
+              </paper-menu>
+            </paper-dropdown-menu> -->
+          	<select value="{{pointA::input}}">
 		        	<template id="depRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
-		        		<option value="[[indexof(item.order)]]">[[item.city]]</option>
+		        		<option value="[[item.order]]">[[item.city]]</option>
 		        	</template>
 		        </select>
           </td>
-          <td><span>[[getd(d)]]</span>/<span>[[getm(d)]]</span></td>
-          <td><span>[[gett(d)</span></td>
+          <td><span>[[request.pointA.day]]</span>/<span>[[request.pointA.month]]</span></td>
+          <td><span>[[request.pointA.time]]</span></td>
         </tr>
         <tr>
-          <td colspan="4"><span>[[geta(d)]]</span></td>
+          <td colspan="4"><span>[[request.pointA.address]]</span></td>
         </tr>
         <tr> 
           <td>Llegada</td> 
           <td>
-          	<select value="{{a::input}}">
+            <!-- <paper-dropdown-menu label="Seleccione un origen" selectedItemLabel="{{pointB}}">
+              <paper-menu class="dropdown-content">
+                <template id="arrRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
+                  <paper-item label="[[item.order]]"><span>[[item.city]]</span> (<span>[[getT(d, item.order, seat, selectedPackages.length)]]</span>€)</paper-item>
+                </template>
+              </paper-menu>
+            </paper-dropdown-menu> -->
+          	<select value="{{pointB::input}}">
 		        	<template id="arrRepeat" is="dom-repeat" items="[[trip.wps]]" filter="arrivalFilter">
-		        		<option value="[[indexof(item.order)]]"><span>[[item.city]]</span> (<span>[[getT(d, item.order, seat, selectedpackages.length)]]</span>€)</option>
+		        		<option value="[[item.order]]"><span>[[item.city]]</span> (<span>[[getT(request.pointA, item, seat, selectedPackages.length)]]</span>€)</option>
 		        	</template>
 		        </select>
           </td>
-          <td><span>[[getd(a)]]</span>/<span>[[getm(a)]]</span></td>
-          <td><span>[[gett(a)]]</span></td>
+          <td><span>[[request.pointB.day]]</span>/<span>[[request.pointB.month]]</span></td>
+          <td><span>[[request.pointB.time]]</span></td>
         </tr>
         <tr>
-          <td colspan="4"><span>[[geta(a)]]</span></td>
+          <td colspan="4"><span>[[request.pointB.address]]</span></td>
         </tr>
 
         <tr>
@@ -113,7 +134,7 @@
         <tr>
           <td>Asiento</td>
           <td><paper-checkbox checked="{{seat}}"></paper-checkbox></td>
-          <td>+<span>[[getc(d,a,seat)]]</span>€</td>
+          <td>+<span>[[priceUser]]</span>€</td>
         </tr>
 
         <template is="dom-if" if="[[packages(trip.packages)]]">
@@ -121,7 +142,7 @@
           <tr>
             <td colspan="2">Paquetes</td>
             <!-- <td><input type="Number" min="0" max="10" value="{{pkn::input}}"></td> -->
-            <td>+<span>[[getpkc(d,a,selectedpackages.length)]]</span>€ (<span>[[selectedpackages.length]]</span>x <span>[[singlepkc(d, a)]]</span>€)</td>
+            <td>+<span>[[pricePackages]]</span>€ (<span>[[selectedPackages.length]]</span>x <span>[[singlepkc(request.pointA, request.pointB)]]</span>€)</td>
           </tr>
           <tr>
             <td colspan="4">
@@ -129,16 +150,16 @@
                 <div class="layout vertical add-package">
                   <div class="container-add-package">
                     <!-- Meter los package-line aqui -->
-                    <template is="dom-repeat" items="{{selectedpackages}}">
+                    <template is="dom-repeat" items="{{selectedPackages}}">
                       <package-line package="[[item]]" on-delete="removePackage"></package-line>
                     </template>
                   </div>
 
                   <template is="dom-if" if="[[!selectedpackage]]">
                     <div class="layout horizontal header-add-package">
-                      <paper-button class="package-button" raised on-click="openAdd">Añadir paquete</paper-button>
+                      <paper-button raised class="package-button" on-click="openAdd">Añadir paquete</paper-button>
                       <div class="flex"></div>
-                      <div class="layout horizontal center"><paper-button class="package-button" raised on-click="openNew">Crear paquete</paper-button></div>
+                      <div class="layout horizontal center"><paper-button raised class="package-button" on-click="openNew">Crear paquete</paper-button></div>
                     </div>
                   </template>
 
@@ -162,35 +183,34 @@
                 </div>
             </td>
           </tr>
-
-          <pop-up id="newPackage" with-backdrop>
-            <!-- <template is="dom-if" if="[[npopened]]"> -->
-              <generic-container>
-                <package-new user="{{user}}" on-discard="discardNew" on-newpackage="addPackage"></package-new>
-              <generic-container>
-            <!-- </template> -->
-          </pop-up>
-
-          <!-- <template is="dom-if" if="[[apopened]]"> -->
-          <pop-up id="addPackage" with-backdrop>
-          <!-- <paper-dialog id="addPackage" opened="{{apopened}}" with-backdrop> -->
-            <!-- <template is="dom-if" if="[[apopened]]"> -->
-              <generic-container>
-                <package-content wtf="asdf" filterlist="[[selectedpackages]]" filterattrib="idpackage" iduser="[[user.iduser]]" on-select="addPackage" data="{{user.packages}}" load></package-content>
-              </generic-container>
-            <!-- </template> -->
-          <!-- </paper-dialog> -->
-          </pop-up>
           <!-- </template> -->
         </template>
         <tr>
           <td colspan="2">Precio final</td>
-          <td><span>[[getTotal(d, a, seat, selectedpackages.length)]]</span>€</td>
-          <td><button>Solicitar</button></td>
+          <td><span>[[total]]</span>€</td>
+          <td><paper-button raised on-click="requestTrip">Solicitar</paper-button></td>
         </tr>
 
       </table>
     </div>
+    <pop-up id="newPackage" with-backdrop>
+      <!-- <template is="dom-if" if="[[npopened]]"> -->
+        <generic-container>
+          <package-new user="{{user}}" on-discard="closeNew" on-newpackage="addPackage"></package-new>
+        <generic-container>
+      <!-- </template> -->
+    </pop-up>
+
+    <!-- <template is="dom-if" if="[[apopened]]"> -->
+    <pop-up id="addPackage" with-backdrop>
+    <!-- <paper-dialog id="addPackage" opened="{{apopened}}" with-backdrop> -->
+      <!-- <template is="dom-if" if="[[apopened]]"> -->
+        <generic-container>
+          <package-content wtf="asdf" filterlist="[[selectedPackages]]" filterattrib="idpackage" iduser="[[user.iduser]]" on-select="addPackage" data="{{user.packages}}" load></package-content>
+        </generic-container>
+      <!-- </template> -->
+    <!-- </paper-dialog> -->
+    </pop-up>
 	</template>
 	<script>
 		Polymer({
@@ -200,19 +220,26 @@
           type: Boolean,
           value: false
         },
+        request: {
+          type: Object,
+          value: {pointA:{}, pointB:{}}
+        },
+        selectedPackages: {
+          type: Array,
+          value: []
+        },
         trip: {
-      		type: Object,
-      		value: {}
-      	},
-      	d: {
+          type: Object,
+          // value: {},
+          observer: 'tripChanged'
+        },
+      	pointA: {
       		type: Number,
-      		value: 0,
-      		observer: 'dChanged'
+      		observer: 'pointAChanged'
       	},
-      	a: {
+      	pointB: {
       		type: Number,
-      		value: 0
-      		// observer: 'aChanged'
+      		observer: 'pointBChanged'
       	},
       	// pkn: {
       	// 	type: Number,
@@ -220,7 +247,8 @@
       	// },
       	seat: {
       		type: Boolean,
-      		value: true
+      		value: true,
+          observer: 'sChanged'
       	},
       	priceUser: {
           type: Number,
@@ -230,17 +258,36 @@
           type: Number,
           value: 0
         },
+        total: {
+          type: Number,
+          value: 0
+        },
         user: {
           type: Object,
           notify: true
-        },
-        selectedpackages: {
-          type: Array,
-          value: []
-        },
-        apopened: {
-          type: Boolean,
-          value: false
+        }
+        // apopened: {
+        //   type: Boolean,
+        //   value: false
+        // }
+      },
+      observers: ['updateValues(selectedPackages.splices)'],
+      prueba: function() {
+        console.log("ALSKJFAF");
+      },
+      tripChanged: function() {
+        var wps = this.trip.wps;
+        if(wps) {
+          var last = wps[wps.length - 1];
+          var preOrder = wps[wps.length - 2].order;
+          var a = this.pointA, b = this.pointB;
+
+          if((!a && a !== 0) || !b ||
+           (a != 99 && a > preOrder) ||
+           (b != 99 && b > preOrder)) {
+            this.set('pointA', 0);
+            this.set('pointB', last);
+          }
         }
       },
       // byIndex: function(index) {
@@ -256,110 +303,177 @@
       	// console.log("d: " + this.d + ", day:" + this.request.d.day + ", month:" + this.request.d.month);
       // },
       // aChanged: function() {
-      	// this.request.a = this.trip.wps[this.a];
+      	// this.request.pointB = this.trip.wps[this.bOrder];
       // },
-      getd: function(i) {
-      	if(this.trip && this.trip.wps) return this.trip.wps[i].day;
-      },
-      getm: function(i) {
-      	if(this.trip && this.trip.wps) return this.trip.wps[i].month;
-      },
-      gett: function(i) {
-      	if(this.trip && this.trip.wps) return this.trip.wps[i].time;
-      },
-      geta: function(i) {
-      	if(this.trip && this.trip.wps) return this.trip.wps[i].address;
-      },
-      getc: function(d, a, s, unchanged) {
+      // getd: function(i) {
+      // 	if(this.trip && this.trip.wps) return i.day;
+      // },
+      // getm: function(i) {
+      // 	if(this.trip && this.trip.wps) return i.month;
+      // },
+      // gett: function(i) {
+      // 	if(this.trip && this.trip.wps) return i.time;
+      // },
+      // geta: function(i) {
+      // 	if(this.trip && this.trip.wps) return i.address;
+      // },
+      getc: function(pointA, pointB, s, unchanged) {
       	var pu = 0;
+        // b = this.indexof(b);
+        // d = this.indexof(d);
 
-      	if(s && this.trip && this.trip.wps) {
-      		var wps = this.trip.wps;
-          console.log(d + " - " + a);
+      	if(s && pointB && pointA) {
+      		// var wps = this.trip.wps;
+          console.log(pointA + " - " + pointB);
           console.log(wps);
-      		var cost = wps[a].cost - wps[d].cost;
+      		var cost = pointB.cost - pointA.cost;
 
       		if(cost >= 0) pu = cost;
       		// else throw "The cost can't be negative";
       	} 
 
-      	if(!unchanged) this.priceUser = pu;
+      	// if(!unchanged) this.priceUser = pu;
       	return pu;
       },
-      getpkc: function(d, a, pkn, unchanged) {
+      getpkc: function(pointA, pointB, pkn, unchanged) {
       	var pp = 0;
+        // b = this.indexof(b);
+        // d = this.indexof(d);
 
-        var trip = this.trip;
-      	if(trip && trip.wps) {
-      		var wps = trip.wps;
-      		var cost =  wps[a].pkcost - wps[d].pkcost;
+        // var trip = this.trip;
+      	if(pointB && pointA) {
+      		// var wps = trip.wps;
+      		var cost =  pointB.pkcost - pointA.pkcost;
       		if(cost >= 0) pp = cost * pkn;
       		// else throw "The package cost can't be negative";
       	}
 
-      	if(!unchanged) this.pricePackages = pp;
+      	// if(!unchanged) this.pricePackages = pp;
       	return pp;
       },
-      singlepkc: function(d, a) {
-        var trip = this.trip;
-        if(trip && trip.wps) {
-          var wps = trip.wps;
-          return wps[a].pkcost - wps[d].pkcost;
+      singlepkc: function(pointA, pointB) {
+        // b = this.indexof(b);
+        // d = this.indexof(d);
+        // var trip = this.trip;
+        if(pointB && pointA) {
+          // var wps = trip.wps;
+          return pointB.pkcost - pointA.pkcost;
         }
 
         return 0;
       },
-      getT: function(d, order, s, pkn) {
-        var a = this.indexof(order);
-      	return this.getc(d, a, s, true) + this.getpkc(d, a, pkn, true);
+      getT: function(pointA, pointB, s, pkn) {
+        // var b = this.indexof(order);
+        // d = this.indexof(d);
+      	return this.getc(pointA, pointB, s, true) + this.getpkc(pointA, pointB, pkn, true);
       },
       getTotal: function() {
-      	return this.priceUser + (this.trip.packages ? this.pricePackages : 0);
+        var pks = this.trip.packages;
+      	return this.priceUser + (pks !== false && pks !== 0 && typeof pks !== undefined ? this.pricePackages : 0);
       },
       openNew: function() {
-        this.$$("newPackage").open();
+        this.$.newPackage.open();
+        // this.$$("#newPackage").open();
       },
       openAdd: function() {
-        // this.apopened = true;
-        this.$$("#addPackage").open();
+        this.$.addPackage.open();
+        // this.$$("#addPackage").open();
       },
-      discardNew: function() {
-        this.$$("#newPackage").close();
+      closeNew: function() {
+        this.$.newPackage.close();
+        // this.$$("#newPackage").close();
+      },
+      closeAdd: function() {
+        this.$.addPackage.close();
       },
       // addNew: function(e, package) {
       //   // this.push('user.packages', package);
       //   this.addPackage(e, package);
       // },
       removePackage: function(e, package) {
-        this.splice('selectedpackages', this.selectedpackages.indexOf(package), 1);
+        this.splice('selectedPackages', this.selectedPackages.indexOf(package), 1);
       },
       addPackage: function(e, package) {
-        this.$$("#addPackage").close();
-        this.$$("#newPackage").close();
-        this.push('selectedpackages', package);
+        // this.$$("#addPackage").close();
+        // this.$$("#newPackage").close();
+        this.closeNew();
+        this.closeAdd();
+        this.push('selectedPackages', package);
       },
-      dChanged: function() {
+      pointAChanged: function() {
+        console.log("pointA: " + this.pointA);
+        this.set('request.pointA', this.indexof(this.pointA));
+
         this.$.arrRepeat.render();
+        // console.log("pointA: ");
+        // console.log(this.request.pointA);
+        this.updateValues();
+      },
+      pointBChanged: function() {
+        // console.log("b: " + this.b);
+        this.set('request.pointB', this.indexof(this.pointB));
+        // console.log("pointB: ");
+        // console.log(this.request.pointB);
+        this.updateValues();
+      },
+      sChanged: function() {
+        this.updateValues();
+      },
+      updateValues: function() {
+        var req = this.request;
+        this.set('total', this.getT(req.pointA, req.pointB, this.seat, this.selectedPackages.length));
+        console.log("THIS TOTAL: " + this.total);
+        this.set('priceUser', this.getc(req.pointA, req.pointB, this.seat));
+        this.set('pricePackages', this.getpkc(req.pointA, req.pointB, this.selectedPackages.length));
       },
       departureFilter: function(value) {
         return value.stop;
       },
       arrivalFilter: function(value) {
-        return value.stop && value.order > this.trip.wps[this.d].order;
+        // return value.stop && value.order > this.trip.wps[this.d].order;
+        console.log("---------");
+        var pointA = this.request.pointA;
+        console.log(value);
+        console.log(pointA);
+        return value.stop && ((typeof pointA === 'undefined') || (value.order > pointA.order));
       },
       packages: function(value) {
         return value || value === null;
       },
-      indexof: function(order) {
-        var trip = this.trip;
-        if(trip && trip.wps) {
-          var wps = trip.wps;
-          var length = wps.length;
-          for(var i = 0; i < length; i++)
-            if(wps[i].order == order) return i;
-        }
+      requestTrip: function() {
+        var req = this.request;
+        var packages = this.selectedPackages;
+        var pkcost = this.pricePackages / packages.length;
 
-        return -1;
+        req.trip = this.trip.idtrip;
+        // req.pointA = this.d.order;
+        // req.pointB = this.b.order;
+        req.cost = this.priceUser;
+        req.travels = this.seat ? 1 : 0;
+        req.packages = packages.map(function(pk) {
+          return {package:pk.idpackage, cost:pkcost};
+        });
+
+        console.log("Request data: ");
+        console.log(req);
+        this.$.tr.update = req;
+        this.$.tr.saveData(true);
+
+      },
+      indexof: function(order) {
+
+        var trip = this.trip;
+        if(trip && trip.wps)
+          return trip.wps[Teranga.indexOf(order, trip.wps, "order")];
+        // var trip = this.trip;
+        // if(trip && trip.wps) {
+        //   var wps = trip.wps;
+        //   var length = wps.length;
+        //   for(var i = 0; i < length; i++)
+        //     if(wps[i].order == order) return i;
+        // }
+
+        return 'undefined';
       }
     });
 	</script>

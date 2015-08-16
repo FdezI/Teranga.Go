@@ -52,6 +52,7 @@
             <span>[[tag(arrival)]]</span>
             <div class="layout vertical">
               <span>[[location.date]]</span>
+              <span>[[isodate(location.date)]]</span>
               <span>Jun</span>
             </div>
             <span>10:30</span>
@@ -82,6 +83,9 @@
       },
       day: function(date) {
         return date.getDay();
+      },
+      isodate: function(date) {
+        if(date) return date.toISOString();
       },
       retardationChanged: function() {
         this.fire('retardation-changed', this.location);

@@ -16,13 +16,13 @@
 
     <template is="dom-if" if="[[collapse]]">
       <generic-collapse-container>
-        <car-content id="content" iduser="[[iduser]]" data="[[data]]" selected="{{selected}}" load loading="{{loading}}"></car-content>
+        <car-content id="content" iduser="[[iduser]]" data="[[data]]" selected="{{selected}}" load$="[[load]]" loading="{{loading}}"></car-content>
       </generic-collapse-container>
     </template>
 
     <template is="dom-if" if="[[!collapse]]">
       <generic-container>
-        <car-content id="content" iduser="[[iduser]]" data="[[data]]" selected="{{selected}}" load loading="{{loading}}"></car-content>
+        <car-content id="content" iduser="[[iduser]]" data="[[data]]" selected="{{selected}}" load$="[[load]]" loading="{{loading}}"></car-content>
       </generic-container>
     </template>
 
@@ -30,9 +30,11 @@
       <car-box newcar="true" on-click="create"></car-box>
     </template>
 
-    <paper-dialog id="dialog" with-backdrop>
+    <pop-up id="dialog" with-backdrop>
+    <!-- <paper-dialog id="dialog" with-backdrop> -->
       <car-edit id="edit" iduser="[[iduser]]" on-created="onCreated" on-edited="onEdited" on-discard="closePopup"></car-edit>
-    <paper-dialog>
+    <!-- <paper-dialog> -->
+    </pop-up>
 
     <paper-toast id="created" text="Coche creado."></paper-toast>
     <paper-toast id="edited" text="Coche editado."></paper-toast>

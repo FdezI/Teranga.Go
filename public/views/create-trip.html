@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../elements/trip-edit-route-validator.html">
 <link rel="import" href="../elements/trip-edit-origin-validator.html">
@@ -73,7 +74,7 @@
   </style>
   <template>
     <data-service id="rs" type="routes" fetch="list" data="{{routes}}"></data-service>
-    <data-service id="ts" type="trips"></data-service>
+    <data-service id="ts" type="trips" on-response="onTripCreated"></data-service>
 
     <datalist id="routes">
       <template is="dom-repeat" items="[[routes]]">
@@ -173,14 +174,6 @@
             <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="[[freeSeats(car)]]" value="{{filters.seats}}" pin snaps editable></paper-slider>
           </div>
         </div>
-
-        
-
-        <pop-up id="car_select" with-backdrop>
-          <generic-container>
-            <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
-          </generic-container>
-        </pop-up>
       </template>
 
       <template is="dom-if" if="[[car.idcar]]">
@@ -225,6 +218,14 @@
         <paper-button raised on-click="discardData">Cancelar</paper-button>
       </div>
     </template>
+    <pop-up id="car_select" with-backdrop>
+      <car-container iduser="[[user.iduser]]" data="{{user.cars}}" selected="{{car}}" on-select="hideCarSelect" allow-new load on-discard="discardCarCreation"></car-container>
+      <!-- <generic-container>
+        <car-content iduser="[[user.iduser]]" data="[[user.cars]]" selected="{{car}}" on-select="hideCarSelect" load></car-content>
+      </generic-container> -->
+    </pop-up>
+
+    <paper-toast id="tCreated" text="Viaje creado."></paper-toast>
   </template>
 
   <script>
@@ -282,10 +283,15 @@
       },
       showCarSelect: function() {
         // console.log(this.$);
-        this.$$("#car_select").open();
+        this.$.car_select.open();
+        // this.$$("#car_select").open();
       },
       hideCarSelect: function() {
-        this.$$("#car_select").close();
+        this.$.car_select.close();
+        // this.$$("#car_select").close();
+      },
+      discardCarCreation: function(e) {
+        e.stopPropagation();
       },
       // selectCar: function(e, car) {
       //   this.idcar = car.idcar;
@@ -440,7 +446,7 @@
             var cpkcost = Number(wp.pkcost) + (costs['KmPkCost'] * leg.distance.value / 1000.0);
           }
           console.log("Ccost: " + ccost + ", cpkcost: " + cpkcost);
-          f.wps.push({location: loc.idlocation, address: loc.address, date: loc.date, stop: loc.stop, cost:Number(ccost ? ccost.toFixed(2) : 0), pkcost:Number(cpkcost ? cpkcost.toFixed(2) : 0)});
+          f.wps.push({location: loc.idlocation, address: loc.address, date: new Date(loc.date.getTime() - loc.date.getTimezoneOffset() * 60000), stop: loc.stop, cost:Number(ccost ? ccost.toFixed(2) : 0), pkcost:Number(cpkcost ? cpkcost.toFixed(2) : 0)});
         };
 
         
@@ -517,6 +523,12 @@
 
       },
 
+      onTripCreated: function(e, data) {
+        if(data.id) {
+          page("/profile");
+          this.$.tCreated.show();
+        }
+      },
 
       directions: function(e, data) {
         console.log("DIRECTIONS: ");
@@ -545,8 +557,11 @@
 
         if(!t || !d) return;
 
+        console.log("OFFSET: ");
+        console.log(this.selected.origin);
+        var dateOffset = this.selected.origin.utcoffset;
         var date = new Date(Date.parse(d + " " + t));
-        date.setTime(date.getTime() - ((d.getTimezoneOffset() - (this.selected.origin.utcoffset * 60)) * 60 * 1000));
+        date.setTime(date.getTime() - ((0/**date.getTimezoneOffset() - (dateOffset * 60)**/) * 60000));
 
         console.log("ORIG: " + this.selected.origin);
         this.set('selected.origin.date', date);
@@ -567,7 +582,7 @@
           if(retardation) var retValues = retardation.split(":");
           else retValues = null;
           if(retValues) console.log((((retValues[0] * 60) + retValues[1])));
-          date = addTime(date, (loc.utcoffset * 60 * 60) + legs[i].duration.value + (retValues ? ((Number(retValues[0] * 60) + Number(retValues[1])) * 60) : 0));
+          date = addTime(date, ((loc.utcoffset  - dateOffset) * 3600) + legs[i].duration.value + (retValues ? ((Number(retValues[0] * 60) + Number(retValues[1])) * 60) : 0));
           this.set('others.' + i + '.date', date);
           console.log(date);
         }

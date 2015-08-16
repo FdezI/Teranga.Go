@@ -20,7 +20,8 @@
       	type: Boolean,
       	value: false,
       	reflectToAttribute: true
-      }
+      },
+      load: Boolean
 
   	},
   	// ready: function() {
@@ -42,7 +43,9 @@
     onCreated: function(e, object) {
     	// console.log("AAAAAQUI");
     	// console.log(this);
-      this.push('data', object);
+      if(!this.data) this.set('data', [object]);
+      else this.push('data', object);
+      
       this.$.created.show();
       this.closePopup();
     },

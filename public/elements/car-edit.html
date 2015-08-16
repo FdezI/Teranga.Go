@@ -138,7 +138,7 @@
     },
     saveData: function() {
       console.log("SAVING DATA IN CAR EDIT");
-      this.$.cs.saveData(true);
+      this.$.cs.saveData(this.newObject);
     },
     discardData: function() {
       this.fire('discard');
