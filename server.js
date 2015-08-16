@@ -121,6 +121,9 @@ apiRouter.route('/users/:iduser/trips')
 apiRouter.route('/users/:iduser/favorites')
 	.get(db.userController.getFavorites);
 
+apiRouter.route('/users/:iduser/requests')
+	.get(db.userController.getRequests);
+
 // apiRouter.route('/users/:iduser/trips/:idtrip') // Maybe should this be deleted and use unlinked instead
 // 	.get(db.tripController.get)
 // 	.put(db.tripController.addPassenger);

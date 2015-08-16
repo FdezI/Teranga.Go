@@ -91,18 +91,18 @@ exports.getTrips = function(req, res) {
 	var user = req.params.iduser;
 	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, PB.date as atime, false as driving\
 											FROM userTrips\
-												LEFT JOIN tripPoints AS PA ON userTrips.trip = PA.trip AND pointA = PA.order\
-												LEFT JOIN tripPoints AS PB ON userTrips.trip = PB.trip AND pointB = PB.order\
-												INNER JOIN location AS LA ON LA.idlocation = PA.location\
-												INNER JOIN location AS LB ON LB.idlocation = PB.location\
+												LEFT JOIN tripPoints PA ON userTrips.trip = PA.trip AND pointA = PA.order\
+												LEFT JOIN tripPoints PB ON userTrips.trip = PB.trip AND pointB = PB.order\
+												INNER JOIN location LA ON LA.idlocation = PA.location\
+												INNER JOIN location LB ON LB.idlocation = PB.location\
 											WHERE user=?)\
 											UNION DISTINCT\
 											(SELECT LA.city, LB.city, PA.date, PB.date, true\
 											FROM trip\
-												LEFT JOIN tripPoints AS PA ON PA.order = 0 AND idtrip = PA.trip \
-												LEFT JOIN tripPoints AS PB ON PB.order = 99 AND idtrip = PB.trip\
-												INNER JOIN location AS LA ON LA.idlocation = PA.location\
-												INNER JOIN location AS LB ON LB.idlocation = PB.location\
+												LEFT JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip \
+												LEFT JOIN tripPoints PB ON PB.order = 99 AND idtrip = PB.trip\
+												INNER JOIN location LA ON LA.idlocation = PA.location\
+												INNER JOIN location LB ON LB.idlocation = PB.location\
 											WHERE trip.driver=?)';
 
 	// This method is returning: [{departure: '', arrival: '', dtime: null, driving: 0}, {...}]
@@ -157,6 +157,21 @@ exports.getFavorites = function(req, res) {
 	pool.query("SELECT iduser, name, surnames, karma, karma IS NOT NULL AS driver FROM favorites\
 								JOIN user ON iduser=user2\
 							WHERE user1=?", user, function(err, rows, fields) {
+		if(err) throw err;
+
+		res.json(rows);
+	});
+};
+
+exports.getRequests = function(req, res) {
+	var user = pool.escape(req.params.iduser);
+	pool.query("SELECT R.*, driver, (CASE WHEN R.user != " + user + " THEN (SELECT CONCAT_WS(' ', name, surnames) FROM user WHERE iduser=" + user + ") ELSE 'You' END) driverName FROM requests R\
+								LEFT JOIN tripPoints PA ON PA.trip = R.trip AND PA.order = R.pointA\
+								LEFT JOIN tripPoints PB ON PB.trip = R.trip AND PB.order = R.pointB\
+								INNER JOIN location LA ON LA.idlocation = PA.location\
+								INNER JOIN location LB ON LB.idlocation = PB.location\
+								INNER JOIN trip T ON idtrip = R.trip\
+							WHERE R.user = " + user +" OR R.trip IN (SELECT idtrip FROM trip WHERE driver=" + user + ")", function(err, rows, fields) {
 		if(err) throw err;
 
 		res.json(rows);
