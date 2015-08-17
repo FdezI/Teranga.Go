@@ -12,6 +12,104 @@ var mysql = require('mysql');
 	
 // };
 
+exports.acceptRequest = function(req, res) {
+	var trip = req.query.trip;
+	var user = req.query.user;
+	var where = "trip=" + pool.escape(trip) + " AND user=" + pool.escape(user);
+	pool.query('SELECT trip, user, pointA, pointB, cost, travels FROM requests where ' + where,
+		function(err, rows, fields) {
+			if(err) throw err;
+
+			var request = rows[0];
+			if(!request) {
+				res.json({});
+				return;
+			}
+
+			pool.query('SELECT trip, package, cost FROM packageRequests WHERE ' + where, function(err, rows, fields) {
+				if(err) throw err;
+
+				var packageReqs = rows;
+
+				pool.getConnection(function(err, connection) {
+					if(err) {
+						connection.release();
+			      throw err;
+					}
+					connection.beginTransaction(function(err) {
+						if(err) {
+							connection.release();
+				      throw err;
+						}
+						connection.query('INSERT INTO userTrips SET ?', request, function(err, result) {
+							if (err) {
+					      return connection.rollback(function() {
+					      	connection.release();
+					        throw err;
+					      });
+					    }
+
+					    var startDeletion = function(packagesToo) {
+					    	connection.query('DELETE FROM requests' + (packagesToo ? ", packageRequests" : "") + ' WHERE' + where, function(err, result) {
+									if (err) {
+							      return connection.rollback(function() {
+							      	connection.release();
+							        throw err;
+							      });
+							    }
+
+							    connection.commit(function(err) {
+						        if (err) {
+						          return connection.rollback(function() {
+						          	connection.release();
+						            throw err;
+						          });
+						        }
+
+						        connection.release();
+
+						        res.json({id:0});
+						      });
+
+							  });
+					    };
+
+
+					    if(packages && packages.length > 0) {
+								var insertPackage = function() {
+									connection.query('INSERT INTO packageTrips SET ?, pointA=?, pointB=?' + [packageReqs.pop(), request.pointA, request.pointB], function(err, result) {
+										if (err) {
+								      return connection.rollback(function() {
+								      	connection.release();
+								        throw err;
+								      });
+								    }
+
+										if(packages.length > 0) {
+											insertPackage();
+											return;
+										}
+
+										startDeletion(true);
+
+									});
+
+								};
+
+								insertPackage();
+							} else startDeletion(false);
+
+					    
+						});
+					});
+				});
+			});
+
+			
+
+	});
+};
+
 exports.requestTravel = function(req, res) {
 
 	var pointA = req.body.pointA;

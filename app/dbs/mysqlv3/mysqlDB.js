@@ -38,6 +38,8 @@ exports.tripUnlinkedController = require('./controllers/trips');
 
 exports.locationController = require('./controllers/locations');
 
+exports.notificationController = require('./controllers/notifications');
+
 exports.configController = require('./controllers/config');
 
 exports.actionController = require('./controllers/actions');

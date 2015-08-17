@@ -183,6 +183,17 @@ exports.getRequests = function(req, res) {
 	});
 };
 
+exports.getNotifications = function(req, res) {
+	var user = pool.escape(req.params.iduser);
+	var since = req.query.since;
+
+	pool.query('SELECT emitter, receiver, type, date, object, N.read = 1 as "read" FROM notification N WHERE receiver=' + user + (since ? " AND date>=" + pool.escape(since) : ""), function(err, rows, fields) {
+		if(err) throw err;
+
+		res.json(rows);
+	});
+}
+
 // AUTHENTICATED
 exports.update = function(req, res) {
 	pool.query('UPDATE user SET ? WHERE iduser=?', [req.body, req.params.iduser], function(err, result) {
