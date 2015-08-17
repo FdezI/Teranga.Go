@@ -1,8 +1,10 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../elements/notification-line.html">
+<link rel="import" href="notification-line.html">
 
 <link rel="import" href="popup-behavior.html">
+
+<link rel="import" href="data-service.html">
 
 <dom-module name="notification-popup">
   <style>
@@ -43,14 +45,19 @@
     }
   </style>
   <template>
+    <data-service id="ns" type="notifications" user="[[iduser]]" fetch="all" filters="[[filters]]" data="{{news}}"></data-service>
+
     <div class="container">
       <div class="notification-title">
         <span>Notificaciones</span>
         <a class="notification-mark-as-read">Marcar como leídas</a>
       </div>
       <ul class="notifications-list">
-        <notification-line read></notification-line>
-        <notification-line></notification-line>
+        <template is="dom-repeat" items="[[notifications]]">
+          <notification-line notification="[[item]]"></notification-line>
+        </template>
+        <!-- <notification-line read></notification-line> -->
+        <!-- <notification-line></notification-line> -->
       </ul>
     </div>
   </template>
@@ -59,9 +66,50 @@
     Polymer({
       is: "notification-popup",
       properties: {
-        package: Object
+        notifications: {
+          type: Array,
+          value: []
+        },
+        news: {
+          type: Array,
+          observer: 'newsChanged'
+        },
+        iduser: {
+          type: Number,
+          observer: 'iduserChanged'
+        },
+        tasked: Boolean,
+        filters: {
+          type: Object,
+          value: {}
+        }
       },
-      behaviors: [Teranga.PopupBehavior]
+      behaviors: [Teranga.PopupBehavior],
+
+      iduserChanged: function() {
+        if(this.iduser) {
+          if(!this.tasked) {
+            // this.set('tasked', true);
+            this.request(this);
+            setInterval(this.request, Teranga.notificationInterval, this);
+          }
+        }
+      },
+
+      newsChanged: function() {
+        console.log("ASDF");
+        if(this.news.length > 0) {
+          var self = this;
+          this.news.forEach(function(n) { self.push('notifications', n); });
+          this.news = [];
+        }
+      },
+
+      request: function(self) {
+        self.$.ns.reload();
+
+        self.set('filters.since', new Date());
+      }
     });
   </script>
 </dom-module>

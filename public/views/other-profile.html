@@ -237,6 +237,8 @@
       },
 
       checkFavorite: function(e, data, toast) {
+        // console.log("CHECKING FAV: " );
+        // console.log(data);
         var fav = (data.id || data.id === 0 || data.user1) ? true : false;
 
         var favString = 'session.user.favorites';

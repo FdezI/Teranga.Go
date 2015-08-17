@@ -45,16 +45,16 @@
           <td colspan="4">[[request.arrival]]</td>
         </tr>
 
-        <template is="dom-if" if="[[isOwner(request)]]">
+        <template is="dom-if" if="[[isDriver(request)]]">
           <tr>
             <td><img class="request-box-img" src="../images/user.png"></td>
             <td><span>[[seats(request)]]</span></td>
             <td><img class="request-box-img" src="../images/package-allow.png"></td>
             <td><span>[[request.packages]]</span></td>
           </tr>
-          <tr><td colspan="4"><button class="request-box-button" on-click="redirect">Ver</button></td></tr>
+          <tr><td colspan="4"><button class="request-box-button" on-click="showInfo">Ver</button></td></tr>
         </template>
-        <template is="dom-if" if="[[!isOwner(request)]]">
+        <template is="dom-if" if="[[!isDriver(request)]]">
           <span>[[status]]</span>
           <div class="layout horizontal">
             <div class="layout vertical center">
@@ -77,11 +77,11 @@
         value: {}
       }
     },
-    redirect: function() {
-      window.location='/';
+    showInfo: function() {
+      this.fire('show-info', this.request);
     },
 
-    isOwner: function() {
+    isDriver: function() {
       return this.request.driverName == "You";
     },
     day: function(date) {

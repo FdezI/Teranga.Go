@@ -75,7 +75,7 @@
     
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
-    <notification-popup id="np" opened="{{openPopups.np}}" index="1"></notification-popup>
+    <notification-popup id="np" opened="{{openPopups.np}}" index="1" iduser="[[session.user.iduser]]"></notification-popup>
     <account-popup id="ap" opened="{{openPopups.ap}}" on-logout="logout" on-show-site="setPage" index="0"></account-popup>
 
 

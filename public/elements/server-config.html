@@ -65,7 +65,14 @@
         age--;
     }
     return age;
+  };
+
+  Teranga.diffFromToday = function(utcDate) {
+    var day = Teranga.day(utcDate);
+    var diff = Teranga.today() - day;
+    return diff == 0 ? "Hoy" : diff == -1 ? "Ayer" : day + " " + Teranga.month(date);
   }
+  
 
 
   Teranga.indexOf = function(value, items, attrib) {
@@ -76,7 +83,9 @@
     } else return items.indexOf(value);
 
     return -1;
-  }
+  };
+
+  Teranga.notificationInterval = 60000; // In seconds
 
 </script>
 </dom-module>
