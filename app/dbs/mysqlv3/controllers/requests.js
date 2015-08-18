@@ -1,10 +1,10 @@
 var mysql = require('mysql');
 
 
-// exports.requestPacket = function(req, res) {
+// exports.requestPacket = function(req, res, next) {
 	// mysql.pool.query('SELECT packages FROM trip WHERE idtrip=?', req.body.idtrip, function(err, rows, fields) {
 	// 	if(rows[0].packages) mysql.pool.query('INSERT INTO packageTrips SET ?', req.body, function(err, result) {
-	// 		if(err) throw err;
+	// 		if(err) return next(err);
 			
 	// 		res.json({id:result.insertId});
 	// 	}); else res.json({requested:false});
@@ -12,13 +12,13 @@ var mysql = require('mysql');
 	
 // };
 
-exports.acceptRequest = function(req, res) {
+exports.acceptRequest = function(req, res, next) {
 	var trip = req.query.trip;
 	var user = req.query.user;
 	var where = "trip=" + pool.escape(trip) + " AND user=" + pool.escape(user);
 	pool.query('SELECT trip, user, pointA, pointB, cost, travels FROM requests where ' + where,
 		function(err, rows, fields) {
-			if(err) throw err;
+			if(err) return next(err);
 
 			var request = rows[0];
 			if(!request) {
@@ -27,25 +27,25 @@ exports.acceptRequest = function(req, res) {
 			}
 
 			pool.query('SELECT trip, package, cost FROM packageRequests WHERE ' + where, function(err, rows, fields) {
-				if(err) throw err;
+				if(err) return next(err);
 
 				var packageReqs = rows;
 
 				pool.getConnection(function(err, connection) {
 					if(err) {
 						connection.release();
-			      throw err;
+			      return next(err);
 					}
 					connection.beginTransaction(function(err) {
 						if(err) {
 							connection.release();
-				      throw err;
+				      return next(err);
 						}
 						connection.query('INSERT INTO userTrips SET ?', request, function(err, result) {
 							if (err) {
 					      return connection.rollback(function() {
 					      	connection.release();
-					        throw err;
+					        return next(err);
 					      });
 					    }
 
@@ -54,7 +54,7 @@ exports.acceptRequest = function(req, res) {
 									if (err) {
 							      return connection.rollback(function() {
 							      	connection.release();
-							        throw err;
+							        return next(err);
 							      });
 							    }
 
@@ -62,7 +62,7 @@ exports.acceptRequest = function(req, res) {
 						        if (err) {
 						          return connection.rollback(function() {
 						          	connection.release();
-						            throw err;
+						            return next(err);
 						          });
 						        }
 
@@ -81,7 +81,7 @@ exports.acceptRequest = function(req, res) {
 										if (err) {
 								      return connection.rollback(function() {
 								      	connection.release();
-								        throw err;
+								        return next(err);
 								      });
 								    }
 
@@ -110,7 +110,7 @@ exports.acceptRequest = function(req, res) {
 	});
 };
 
-exports.requestTravel = function(req, res) {
+exports.requestTravel = function(req, res, next) {
 
 	var pointA = req.body.pointA;
 	var trip = pool.escape(req.body.trip);
@@ -133,7 +133,7 @@ exports.requestTravel = function(req, res) {
 								WHERE TP.trip = ' + trip + '\
 								GROUP BY TP.order\
 								ORDER BY TP.order ASC;', function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		var free = 0;
 		var length = rows.length;
@@ -151,18 +151,18 @@ exports.requestTravel = function(req, res) {
 		pool.getConnection(function(err, connection) {
 			if(err) {
 				connection.release();
-	      throw err;
+	      return next(err);
 			}
 			connection.beginTransaction(function(err) {
 				if(err) {
 					connection.release();
-		      throw err;
+		      return next(err);
 				}
 				connection.query('INSERT INTO requests SET ?', req.body, function(err, result) {
 					if (err) {
 			      return connection.rollback(function() {
 			      	connection.release();
-			        throw err;
+			        return next(err);
 			      });
 			    }
 
@@ -172,7 +172,7 @@ exports.requestTravel = function(req, res) {
 								if (err) {
 						      return connection.rollback(function() {
 						      	connection.release();
-						        throw err;
+						        return next(err);
 						      });
 						    }
 
@@ -185,7 +185,7 @@ exports.requestTravel = function(req, res) {
 					        if (err) {
 					          return connection.rollback(function() {
 					          	connection.release();
-					            throw err;
+					            return next(err);
 					          });
 					        }
 
@@ -218,12 +218,12 @@ exports.requestTravel = function(req, res) {
 	// SELECT COUNT(*), null FROM userTrips WHERE idtrip=' + tripId + ' AND accepted=true';
 		
 	// mysql.pool.query(sql, function(err, rows, fields) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 		
 	// 	var used = rows[0].used;
 	// 	var total = rows[0].seats;
 	// 	if(used < total) mysql.pool.query('INSERT INTO userTrips SET ?', req.body, function(err, rows, fields) {
-	// 		if(err) throw err;
+	// 		if(err) return next(err);
 			
 	// 		res.json({id:result.insertId});
 	// 	}); else res.json({requested:false});
@@ -231,17 +231,17 @@ exports.requestTravel = function(req, res) {
 	// });
 };
 
-exports.getAllTravel = function(req, res) {
+exports.getAllTravel = function(req, res, next) {
 	// mysql.pool.query('SELECT * FROM userTrips WHERE accepted=false', function(err, rows, fields) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 		
 	// 	res.json(rows);
 	// });
 };
 
-exports.getAllPacket = function(req, res) {
+exports.getAllPacket = function(req, res, next) {
 	// mysql.pool.query('SELECT * FROM packageTrips WHERE accepted=false', function(err, rows, fields) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 		
 	// 	res.json(rows);
 	// });

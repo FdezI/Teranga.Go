@@ -1,7 +1,7 @@
 var pool = require('mysql').pool;
 var tripConfig = require('../../../config').trips;
 
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 	var trip = req.body;
 	var wps = trip.wps; delete trip.wps;
 
@@ -26,19 +26,19 @@ exports.create = function(req, res) {
 	pool.getConnection(function(err, connection) {
 		if(err) {
 			connection.release();
-      throw err;
+      return next(err);
 		}
 		connection.beginTransaction(function(err) {
 			if(err) {
 				connection.release();
-	      throw err;
+	      return next(err);
 			}
 
 			connection.query('INSERT INTO trip SET ?', trip, function(err, result) {
 				if (err) {
 		      return connection.rollback(function() {
 		      	connection.release();
-		        throw err;
+		        return next(err);
 		      });
 		    }
 
@@ -55,7 +55,7 @@ exports.create = function(req, res) {
 						if (err) {
 				      return connection.rollback(function() {
 				      	connection.release();
-				        throw err;
+				        return next(err);
 				      });
 				    }
 
@@ -68,7 +68,7 @@ exports.create = function(req, res) {
 			        if (err) {
 			          return connection.rollback(function() {
 			          	connection.release();
-			            throw err;
+			            return next(err);
 			          });
 			        }
 
@@ -85,19 +85,19 @@ exports.create = function(req, res) {
 	});
 
 	// pool.query('INSERT INTO trip SET ?',req.body, function(err, result) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 		
 	// 	res.json({id:result.insertId});
 	// });
 };
 
 // AUTHENTICATED
-exports.getAll = function(req, res) {
+exports.getAll = function(req, res, next) {
 	// TODO
 	pool.query('SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
 							FROM trip AS T, car, user\
 							WHERE T.car = idcar AND driver = iduser', function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 	
 		var trips = rows[0];
 
@@ -140,7 +140,7 @@ exports.getAll = function(req, res) {
 	// 							JOIN tripPoints AS TP ON TP.stop = true AND TP.order != 99\
 	// 							JOIN tripPoints AS TP2 ON TP2.trip = TP.trip AND TP2.stop = true AND TP2.order != 0\
 	// 						WHERE idtrip = TP.trip ORDER BY idtrip ASC', function(err, rows, fields) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 
 	// 	var trips = rows;
 	// 	var tripIds = trips.map(function(value) {
@@ -159,7 +159,7 @@ exports.getAll = function(req, res) {
 	// 							WHERE TP.trip IN (?)\
 	// 							GROUP BY TP.trip, TP.order\
 	// 							ORDER BY TP.trip, TP.order ASC;', [tripIds], function(err, rows, fields) {
-	// 		if(err) throw err;
+	// 		if(err) return next(err);
 
 	// 		var i = 0;
 	// 		var last;
@@ -178,7 +178,7 @@ exports.getAll = function(req, res) {
 	// });
 };
 
-exports.get = function(req, res) {
+exports.get = function(req, res, next) {
 	//TODO GET ALL THE AVAILABLE INFORMATION OF THE TRIP INSTEAD OF THE RESUMED ONE
 	// mysql.pool.query('SELECT trip.idtrip, trip.packages = 1 as packages, car.seats-COUNT(T1.idtrip) AS free,\
 	// 						origin.name AS origin,\
@@ -198,7 +198,7 @@ exports.get = function(req, res) {
 	pool.query('SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
 							FROM trip AS T, car, user\
 							WHERE idtrip=? AND T.car = idcar AND driver = iduser', req.params.idtrip, function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 	
 		var trip = rows[0];
 
@@ -231,13 +231,13 @@ exports.get = function(req, res) {
 	});
 };
 
-exports.search = function(req, res) {
+exports.search = function(req, res, next) {
 	var l1 = req.query.origin; delete req.query.origin;
 	var l2 = req.query.destination; delete req.query.destination;
 
 	if(!l1 && !l2) {
 		// TODO complete and only if admin
-		exports.getAll(req, res);
+		exports.getAll(req, res, next);
 		return;
 	}
 
@@ -275,7 +275,7 @@ exports.search = function(req, res) {
 								JOIN user AS U ON iduser = T.driver\
 							WHERE idtrip = TP.trip ' + where + ' ORDER BY idtrip ASC LIMIT ?,10',
 							[l1, l2, offset ? offset : 0], function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		if(rows.length == 0) {
 			res.json([]);
@@ -310,7 +310,7 @@ exports.search = function(req, res) {
 								WHERE TP.trip IN (?)\
 								GROUP BY TP.trip, TP.order\
 								ORDER BY TP.trip, TP.order ASC;', [tripIds], function(err, rows, fields) {
-			if(err) throw err;
+			if(err) return next(err);
 
 			var i = 0;
 			var last;
@@ -360,24 +360,24 @@ exports.search = function(req, res) {
 
 	// pool.query('SELECT idtrip, driver, car, seats, packages = 1 as packages, animals = 1 as animals\
 	// 						FROM trip' + where + 'LIMIT ?,10', offset ? offset : 0, function(err, rows, fields) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 
 	// 	res.json(rows);
 	// });
 };
 
 // AUTHENTICATED
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
 	pool.query('DELETE FROM trip WHERE idtrip=?', req.params.idtrip, function(err, result) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json({deleted:result.affectedRows});
 	});
 };
 
-exports.addPassenger = function(req, res) {
+exports.addPassenger = function(req, res, next) {
 	pool.query('INSERT INTO userTrips SET ?', {tripid:req.params.idtrip, userid:req.params.iduser}, function(err, result) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json({changed:result.changedRows});
 	});

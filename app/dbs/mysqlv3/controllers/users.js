@@ -1,21 +1,21 @@
 var pool = require('mysql').pool;
 
 // UNREGISTERED
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 	console.log(req.body);
 	var password = req.body.password; delete req.body.password;
 
 	pool.query('INSERT INTO user SET ?, `password`=UNHEX(SHA2(?, 256))', [req.body, password], function(err, result) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json({id:result.insertId});
 	});
 };
 
-exports.getAll = function(req, res) {
+exports.getAll = function(req, res, next) {
 	pool.query('SELECT iduser, name, surnames, avatar, karma FROM user', function(err, rows, fields) {
 		if(err) {
-			throw err;
+			return next(err);
 			//TODO handle errors on server.js
 // 			res.json({error:true});
 // 			return;
@@ -26,7 +26,7 @@ exports.getAll = function(req, res) {
 // 	if('exp' in req.query)
 };
 
-exports.get = function(req, res) {
+exports.get = function(req, res, next) {
 	if(!('exp' in req.query)) {
 
 		if(Object.keys(req.query).length == 0)
@@ -34,7 +34,7 @@ exports.get = function(req, res) {
 		else identifiers = pool.escapeId(req.query);
 		
 		pool.query('SELECT ' + identifiers + ', karma IS NOT NULL AS driver FROM user WHERE user.iduser=?', req.params.iduser, function(err, rows, fields) {
-			if(err) throw err;
+			if(err) return next(err);
 
 			res.json(rows[0]);
 		});
@@ -45,7 +45,7 @@ exports.get = function(req, res) {
 
 
 	// mysql.pool.query('SELECT * FROM user WHERE user.iduser=?', req.params.iduser, function(err, rows, fields) {
-	// 	if(err) throw err;
+	// 	if(err) return next(err);
 	// 	console.log("ROWS: " + rows);
 		
 	// 	var user = rows[0];
@@ -69,7 +69,7 @@ exports.get = function(req, res) {
 	// });
 };
 
-exports.getTrips = function(req, res) {
+exports.getTrips = function(req, res, next) {
 	// TODO: benchmark both ways and choose the best one.
 
 	// SECOND METHOD (Date not verified):
@@ -108,35 +108,35 @@ exports.getTrips = function(req, res) {
 	// This method is returning: [{departure: '', arrival: '', dtime: null, driving: 0}, {...}]
 	pool.query(query, [user, user], function(err, rows, result) {
 
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json(rows);
 	});
 };
 
-exports.getAssessments = function(req, res) {
+exports.getAssessments = function(req, res, next) {
 	pool.query('SELECT a.*, avatar FROM trip JOIN assessment AS a ON a.trip = idtrip\
 											JOIN user ON iduser = user\
 										WHERE trip.driver = ?', req.params.iduser, function(err, rows, result) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		res.json(rows);
 	});
 };
 
-exports.getCars = function(req, res) {
+exports.getCars = function(req, res, next) {
 	pool.query('SELECT car.*, COUNT(O2.car) as owners\
 							FROM owners AS O\
 								JOIN car ON idcar = O.car\
 								JOIN owners AS O2 ON O2.car = idcar\
 							WHERE O.owner = ? GROUP BY idcar', req.params.iduser, function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		res.json(rows);
 	});
 };
 
-exports.getPackages = function(req, res) {
+exports.getPackages = function(req, res, next) {
 	var user = req.params.iduser;
 	pool.query("SELECT idpackage, P.name, size, P.description, if(P.emitter = ?, 'emitter', 'receiver') 'is', iduser as other, U.name as otherName, if(COUNT(PT.package) > 0, if(T.expiration < NOW(), 'done', 'accepted'), if(COUNT(PR.package) > 0, if(T.expiration < NOW(), 'expired', 'pending'), 'waiting')) status\
 							FROM package P\
@@ -146,24 +146,24 @@ exports.getPackages = function(req, res) {
 								LEFT JOIN trip T ON idtrip = PT.trip OR idtrip = PR.trip\
 							WHERE emitter = ? OR receiver = ?\
 							GROUP BY idpackage", [user, user, user, user], function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		res.json(rows);
 	});
 };
 
-exports.getFavorites = function(req, res) {
+exports.getFavorites = function(req, res, next) {
 	var user = req.params.iduser;
 	pool.query("SELECT iduser, name, surnames, karma, karma IS NOT NULL AS driver FROM favorites\
 								JOIN user ON iduser=user2\
 							WHERE user1=?", user, function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		res.json(rows);
 	});
 };
 
-exports.getRequests = function(req, res) {
+exports.getRequests = function(req, res, next) {
 	var user = pool.escape(req.params.iduser);
 	pool.query("SELECT idtrip, R.pointA, R.pointB, LA.city departure, LB.city arrival, driver, travels = 1 as travels\
 											,PA.date dtime, LA.utcoffset dutcoffset, COUNT(package) packages\
@@ -177,13 +177,13 @@ exports.getRequests = function(req, res) {
 								LEFT JOIN packageRequests PR ON PR.trip = R.trip AND PR.user = R.user\
 							WHERE R.user = " + user + " OR R.trip IN (SELECT idtrip FROM trip WHERE driver=" + user + ")\
 							GROUP BY R.trip, R.user", function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		res.json(rows);
 	});
 };
 
-exports.getNotifications = function(req, res) {
+exports.getNotifications = function(req, res, next) {
 	var user = pool.escape(req.params.iduser);
 	var since = req.query.since;
 
@@ -191,24 +191,24 @@ exports.getNotifications = function(req, res) {
 								FROM notification N\
 									JOIN user ON iduser = emitter\
 								WHERE receiver=' + user + (since ? " AND date>=" + pool.escape(since) : ""), function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		res.json(rows);
 	});
 }
 
 // AUTHENTICATED
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
 	pool.query('UPDATE user SET ? WHERE iduser=?', [req.body, req.params.iduser], function(err, result) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json({changed:result.changedRows});
 	});
 };
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
 	pool.query('DELETE FROM user WHERE iduser=?', req.params.iduser, function(err, result) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json({deleted:result.affectedRows});
 	});

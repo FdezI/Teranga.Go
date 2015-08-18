@@ -1,9 +1,9 @@
 var pool = require('mysql').pool;
 
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 };
 
-exports.getAll = function(req, res) {
+exports.getAll = function(req, res, next) {
 	if(req.query.list || req.query.hasOwnProperty('list')) var select = "idlocation, city, country, utcoffset";
 	else select = "location.*";
 
@@ -15,22 +15,22 @@ exports.getAll = function(req, res) {
 	} else sql = 'SELECT ' + select + ' FROM location';
 
 	pool.query(sql, function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json(rows);
 	});
 };
 
-exports.get = function(req, res) {
+exports.get = function(req, res, next) {
 	pool.query('SELECT * FROM location WHERE idlocation=?', req.params.idlocation , function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json(rows);
 	});
 };
 
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
 };
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
 };

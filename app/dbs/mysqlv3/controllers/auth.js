@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 
 // UNREGISTERED
-exports.auth = function(req, res) {
+exports.auth = function(req, res, next) {
 	var response = {};
 	if(!req.body.email || !req.body.password) res.json(response);
 	
@@ -11,7 +11,7 @@ exports.auth = function(req, res) {
 	
 	mysql.pool.query('SELECT iduser, name, surnames, email, phone, carnet = 1 as carnet, avatar, birth, karma, karma IS NOT NULL AS driver\
 										FROM `user` WHERE `email`=? AND `password`=UNHEX(SHA2(?, 256))', [req.body.email, req.body.password], function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 		
 		res.json(rows[0]);
 	});

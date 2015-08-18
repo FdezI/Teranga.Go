@@ -65,6 +65,24 @@ var sessionMW = session({
 app.use(sessionMW);
 ////////////////////////////////
 
+function logErrors(err, req, res, next) {
+  console.error(err.stack);
+  next(err);
+};
+
+function clientErrorHandler(err, req, res, next) {
+  if (req.xhr) {
+    res.status(500).send({ error: 'Something blew up!', whatToDo: 'Contact an administrator' });
+  } else {
+    next(err);
+  }
+};
+
+function errorHandler(err, req, res, next) {
+  res.status(500);
+  res.send('error', { error: 'Something blew up!', whatToDo: 'Contact an administrator' });
+};
+
 
 
 // ROUTES FOR OUR API
@@ -220,9 +238,9 @@ app.use('/', express.static(__dirname + '/public/'));
 // });
 
 
-
-
-
+app.use(logErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
 
 // START THE SERVER
 // =============================================================================

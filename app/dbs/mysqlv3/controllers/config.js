@@ -1,7 +1,7 @@
 var pool = require('mysql').pool;
 var config = require('../../../config');
 
-exports.get = function(req, res) {
+exports.get = function(req, res, next) {
 	var keys = Object.keys(req.params);
 	var qKeys = Object.keys(req.query);
 	var length = keys.length;

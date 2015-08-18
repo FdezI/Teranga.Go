@@ -24,7 +24,7 @@ function getRandomChar() {
 	return abc.charAt(getRandomInt(0, abc.length - 1));
 }
 
-exports.generate = function(req, res) {
+exports.generate = function(req, res, next) {
 	var mode = req.params.mode;
 	if(mode) {
 		console.log("ENTRA");
@@ -32,11 +32,11 @@ exports.generate = function(req, res) {
 		if(!amount) amount = 1;
 		
 		var response = [];
-		for(var i = 0; i < amount; i++) response.push(exports["generate" + mode.capitalize()](req, res));
+		for(var i = 0; i < amount; i++) response.push(exports["generate" + mode.capitalize()](req, res, next));
 	}
 };
 
-exports.generateCar = function(req, res) {
+exports.generateCar = function(req, res, next) {
 	var car = {};
 
 	car.idcar = getRandomInt(1000, 9999) + getRandomChar() + getRandomChar();
@@ -48,7 +48,7 @@ exports.generateCar = function(req, res) {
 	// return car;
 };
 
-exports.generateUser = function(req, res) {
+exports.generateUser = function(req, res, next) {
 	var user = {};
 
 	user.name = "Usuario" + getRandomInt(0, 100);
@@ -63,14 +63,14 @@ exports.generateUser = function(req, res) {
 	// return user;
 };
 
-exports.generateRoute = function(req, res) {
+exports.generateRoute = function(req, res, next) {
 	var route = {};
 	route.name = "Ruta" + getRandomChar() + getRandomInt(0, 999) + getRandomChar();
 
 	route.wps = [];
 
 	pool.query('SELECT GROUP_CONCAT(idlocation) locations FROM location GROUP BY country', function(err, rows, fields) {
-		if(err) throw err;
+		if(err) return next(err);
 
 		var locations = rows;
 
@@ -139,11 +139,11 @@ exports.generateRoute = function(req, res) {
 	});
 };
 
-exports.generateTrip = function(req, res) {
+exports.generateTrip = function(req, res, next) {
 	pool.query('SELECT GROUP_CONCAT(iduser) as ids\
 							FROM user\
 								JOIN owners ON owner = iduser', function(err, rows, fields) {
-		if(err) throw err;	
+		if(err) return next(err);	
 
 		var users = rows[0].ids.split(",");
 
@@ -155,7 +155,7 @@ exports.generateTrip = function(req, res) {
 							FROM owners\
 								JOIN car ON idcar = car\
 							WHERE owner = ?', trip.driver, function(err, rows, fields) {
-			if(err) throw err;
+			if(err) return next(err);
 
 			if(rows.length == 0 || !rows[0].ids) {
 				res.json("El usuario no tiene coche para realizar un viaje");
@@ -180,12 +180,12 @@ exports.generateTrip = function(req, res) {
 
 
 			pool.query('SELECT GROUP_CONCAT(idroute) as ids FROM route', function(err, rows, fields) {
-				if(err) throw err;
+				if(err) return next(err);
 				var routes = rows[0].ids.split(",");
 
 				pool.query('SELECT GROUP_CONCAT(location) as ids, GROUP_CONCAT(RP.order) as orders FROM routePoints RP WHERE route=? ORDER BY RP.order ASC', routes[getRandomInt(0, routes.length - 1)],
 					function(err, rows, fields) {
-						if(err) throw err;
+						if(err) return next(err);
 
 						var locations = rows[0].ids.split(",");
 						var orders = rows[0].orders.split(",");
@@ -227,7 +227,7 @@ exports.generateTrip = function(req, res) {
 						if(req.query.hasOwnProperty('save') && req.query !== false && req.query !== 0) {
 							console.log(req.query.save);
 							req.body = trip;
-							db.tripController.create(req, res);
+							db.tripController.create(req, res, next);
 						} else res.json(trip);
 
 				});
