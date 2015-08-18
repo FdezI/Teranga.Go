@@ -187,7 +187,10 @@ exports.getNotifications = function(req, res) {
 	var user = pool.escape(req.params.iduser);
 	var since = req.query.since;
 
-	pool.query('SELECT emitter, receiver, type, date, object, N.read = 1 as "read" FROM notification N WHERE receiver=' + user + (since ? " AND date>=" + pool.escape(since) : ""), function(err, rows, fields) {
+	pool.query('SELECT idnotification, emitter, name eName, receiver, type, date, object, N.read = 1 as "read"\
+								FROM notification N\
+									JOIN user ON iduser = emitter\
+								WHERE receiver=' + user + (since ? " AND date>=" + pool.escape(since) : ""), function(err, rows, fields) {
 		if(err) throw err;
 
 		res.json(rows);
