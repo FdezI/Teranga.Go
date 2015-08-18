@@ -54,7 +54,7 @@
         else update.user = user;
       }
 
-      if(!create) req.url += ("/" + this.fetch);
+      if(!create) req.url += (this.fetch ? "/" + this.fetch : "");
 
       req.body = JSON.stringify(update);
       

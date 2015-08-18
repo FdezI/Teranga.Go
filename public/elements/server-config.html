@@ -28,12 +28,18 @@
   };
 
   Teranga.toLocalDate = function(date) {
-    return date.setTime(date.getTime() + (date.getTimezoneOffset() * 60 * 1000));
+    return date.setTime(date.getTime() + (date.getTimezoneOffset() * 60000));
   };
 
   Teranga.parseUTC = function(utcDate) {
-    return Date.parse(utcDate) + (new Date().getTimezoneOffset() * 60 * 1000);
-  },
+    return Date.parse(utcDate) + (new Date().getTimezoneOffset() * 60000);
+  };
+
+  Teranga.currentUTCDate = function() {
+    var date = new Date();
+    date.setTime(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return date;
+  };
 
   Teranga.today = function() {
     return new Date().toISOString().substring(0, 10);
@@ -69,8 +75,8 @@
 
   Teranga.diffFromToday = function(utcDate) {
     var day = Teranga.day(utcDate);
-    var diff = Teranga.today() - day;
-    return diff == 0 ? "Hoy" : diff == -1 ? "Ayer" : day + " " + Teranga.month(date);
+    var diff = Teranga.day(new Date()) - day;
+    return diff == 0 ? "Hoy" : diff == 1 ? "Ayer" : day + " " + Teranga.month(utcDate);
   }
   
 
@@ -85,7 +91,22 @@
     return -1;
   };
 
-  Teranga.notificationInterval = 60000; // In seconds
+  Teranga.notificationInterval = 60000; // In milliseconds
+
+  Teranga.notifTextFor = function(type) {
+    switch(type) {
+      case 'favorite': return "%en te ha añadido como favorito";
+      case 'tripReq': return "%en quiere viajar contigo";
+      case 'reqStatus': return "El estado de tu solicitud ha cambiado";
+      default: return "";
+    }
+  };
+
+  Teranga.notifPageFor = function(type) {
+    switch(type) {
+      case 'favorite': return "/profile/%e";
+    }
+  }
 
 </script>
 </dom-module>

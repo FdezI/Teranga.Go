@@ -37,10 +37,10 @@
     }
   </style>
   <template>
-    <li class$="[[readable(read)]]" on-click="selectNotif">
+    <li class$="[[readable(notification.read)]]" on-click="selectNotif">
       <img class="notification-img" src="../images/user.png"/>
       <div class="vertical layout flex">
-        <span class="notification-info"><span>[[notification.emitter]]</span> quiere viajar contigo</span>
+        <span class="notification-info"><span>[[notifText(notification)]]</span>
         <span class="notification-time"><span>[[timeText(notification)]]</span></span>
       </div>
       <template is="dom-if" if="[[!notification.read]]">
@@ -54,19 +54,28 @@
       is: "notification-line",
       properties: {
         notification: Object
+        // index: Number
       },
       readable: function(read) {
-      	return "horizontal layout notification" + (this.notification.read ? "" : " new-notification");
+      	return "horizontal layout notification" + (read ? "" : " new-notification");
       },
 
       selectNotif: function() {
-        this.fire("selected", this.notification);
+        this.fire("selected", this);
       },
 
       timeText: function(notif) {
         var date = notif.date;
         return Teranga.diffFromToday(date) + " a las " + Teranga.time(date);
+      },
+
+      notifText: function(notif) {
+        return Teranga.notifTextFor(notif.type).replace("%en", notif.eName);
       }
+
+      // indexChanged: function() {
+      //   this.set('notification.index', this.index);
+      // }
     });
   </script>
 </dom-module>

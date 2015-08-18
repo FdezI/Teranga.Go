@@ -75,7 +75,7 @@
     
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
-    <notification-popup id="np" opened="{{openPopups.np}}" index="1" iduser="[[session.user.iduser]]"></notification-popup>
+    <notification-popup id="np" opened="{{openPopups.np}}" index="1" iduser="[[session.user.iduser]]" on-selected="notifSelected"></notification-popup>
     <account-popup id="ap" opened="{{openPopups.ap}}" on-logout="logout" on-show-site="setPage" index="0"></account-popup>
 
 
@@ -334,6 +334,11 @@
       },
       updatePopups: function() {
       	if(!this.$.ap.opened && !this.$.np.opened) this.set('selectedIcon', "");
+      },
+
+      notifSelected: function(e, notif) {
+      	page(Teranga.notifPageFor(notif.type).replace("%e", notif.emitter));
+      	this.closePopups();
       },
 
       _openPopupsChanged: function() {

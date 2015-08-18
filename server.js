@@ -180,7 +180,8 @@ apiRouter.route('/request/accept')
 	.post(db.requestController.acceptRequest);
 
 apiRouter.route('/notifications')
-	.get(db.notificationController.getAll);
+	.get(db.notificationController.getAll)
+	.put(db.notificationController.markRead);
 
 // apiRouter.route('/request/packet')
 	// .get(db.requestController.getAllPacket)

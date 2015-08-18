@@ -45,16 +45,17 @@
     }
   </style>
   <template>
-    <data-service id="ns" type="notifications" user="[[iduser]]" fetch="all" filters="[[filters]]" data="{{news}}"></data-service>
+    <data-service id="ns" type="notifications" user="[[iduser]]" fetch="all" filters="[[filters]]" on-response="newNotifs"></data-service>
+    <data-service id="nus" type="notifications" on-response="readApplied"></data-service>
 
     <div class="container">
       <div class="notification-title">
         <span>Notificaciones</span>
-        <a class="notification-mark-as-read">Marcar como leídas</a>
+        <a class="notification-mark-as-read" on-click="markRead">Marcar como leídas</a>
       </div>
       <ul class="notifications-list">
-        <template is="dom-repeat" items="[[notifications]]">
-          <notification-line notification="[[item]]"></notification-line>
+        <template id="notifRepeat" is="dom-repeat" items="[[notifications]]">
+          <notification-line notification="[[item]]" index="[[index]]" on-selected="markRead"></notification-line>
         </template>
         <!-- <notification-line read></notification-line> -->
         <!-- <notification-line></notification-line> -->
@@ -70,10 +71,7 @@
           type: Array,
           value: []
         },
-        news: {
-          type: Array,
-          observer: 'newsChanged'
-        },
+        news: Array,
         iduser: {
           type: Number,
           observer: 'iduserChanged'
@@ -86,6 +84,8 @@
       },
       behaviors: [Teranga.PopupBehavior],
 
+      observers: ['newsChanged(news.splices)'],
+
       iduserChanged: function() {
         if(this.iduser) {
           if(!this.tasked) {
@@ -96,19 +96,67 @@
         }
       },
 
-      newsChanged: function() {
-        console.log("ASDF");
-        if(this.news.length > 0) {
+      markRead: function(e, line) {
+        var update = {receiver: this.iduser};
+        var notif = line.notification;
+        var self = this;
+
+        if(notif) {
+          if(notif.read) return;
+          line.set('notification.read', 1);
+          var id = notif.idnotification;
+          // this.set('notifications.' + this.notifications.indexOf(notif) + '.read', 1);
+        }
+
+        update.notifications = id ? [id] :
+                                  this.notifications.filter(function(n, index) {
+                                    var pass = !n.read
+                                    if(pass) self.set('notifications.' + index + '.read', 1);
+                                    return pass;
+                                  }).map(function(n) { return n.idnotification; });
+
+        if(update.notifications.length > 0) {
+          this.$.nus.set('update', update);
+          this.$.nus.saveData();
+        }
+      },
+
+      readApplied: function(e, data) {
+        if(data.changed) {
+          // this.set('notifications', this.notifications);
+          // this.splice('notifications', 0, 0);
+          // this.$.notifRepeat.render();
+        }
+      },
+
+      newNotifs: function(e, news) {
+        if(news.length > 0) {
           var self = this;
-          this.news.forEach(function(n) { self.push('notifications', n); });
-          this.news = [];
+          news.forEach(function(n) {
+            var notifs = self.notifications;
+            var done = false;
+            var length = notifs.length;
+            if(length > 0) {
+              var i = -1;
+              while(++i < length && !done) {
+                var notif = notifs[i];
+                if(n.type == notif.type && n.emitter == notif.emitter && n.object == notif.object) {
+                  self.splice('notifications', i, 1);
+
+                  done = true;
+                }
+              }
+            }
+
+            self.push('notifications', n);
+          });
         }
       },
 
       request: function(self) {
         self.$.ns.reload();
 
-        self.set('filters.since', new Date());
+        self.set('filters.since', Teranga.currentUTCDate().toISOString());
       }
     });
   </script>
