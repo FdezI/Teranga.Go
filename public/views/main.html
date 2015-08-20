@@ -84,7 +84,8 @@
       <paper-scroll-header-panel drawer fixed>
 				<!-- Drawer Toolbar -->
 				<paper-toolbar id="drawerToolbar" class="title-bar">
-				  <span class="paper-font-title">Teranga Go!</span>
+				  <!-- <span class="paper-font-title">Teranga Go!</span> -->
+				  <img src="../images/header_teranga.jpg">
 				</paper-toolbar>
 				
 				<!-- Drawer Content -->
@@ -125,9 +126,6 @@
 						  </div>
 					  </iron-selector>
 				  </template>
-
-    
-
 
 				  <template is="dom-if" if="[[!session.user]]">
 					  <paper-button class="paper-icon-header layout horizontal center" on-click="showLogin">Loguearse</paper-button>
@@ -172,11 +170,9 @@
 				    </section> -->
 				  </iron-pages>
 				</div>
-			      
 			<!--       </iron-scaffold> -->
       </paper-scroll-header-panel>
     </paper-drawer-panel>
-    
     <!-- <login-box class$="{{displayLogin}}" session="{{session}}"></login-box> -->
 		<!-- <login-box session="{{session}}"></login-box> -->
     <pop-up id="login" with-backdrop>
@@ -184,7 +180,6 @@
     	<login-box on-login="login"></login-box>
   	<!-- </paper-dialog> -->
     </pop-up>
-    
 <!--     <iron-localstorage name="session" value="{{session}}"></iron-localstorage> -->
   </template>
   

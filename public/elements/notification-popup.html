@@ -36,7 +36,7 @@
       cursor: pointer;
     }
     .notifications-list {
-      overflow-y: scroll;
+      overflow-y: auto;
       max-height: 270px;
       min-height: 270px;
       padding: 0;
@@ -57,8 +57,6 @@
         <template id="notifRepeat" is="dom-repeat" items="[[notifications]]">
           <notification-line notification="[[item]]" index="[[index]]" on-selected="markRead"></notification-line>
         </template>
-        <!-- <notification-line read></notification-line> -->
-        <!-- <notification-line></notification-line> -->
       </ul>
     </div>
   </template>

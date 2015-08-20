@@ -10,41 +10,6 @@
 
 <dom-module name="trip-table">
   <style>
-  /*.selector {
-    padding: 10px;
-    border: 1px solid #ccc;
-    background: #ddd;
-    text-align: center;
-    margin: 5px;
-  }
-  .selector input{
-    margin: 0;
-    padding: 0;
-    -webkit-appearance:none;
-       -moz-appearance:none;
-            appearance:none;
-  }
-
-  .selector input:active +.radio-img{opacity: .9;}
-  .selector input:checked +.radio-img{
-    border: 3px solid #999;
-    box-shadow: 2px 2px 10px #999;
-  }
-  .radio-img {
-    padding: 3px;
-    border: 1px solid #333;
-    cursor:pointer;
-    display:inline-block;
-  }
-  .radio-img:hover{
-    -webkit-filter: brightness(1.2);
-       -moz-filter: brightness(1.2);
-            filter: brightness(1.2);
-    box-shadow: 2px 2px 10px #999;
-  }*/
-  /*.img-size {
-    width: 40px;
-  }*/
   .options-selector {
     border: 1px solid #ccc;
     background: #ddd;
@@ -67,53 +32,99 @@
   .trip-table-content {
     border: 1px solid #ccc;
   }
+  .img-map {
+    background-image: url("../images/spain_senegal.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+  }
+
+  .search-div {
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0px 0px 10px 0px #999;
+  }
+
+  .search-text {
+    /*font-size: 1.5em;*/
+    font-weight: bold;
+    font-variant: small-caps;
+    text-align: center;
+    font-size: 1.2em;
+    padding: 10px;
+  }
+
+  .table-search {
+    padding-left: 40px;
+    background: rgba(255,255,255,0);
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(255,255,255,0)), color-stop(9%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)));
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+    background: -o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 9%, rgba(255,255,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1 );
+  }
+
+  .half-col {
+    min-width: 200px;
+    display: inline-block;
+    margin: 2px;
+  }
+
   </style>
   
   <template>
     <location-service id="ls" fetch="list" data="{{wps}}"></location-service>
     <trip-search-validator items="[[wps]]" attrib="city" difff="[[fakefilters.origin]]" diffs="[[fakefilters.destination]]"></trip-search-validator>
     
-    <table>
-      <tr>
-        <td colspan="2">Encuentra el viaje que necesitas</td>
-      </tr>
-      <tr>
-        <datalist id="wps">
-          <template id="asdf" is="dom-repeat" items="[[wps]]">
-            <option id="[[index]]" value="[[item.city]]">
+    <div class="search-div">
+      <div class="img-map horizontal layout">
+        <div class="flex"></div>
+        <table class="table-search">
+          <tr>
+            <td colspan="2" class="search-text">Encuentra el viaje que necesitas</td>
+          </tr>
+          <tr>
+            <datalist id="wps">
+              <template id="asdf" is="dom-repeat" items="[[wps]]">
+                <option id="[[index]]" value="[[item.city]]">
+              </template>
+            </datalist>
+            <td class="half-col">
+              <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator" error-message="Seleccione una opción de la lista" required></paper-input>
+            </td>
+            <td class="half-col">
+              <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="wps" value="{{fakefilters.destination}}" validator="trip-search-validator" error-message="Seleccione una opción de la lista" required></paper-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="search-text">Cuando lo necesitas</td>
+          </tr>
+          <tr>
+            <td class="half-col">Desde: <input type="date" placeholder="Desde" value="{{filters.from::input}}" min="[[today()]]"></td>
+            <td class="half-col">Hasta: <input type="date" placeholder="Hasta" value="{{filters.to::input}}" min="[[today()]]"></td>
+          </tr>
+          <template is="dom-if" if="[[petsAndPackages]]">
+            <tr>
+              <td class="half-col">
+                <filter-selector type="pet" selected="{{filters.animals}}" checked></filter-selector>
+              </td>
+              <td class="half-col">
+                <filter-selector type="package" selected="{{filters.packages}}" checked></filter-selector>
+              </td>
+            </tr>
           </template>
-        </datalist>
-        <td>
-          <paper-input id="origin" autocomplete="on" type="text" label="De:" placeholder="Origen" list="wps" value="{{fakefilters.origin}}" validator="trip-search-validator" error-message="Seleccione una opción de la lista" required></paper-input>
-        </td>
-        <td>
-          <paper-input id="destination" type="text" label="A:" placeholder="Destino" list="wps" value="{{fakefilters.destination}}" validator="trip-search-validator" error-message="Seleccione una opción de la lista" required></paper-input>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">Cuando lo necesitas</td>
-      </tr>
-      <tr>
-        <td>Desde: <input type="date" placeholder="Desde" value="{{filters.from::input}}" min="[[today()]]"></td>
-        <td>Hasta: <input type="date" placeholder="Hasta" value="{{filters.to::input}}" min="[[today()]]"></td>
-      </tr>
-      <template is="dom-if" if="[[petsAndPackages]]">
-        <tr>
-          <td>
-            <filter-selector type="pet" selected="{{filters.animals}}" checked></filter-selector>
-          </td>
-          <td>
-            <filter-selector type="package" selected="{{filters.packages}}" checked></filter-selector>
-          </td>
-        </tr>
-      </template>
-      <tr>
-        <td class="search-td" colspan="2">
-          <paper-button class="search-button" raised on-click="search">Buscar</paper-button>
-        </td>
-      </tr>
-    </table>
-
+          <tr>
+            <td class="search-td" colspan="2">
+              <paper-button class="search-button" raised on-click="search">Buscar</paper-button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
     <div class="trip-table-header layout horizontal">
       <div class="layout vertical">
         <div>Viajes de <span>[[departure]]</span> a <span>[[arrival]]</span></div>

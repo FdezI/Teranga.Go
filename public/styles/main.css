@@ -25,8 +25,22 @@ paper-toast {
 	z-index: 20;
 }
 
+.menuItemSelected {
+	background: #f00;
+}
+
+.selected {
+	background: #0f0;
+}
+
 .hidden {
 	display: none;
+}
+
+.primary-button {
+	background: #FF6A1D;
+	color: #222;
+	font-weight: bold;
 }
 
 .menu-item {
