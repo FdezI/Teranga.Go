@@ -25,6 +25,14 @@ paper-toast {
 	z-index: 20;
 }
 
+.menuItemSelected {
+	background: #f00;
+}
+
+.selected {
+	background: #0f0;
+}
+
 .hidden {
 	display: none;
 }
