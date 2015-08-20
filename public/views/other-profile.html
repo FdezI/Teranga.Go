@@ -116,7 +116,7 @@
               </template>
             </div>
             <div>
-              <other-trip-container iduser="[[user.iduser]]" trips="{{user.trips}}" open="true"></other-trip-container>
+              <other-trip-container iduser="[[user.iduser]]" on-select="tripSelected" load></other-trip-container>
             </div>
           </div>
         </template>
@@ -160,10 +160,10 @@
           value: false,
           notify: true
         },
-        trips: {
-          type: Object,
-          value: []
-        },
+        // trips: {
+        //   type: Object,
+        //   value: []
+        // },
         loading: {
           type: Boolean,
           value: true
@@ -259,6 +259,10 @@
 
         this.set('favorite', fav);
         this.set('loading', false);
+      },
+
+      tripSelected: function(e, trip) {
+        page("/trips/" + trip.idtrip);
       }
 
     });

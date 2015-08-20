@@ -34,10 +34,13 @@
         <img class="user-box-img" src="[[user.avatar]]">
         <template is="dom-if" if="[[user.driver]]">
           <stars-rating score="[[user.karma]]"></stars-rating>
-          <span>[[user.name]]</span>
-          <div><span>3</span> viajes programados</div>
         </template>
+        
         <span>[[user.name]]</span>
+
+        <template is="dom-if" if="[[user.driver]]">
+          <div><span>[[user.plannedTrips]]</span> viajes programados</div>
+        </template>
       </div>
     <!-- </a> -->
   </template>

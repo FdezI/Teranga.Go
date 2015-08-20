@@ -1,3 +1,5 @@
+<link rel="import" href="data-service.html">
+
 <dom-module name="location-info">
   <style>
   /*.location-container {
@@ -89,21 +91,20 @@
   }
   </style>
   <template>
+    <data-service id="ls" type="locations" fetch="random" data="{{location}}" load-on-attach></data-service>
     <div class="layout horizontal container">
-      <template is="dom-if" if="[[right]]">
-        <div class="right-box layout vertical">
-          <span class="location-title">Granada</span>
-          <span class="location-description">Descripcion</span>
-        </div>
-        <img src="[[location.img]]" class="location-img">
-      </template>
 
       <template is="dom-if" if="[[!right]]">
-          <img src="[[location.img]]" class="location-img">
-          <div class="left-box layout vertical">
-            <span class="location-title">Granada</span>
-            <span class="location-description">Descripcion</span>
-          </div>
+        <img src="[[location.img]]" class="location-img">
+      </template>
+          
+      <div class$="[[getClass(right)]]">
+        <span class="location-title">[[location.city]]</span>
+        <span class="location-description">[[location.description]]</span>
+      </div>
+
+      <template is="dom-if" if="[[right]]">
+        <img src="[[location.img]]" class="location-img">
       </template>
       
     </div>
@@ -118,6 +119,10 @@
           type: Boolean,
           value: false
         }
+      },
+
+      getClass: function(right) {
+        return (right ? "right" : "left") + "-box layout vertical";
       }
     });
   </script>

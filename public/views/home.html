@@ -27,7 +27,7 @@
     <map-searcher></map-searcher>
 
     <div>
-      <info-box button="Regístrate">
+      <info-box button="Regístrate" on-selected="goToPage" page="profile">
         <img src="../images/user.png"/>
         <h3>¿Eres nuevo por aquí?</h3>
         <p>Registrate y descubre un nuevo mundo.</p>-->
@@ -39,7 +39,7 @@
         <p>Encuentra cientos de tesoros sin gastar nada.</p>
       </info-box>
 
-      <info-box button="Busca ahora">
+      <info-box button="Busca ahora" on-selected="goToPage" page="trips">
         <img src="../images/user.png"/>
         <h3>Descubre nuevos lugares</h3>
         <p>Y cambia tu forma de ver el mundo.</p>
@@ -57,6 +57,10 @@
       is:"home-view",
       properties: {
         session: Object
+      },
+
+      goToPage(e, pag) {
+        page("/" + pag);
       }
 
     });

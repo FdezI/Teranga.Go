@@ -37,7 +37,7 @@
       <content select="h3"></content>
       <content select="p"></content>
       <template is="dom-if" if="[[button]]">
-      	<paper-button class="btn green" raised on-click="">
+      	<paper-button class="btn green" raised on-click="select">
       		<span>[[button]]</span>
     		</paper-button>
       </template>
@@ -49,7 +49,15 @@
 			is: "info-box",
 			hostAttributes: {
 				button: false
-			}
+			},
+      properties: {
+        page: String
+      },
+
+      select: function() {
+        this.fire("selected", this.page);
+      }
+
 		});
 	</script>
 </dom-module>

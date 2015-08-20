@@ -10,7 +10,7 @@
       <data-service id="ts" type="trips" fetch="all" filters="[[filters]]" data="{{trips}}"></data-service>
       <trip-table pets-and-packages trips="{{trips}}" filters="{{filters}}" on-search="search" on-selected="tripSelected"></trip-table>
 
-      <select value="{{selected::input}}">
+      <select value="{{idtrip::input}}">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -18,7 +18,7 @@
     </template>
 
     <template is="dom-if" if="[[isPage('info', page)]]">
-      <trip-view idtrip="[[selected]]" user="{{session.user}}" searched="[[filters]]" on-trip-requested="tripRequested"></trip-view>
+      <trip-view idtrip="[[idtrip]]" user="{{session.user}}" searched="[[filters]]" on-trip-requested="tripRequested"></trip-view>
     </template>
 
     <paper-toast id="rDone" text="Solicitud de viaje realizada <a href='/profile'>Ver en perfil</a>."></paper-toast>
@@ -28,10 +28,10 @@
     Polymer({
       is: "trips-view",
       properties: {
-        selected: {
+        idtrip: {
           type: Number,
           value: 0,
-          observer: 'selectedChanged'
+          observer: 'idtripChanged'
         },
         route: {
           type: String,
@@ -48,8 +48,10 @@
         console.log("trips-view ready!");
       },
 
-      selectedChanged: function() {
-        console.log("CHANGED SELECTED");
+      idtripChanged: function() {
+        // console.log("CHANGED SELECTED");
+        if(this.idtrip) this.goToPage('info');
+        else this.goToPage('search');
       },
 
       search: function() {
@@ -57,8 +59,9 @@
       },
 
       tripSelected: function(e, trip) {
-        this.set('selected', trip.idtrip);
-        this.goToPage("info");
+        // page("/trips/" + trip.idtrip);
+        this.set('idtrip', trip.idtrip);
+        // this.goToPage("info");
       },
 
       tripRequested: function(e, data) {
@@ -72,6 +75,10 @@
 
       isPage: function(name, page) {
         return name === page;
+      },
+
+      back: function() {
+        this.set('idtrip', null);
       }
     });
   </script>
