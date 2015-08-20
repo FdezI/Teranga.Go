@@ -1,5 +1,11 @@
 var pool = require('mysql').pool;
 
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
 exports.create = function(req, res, next) {
 };
 
@@ -22,10 +28,15 @@ exports.getAll = function(req, res, next) {
 };
 
 exports.get = function(req, res, next) {
-	pool.query('SELECT * FROM location WHERE idlocation=?', req.params.idlocation , function(err, rows, fields) {
+	var loc = req.params.idlocation;
+	var random = (loc == "random");
+	var sql = random ? 'SELECT * FROM location' : 'SELECT * FROM location WHERE idlocation=?';
+	
+	pool.query(sql, loc, function(err, rows, fields) {
 		if(err) return next(err);
 		
-		res.json(rows);
+		if(random) res.json(rows[getRandomInt(0, rows.length - 1)]);
+		else res.json(rows);
 	});
 };
 
