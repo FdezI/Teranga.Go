@@ -25,6 +25,12 @@ body {
 	display: none;
 }
 
+.primary-button {
+	background: #FF6A1D;
+	color: #222;
+	font-weight: bold;
+}
+
 .menu-item {
 	display: block;
 	text-decoration: none;
