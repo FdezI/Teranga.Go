@@ -197,18 +197,20 @@ DROP TABLE IF EXISTS `notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `notification` (
+  `idnotification` int(11) NOT NULL AUTO_INCREMENT,
   `emitter` int(11) NOT NULL,
   `receiver` int(11) NOT NULL,
   `type` enum('favorite','reqStatus','tripReq') NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `object` int(11) NOT NULL DEFAULT '0',
   `read` bit(1) NOT NULL DEFAULT b'0',
-  PRIMARY KEY (`emitter`,`receiver`,`type`,`object`),
+  PRIMARY KEY (`idnotification`),
+  UNIQUE KEY `index4` (`emitter`,`receiver`,`type`,`object`),
   KEY `fk_notification_1_idx` (`emitter`),
   KEY `fk_notification_2_idx` (`receiver`),
   CONSTRAINT `fk_notification_1` FOREIGN KEY (`emitter`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_notification_2` FOREIGN KEY (`receiver`) REFERENCES `user` (`iduser`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,7 +219,7 @@ CREATE TABLE `notification` (
 
 LOCK TABLES `notification` WRITE;
 /*!40000 ALTER TABLE `notification` DISABLE KEYS */;
-INSERT INTO `notification` VALUES (1,12,'favorite','2015-08-17 21:49:02',0,'\0'),(12,2,'favorite','2015-08-17 19:35:40',0,'\0');
+INSERT INTO `notification` VALUES (1,1,12,'favorite','2015-08-18 13:39:06',0,'');
 /*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -608,4 +610,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-17 22:58:11
+-- Dump completed on 2015-08-20 21:08:05
