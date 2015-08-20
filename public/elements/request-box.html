@@ -20,43 +20,85 @@
     .request-box-button {
       width: 100%;
     }
+    .delete-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      position: relative;
+      left: 62px;
+      top: -5px;
+      font-size: 23px;
+      padding: 0px;
+    }
   </style>
   
   <template>  
     <div class="request">
-        <table>
-          <tr>
-            <td colspan="4">[[departure]]</td>
-          </tr>
-          <tr>
-            <td colspan="4">/</td>
-          </tr>
-          <tr>
-            <td colspan="4">[[arrival]]</td>
-          </tr>
+      <table>
+        <tr>
+          <td colspan="4">[[request.departure]]</td>
+        </tr>
+        <tr>
+          <td colspan="4">/</td>
+        </tr>
+        <tr>
+          <td colspan="4">[[request.arrival]]</td>
+        </tr>
+
+        <template is="dom-if" if="[[isDriver(request)]]">
           <tr>
             <td><img class="request-box-img" src="../images/user.png"></td>
-            <td><span>[[seats]]</span></td>
+            <td><span>[[seats(request)]]</span></td>
             <td><img class="request-box-img" src="../images/package-allow.png"></td>
-            <td><span>[[packages]]</span></td>
+            <td><span>[[request.packages]]</span></td>
           </tr>
-          <tr><td colspan="4"><button class="request-box-button" on-click="redirect">Ver</button></td></tr>
-        </table>
-      </div>
+          <tr><td colspan="4"><button class="request-box-button" on-click="showInfo">Ver</button></td></tr>
+        </template>
+        <template is="dom-if" if="[[!isDriver(request)]]">
+          <span>[[status]]</span>
+          <div class="layout horizontal">
+            <div class="layout vertical center">
+            <span>[[day(request.dtime)]]</span>
+            <span>[[month(request.dtime)]]</span>
+            </div>
+            <span>[[time(request.dtime)]]</span><span> (UTC </span><span>[[getUTCText(request.dutcoffset)]]</span>)
+          </div>
+        </template>
+      </table>
+    </div>
   </template>
 
   <script>
   Polymer({
     is: "request-box",
     properties: {
-      url: String,
-      seats: Number,
-      packages: Number,
-      departure: String,
-      arrival: String
+      request: {
+        type: Object,
+        value: {}
+      }
     },
-    redirect: function() {
-      window.location='/';
+    showInfo: function() {
+      this.fire('show-info', this.request);
+    },
+
+    isDriver: function() {
+      return this.request.driverName == "You";
+    },
+    day: function(date) {
+      return Teranga.day(date);
+    },
+    month: function(date) {
+      return Teranga.month(date);
+    },
+    time: function(date) {
+      return Teranga.time(date);
+    },
+    seats: function() {
+      return this.request.travels ? 1 : 0;
+    },
+    getUTCText: function() {
+      var offset = this.request.dutcoffset;
+      return (offset >= 0 ? "+" : "-") + offset;
     }
   });
   </script>

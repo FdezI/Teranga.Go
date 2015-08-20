@@ -1,6 +1,10 @@
 <!-- <link rel="import" href="../bower_components/iron-pages/iron-pages.html"> -->
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../bower_components/gold-phone-input/gold-phone-input.html">
 <link rel="import" href="../elements/generic-collapse-container.html">
 <!-- <link rel="import" href="../bower_components/iron-icon-button/iron-icon-button.html"> -->
 
@@ -16,8 +20,8 @@
 <!-- <link rel="import" href="../elements/assessment-container.html"> -->
 <!-- <link rel="import" href="../elements/package-container.html"> -->
 <link rel="import" href="../elements/car-container.html">
-<link rel="import" href="../elements/user-container.html">
-<link rel="import" href="../elements/request-container.html">
+<!-- <link rel="import" href="../elements/user-container.html"> -->
+<!-- <link rel="import" href="../elements/request-container.html"> -->
 
 <link rel="import" href="../elements/stars-rating.html">
 <link rel="import" href="../elements/car-edit.html">
@@ -26,13 +30,15 @@
 <link rel="import" href="../elements/package-content.html">
 <link rel="import" href="../elements/trip-content.html">
 <link rel="import" href="../elements/assessment-content.html">
+<link rel="import" href="../elements/user-content.html">
+<link rel="import" href="../elements/request-content.html">
 <!-- <link rel="import" href="../elements/travel-box.html"> -->
 <link rel="import" href="../elements/comment-box.html">
 <link rel="import" href="../elements/car-box.html">
 <link rel="import" href="../elements/package-box.html">
 <link rel="import" href="../elements/user-box.html">
 <link rel="import" href="../elements/comment-box.html">
-<link rel="import" href="../elements/your-request-box.html">
+<link rel="import" href="../elements/own-request-box.html">
 <link rel="import" href="../elements/request-box.html">
 
 <link rel="import" href="../elements/data-service.html">
@@ -48,131 +54,154 @@
 
   <template>
 
-      <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service>
+    <!-- <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service> -->
+    <data-service id="uss" type="users" update="[[update]]" fetch="[[session.user.iduser]]" on-response="profileSaved"></data-service>
+    <data-service id="usl" type="users" data="{{session.user}}" fetch="[[session.user.iduser]]" on-response="profileLoaded"></data-service>
 
-      <template id="profileTemplate" is="dom-if" if="[[session.user]]">
-        <template id="profileTemplate" is="dom-if" if="[[isPage('profile', page)]]">
-        <!-- <iron-pages attr-for-selected="page" selected="{{page}}"> -->
-          <!-- <other-profile showdriver="true"></other-profile> -->
-          <!-- <create-trip user="{{session.user}}"></create-trip> -->
-          <!-- <tracking-package></tracking-package> -->
-          <!-- <user-box name="Carmen" score="3" url="/"></user-box> -->
-          <!-- <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
-          <trip-card  username="Carmen" score="3" start="Granada" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card> -->
-          <!-- <travel-box departure="Granada" arrival="Dogo" driver="Carmen" day="20" month="Jun" hour="10:30"></travel-box>
-          <package-box name="Paquete" idpackage="23542795647" status="Inactivo" size="Mediano" url="/"></package-box>
-          <user-box name="Carmen" score="3" url="/"></user-box>
-          <your-request-box departure="Granada" arrival="Dogo" status="Pendiente" day="20" month="Jun" hour="10:30"></your-request-box>
-          <comment-box image="" car="3" driver="6" profileurl="/" comment="bla bla bla bla bla bla bla bla bla bla bla"></comment-box>
-          <request-box departure="Granada" arrival="Dogo" seats="1" packages="3" url="/"></request-box>
-   -->
-          <article page="profile">
+    <template id="profileTemplate" is="dom-if" if="[[session.user.iduser]]">
+      <template id="profileTemplate" is="dom-if" if="[[isPage('profile', page)]]">
+      <!-- <iron-pages attr-for-selected="page" selected="{{page}}"> -->
+        <!-- <other-profile showdriver="true"></other-profile> -->
+        <!-- <create-trip user="{{session.user}}"></create-trip> -->
+        <!-- <tracking-package></tracking-package> -->
+        <!-- <user-box name="Carmen" score="3" url="/"></user-box> -->
+        <!-- <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
+        <trip-card  username="Carmen" score="3" start="Granada" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card> -->
+        <!-- <travel-box departure="Granada" arrival="Dogo" driver="Carmen" day="20" month="Jun" hour="10:30"></travel-box>
+        <package-box name="Paquete" idpackage="23542795647" status="Inactivo" size="Mediano" url="/"></package-box>
+        <user-box name="Carmen" score="3" url="/"></user-box>
+        <own-request-box departure="Granada" arrival="Dogo" status="Pendiente" day="20" month="Jun" hour="10:30"></own-request-box>
+        <comment-box image="" car="3" driver="6" profileurl="/" comment="bla bla bla bla bla bla bla bla bla bla bla"></comment-box>
+        <request-box departure="Granada" arrival="Dogo" seats="1" packages="3" url="/"></request-box>
+ -->
+        <article page="profile">
 
-            <div class="margin-block layout horizontal">
-              <div class="layout vertical profile-a">
-                <div class="profile-photo-super">
-                  <img class="profile-photo" src="../images/full-star.png"/>
-                  <template is="dom-if" if="[[edit]]">
-                    <div class="profile-photo-div"><img src="../images/edit.png"></div>
-                  </template>
-                </div>
-                <template is="dom-if" if="[[showdriver]]">
-                  <div class="profile-stars" onclick=""><stars-rating score="[[session.user.karma]]"></stars-rating></div>
+          <div class="margin-block layout horizontal">
+            <div class="layout vertical profile-a">
+              <div class="profile-photo-super">
+                <img class="profile-photo" src="../images/full-star.png"/>
+                <template is="dom-if" if="[[edit]]">
+                  <div class="profile-photo-div"><img src="../images/edit.png"></div>
                 </template>
               </div>
+              <template is="dom-if" if="[[edit]]">
+                <table>
+                  <tr>
+                    <td>Carnet:</td>
+                    <td><paper-toggle-button name="carnet" checked="{{update.carnet}}"></paper-toggle-button></td>
+                  </tr>
+                </table>
+              </template>
+              <template is="dom-if" if="[[showStars(edit, session.user.driver)]]">
+                <div class="profile-stars" onclick=""><stars-rating score="[[session.user.karma]]"></stars-rating></div>
+              </template>
+            </div>
 
-              <div class="layout vertical profile-b">
-                <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
-                <div class="profile-age"><span>XX</span> años</div>
-                <template is="dom-if" if="[[edit]]">
-                  <form>
-                    <table style="width:100%">
-                      <tr>
-                        <td>E-mail:</td>
-                        <td><input type="text" name="email" value="{{update.email::input}}"></td>
-                      </tr>
-                      <tr> 
-                        <td>Teléfono:</td> 
-                        <td><input type="text" name="phone" value="{{update.phone::input}}"></td>
-                      </tr>
-                      <tr> 
-                        <td>Contraseña:</td>
-                        <td><input type="password" name="pass"></td>
-                      </tr>
-                      <tr> 
-                        <td>Repetir contraseña:</td>
-                        <td><input type="password" name="pass2" value="{{update.password::input}}"></td>
-                      </tr>
-                      <tr> 
-                        <td>Carnet de conducir:</td>
-                        <td><input type="checkbox" name="carnet" value="{{update.carnet::input}}"></td> 
-                      </tr>
-                    </table>
-                  </form>
-                </template>
+            <div class="layout vertical profile-b">
+              <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
+              <div class="profile-age"><span>XX</span> años</div>
+              <template is="dom-if" if="[[edit]]">
+                <form>
+                  <!-- <table style="width:100%"> -->
+                    <!-- <tr> -->
+                      <!-- <td>E-mail:</td> -->
+                      <!-- <td> -->
+                        <gold-email-input label="E-mail" always-float-label name="email" value="{{update.email}}"></gold-email-input>
+                      <!-- </td> -->
+                    <!-- </tr> -->
+                    <!-- <tr>  -->
+                      <!-- <td>Teléfono:</td>  -->
+                      <!-- <td> -->
+                        <gold-phone-input label="Teléfono" always-float-label name="phone" value="{{update.phone}}" phone-number-pattern="XXX-XXX-XXX" country-code="0"></gold-phone-input>
+                      <!-- </td> -->
+                    <!-- </tr> -->
+                    <!-- <tr>  -->
+                      <!-- <td>Contraseña:</td> -->
+                      <!-- <td> -->
+                        <paper-input label="Contraseña" always-float-label type="password" name="pass"></paper-input>
+                      <!-- </td> -->
+                    <!-- </tr> -->
+                    <!-- <tr>  -->
+                      <!-- <td>Repetir contraseña:</td> -->
+                      <!-- <td> -->
+                        <paper-input label="Repetir contraseña" always-float-label type="password" name="pass2" value="{{update.password}}"></paper-input>
+                      <!-- </td> -->
+                    <!-- </tr> -->
+                  <!-- </table> -->
+                </form>
+              </template>
+            </div>
+            <div class="profile-c layout self-end profile-buttons">
+
+              <template is="dom-if" if="[[!edit]]">
+                <paper-button class="primary-button" raised on-click="createTrip">Crear viaje</paper-button>
+                <div class="space"></div>
+                <paper-button class="secondary-button" raised on-click="editProfile">Editar perfil</paper-button>
+              </template>
+
+              <template is="dom-if" if="[[edit]]">
+                <paper-button class="primary-button" raised on-click="saveProfile">Guardar cambios</paper-button>
+                <div class="space"></div>
+                <paper-button class="secondary-button" raised on-click="cancelEdit">Cancelar</paper-button>
+              </template>
+
+            </div>
+          </div>
+
+          <div class="vertical-separator"></div>
+
+          <template id="moreInfo" is="dom-if" if="[[!edit]]">
+            <div>
+              <div class="profile-container-half">
+                 <generic-collapse-container name="Viajes" reloadable additable>
+                    <trip-content iduser="[[session.user.iduser]]" on-select="tripSelected" data="{{session.user.trips}}"></trip-content>
+                  </generic-collapse-container>
+                <!-- <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container> -->
               </div>
-              <div class="profile-c layout self-end profile-buttons">
-
-                <template is="dom-if" if="[[!edit]]">
-                  <paper-button class="primary-button" raised on-click="createTrip">Crear viaje</paper-button>
-                  <div class="space"></div>
-                  <paper-button class="secondary-button" raised on-click="editProfile">Editar perfil</paper-button>
-                </template>
-
-                <template is="dom-if" if="[[edit]]">
-                  <paper-button class="primary-button" raised on-click="saveProfile">Guardar cambios</paper-button>
-                  <div class="space"></div>
-                  <paper-button class="secondary-button" raised on-click="cancelEdit">Cancelar</paper-button>
-                </template>
-
+              <div class="profile-container-half" style="float: right;">
+                <generic-collapse-container name="Solicitudes" reloadable>
+                  <request-content iduser="[[session.user.iduser]]" on-select="requestSelected" data="{{session.user.requests}}"></request-content>
+                </generic-collapse-container>
+                <!-- <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container> -->
               </div>
             </div>
 
-            <div class="vertical-separator"></div>
+            <generic-collapse-container name="Paquetes" reloadable additable>
+              <package-content iduser="[[session.user.iduser]]" on-select="packageSelected" data="{{session.user.packages}}"></package-content>
+            </generic-collapse-container>
 
-            <template id="moreInfo" is="dom-if" if="[[!edit]]">
-              <div>
-                <div class="profile-container-half">
-                   <generic-collapse-container name="Viajes" reloadable additable>
-                      <trip-content iduser="[[session.user.iduser]]" on-select="tripSelected" data="{{session.user.trips}}"></trip-content>
-                    </generic-collapse-container>
-                  <!-- <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container> -->
-                </div>
-                <div class="profile-container-half" style="float: right;">
-                  <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container>
-                </div>
-              </div>
-
-              <generic-collapse-container name="Paquetes" reloadable additable>
-                <package-content iduser="[[session.user.iduser]]" on-select="packageSelected" data="{{session.user.packages}}"></package-content>
+            <!-- <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}" on-select="packageSelected"></package-container> -->
+            <!-- <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container> -->
+            <generic-collapse-container name="Usuarios favoritos" reloadable>
+              <user-content type="favorites" iduser="[[session.user.iduser]]" on-select="favoriteSelected" data="{{session.user.favorites}}"></user-content>
+            </generic-collapse-container>
+            
+            <template is="dom-if" if="[[session.user.driver]]">
+              <generic-collapse-container name="Opiniones" reloadable additable>
+                <assessment-content iduser="[[session.user.iduser]]" on-select="assessmentSelected" data="{{session.user.assessments}}"></assessment-content>
               </generic-collapse-container>
-
-              <!-- <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}" on-select="packageSelected"></package-container> -->
-              <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container>
-              
-              <template is="dom-if" if="[[showdriver]]">
-                <generic-collapse-container name="Opiniones" reloadable additable>
-                  <assessment-content iduser="[[session.user.iduser]]" on-select="assessmentSelected" data="{{session.user.assessments}}"></assessment-content>
-                </generic-collapse-container>
-                <!-- <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container> -->
-              </template>
+              <!-- <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container> -->
             </template>
+          </template>
 
-            <template is="dom-if" if="[[edit]]">
-              <car-container iduser="[[session.user.iduser]]" cars="{{session.user.cars}}" add-allow></car-container>
-            </template>
-          </article>
-        </template>
-        <template id="profileTemplate" is="dom-if" if="[[isPage('createTrip', page)]]">
-          <article page="createTrip">
-            <create-trip user="[[session.user]]" on-discard="backToProfile"></create-trip>
-          </article>
-        </template>
+          <template is="dom-if" if="[[edit]]">
+            <car-container iduser="[[session.user.iduser]]" data="{{session.user.cars}}" allow-new load></car-container>
+          </template>
+        </article>
       </template>
+      <template id="profileTemplate" is="dom-if" if="[[isPage('createTrip', page)]]">
+        <article page="createTrip">
+          <create-trip user="[[session.user]]" on-discard="goToPage" on-trip-created="tripCreated"></create-trip>
+        </article>
+      </template>
+    </template>
 
-      <template is="dom-if" if="[[!session.user]]">
-        <register-view></register-view>
-      </template>
+    <template is="dom-if" if="[[!session.user.iduser]]">
+      <register-view></register-view>
+    </template>
+
+    <paper-toast id="pSaved" text="Cambios guardados."></paper-toast>
+    <paper-toast id="tCreated" text="Viaje creado."></paper-toast>
   </template>
 
   <script>
@@ -190,17 +219,17 @@
       	},
         edit: {
           type: Boolean,
-          value: false,
-          observer: 'updateShow'
+          value: false
+          // observer: 'updateShow'
         },
         trips: {
           type: Object,
           value: []
         },
-        showdriver: {
-          type: Boolean,
-          value: false
-        },
+        // showdriver: {
+        //   type: Boolean,
+        //   value: false
+        // },
         update: {
           type: Object,
           value: {}
@@ -212,11 +241,18 @@
         page: {
           type: String,
           value: "profile"
-        }
+        },
+        proposed: Object
       },
 
-      observers: ['tripsUpdated(session.user.trips)', 'updateShow(session.user)'],
+      observers: ['tripsUpdated(session.user.trips)'],// 'updateShow(session.user)'],
 
+      // userChanged: function() {
+      //   if(this.session.user.iduser && !this.lastUserId) {
+      //     this.set('userLoadedFirstTime', true);
+      //     this.$.usl.reload();
+      //   }
+      // },
       editProfile: function() {
 
         var update = {};
@@ -238,36 +274,66 @@
       },
       saveProfile: function() {
         console.log("saveChanges");
-        var user = this.session.user;
+        // var user = this.session.user;
         var update = this.update;
-        //TODO only do this if the change has been really made
+        // var self = this;
+        var propose = this.propose = {};
+
         Object.keys(update).forEach(function(key) {
-          user[key] = update[key];
+          propose[key] = update[key];
+          // self.set('user.' + key, update[key]);
         });
         
 
-        this.$$("user-service").saveData();
+        // this.$$("user-service").saveData();
+        this.$.uss.saveData();
         this.edit = false;
       },
-      updateShow: function() {
-        if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;
-        else this.showdriver = false;
+      profileSaved: function(e, data) {
+        var propose = this.propose;
+        var self = this;
+
+        Object.keys(propose).forEach(function(key) {
+          self.set('session.user.' + key, propose[key]);
+        });
+
+        this.propose = undefined;
+
+        this.$.pSaved.show();
+      },
+      // updateShow: function() {
+      //   if(!this.edit && this.session && this.session.user && this.session.user.driver) this.showdriver = true;
+      //   else this.showdriver = false;
+      // },
+      showStars: function(edit, driver) {
+        return !edit && driver;
       },
       packageSelected: function(e, package) {
         page("/tracking/" + package.idpackage);
       },
+      favoriteSelected: function(e, favorite) {
+        page("/profile/" + favorite.iduser);
+      },
 
       createTrip: function() {
-        this.page = "createTrip";
+        this.goToPage("createTrip");
+        // this.page = "createTrip";
         // this.route = "createTrip";
       },
 
-      backToProfile: function() {
-        this.page = "profile";
+      tripCreated: function() {
+        this.goToPage("profile", "tCreated");
+        // this.$.tCreated.show();
       },
 
-      isPage: function(page) {
-        return this.page == page;
+      goToPage: function(page, toastid) {
+        this.set('page', page ? page : 'profile');
+        if(toastid) this.$[toastid].show();
+        // this.page = page;
+      },
+
+      isPage: function(name, page) {
+        return name === page;
       }
 
 

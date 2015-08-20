@@ -1,6 +1,6 @@
-<dom-module name="your-request-box">
+<dom-module name="own-request-box">
   <style>
-    .your-request {
+    .own-request {
       border: 2px solid #ccc;
       width: 150px;
       height: 150px;
@@ -24,7 +24,7 @@
   
   <template>
     <a id="linkuser" href="[[url]]">
-      <div class="your-request">
+      <div class="own-request">
         <div style="height: 0px;"><button class="delete-button">x</button></div>
         <span>[[departure]]</span>
         <span>/</span>
@@ -43,7 +43,7 @@
 
   <script>
   Polymer({
-    is: "your-request-box",
+    is: "own-request-box",
     properties: {
       departure: String,
       arrival: String,

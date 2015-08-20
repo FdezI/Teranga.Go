@@ -7,7 +7,8 @@ mysql.pool = mysql.createPool({
   host     : 'localhost',
   user     : 'tfg',
   password : 'asdfasdf',
-  database : 'TFGv3'
+  database : 'TFGv3',
+  timezone : '+00:00'
 });
 /////////////////
 
@@ -30,7 +31,15 @@ exports.routeController = require('./controllers/routes');
 exports.packageController = require('./controllers/packages');
 exports.requestController = require('./controllers/requests');
 
+exports.favoriteController = require('./controllers/favorites');
+
 exports.carUnlinkedController = require('./controllers/cars');
 exports.tripUnlinkedController = require('./controllers/trips');
 
 exports.locationController = require('./controllers/locations');
+
+exports.notificationController = require('./controllers/notifications');
+
+exports.configController = require('./controllers/config');
+
+exports.actionController = require('./controllers/actions');

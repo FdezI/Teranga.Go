@@ -49,6 +49,9 @@
 
 <dom-module name="main-view" on-logout="logout">
   <style>
+  	#popupIcons {
+  		height: 100%;
+  	}
   </style>
   
   <template id="app">
@@ -68,12 +71,12 @@
 	      on-iron-response="{{onResponse}}">
     </iron-ajax>-->
     
-    <iron-localstorage name="session3" value="{{session}}"></iron-localstorage>
+    <iron-localstorage name="session3" value="{{session}}" on-iron-localstorage-load-empty="noStorage"></iron-localstorage>
     
     <data-service id="as" type="auth" data="{{session.user}}" on-response="authTreat"></data-service>
 
-    <notification-popup id="np" index="1"></notification-popup>
-    <account-popup id="ap" on-logout="logout" index="0"></account-popup>
+    <notification-popup id="np" opened="{{openPopups.np}}" index="1" iduser="[[session.user.iduser]]" on-selected="notifSelected"></notification-popup>
+    <account-popup id="ap" opened="{{openPopups.ap}}" on-logout="logout" on-show-site="setPage" index="0"></account-popup>
 
 
     <paper-drawer-panel id="paperDrawerPanel">
@@ -112,7 +115,8 @@
 				  
 				  <!-- Toolbar icons -->
 				  <template is="dom-if" if="[[session.user]]">
-				  	<iron-selector id="popupIcons" attr-for-selected="name" selected="{{selectedIcon}}" selectedClass="selected">
+				  	<iron-selector id="popupIcons" class="layout horizontal justified" attr-for-selected="name" selected="{{selectedIcon}}" on-iron-select="updatePopups" selected-class="selected">
+				  		<div name="a"></div>
 						  <div name="notif" class="paper-icon-header-div layout horizontal center" on-tap="toggleNotif">
 						  	<paper-icon-button class="paper-icon-header" icon="menu"></paper-icon-button>
 						  </div>
@@ -160,6 +164,9 @@
 				      	<tracking-view session="{{session}}" route="{{route}}" idpackage="[[params.idpackage]]"></tracking-view>
 				      <!-- </template> -->
 				    </section>
+				    <section hash="other">
+				    	<other-profile-view session="[[session]]" route="{{route}}" iduser="[[params.iduser]]"></other-profile-view>
+				    </section>
 				    <!-- <section hash="createTrip">
 				    	<create-trip user="[[session.user]]"></create-trip>
 				    </section> -->
@@ -174,7 +181,7 @@
 		<!-- <login-box session="{{session}}"></login-box> -->
     <pop-up id="login" with-backdrop>
     <!-- <paper-dialog id="login" with-backdrop> -->
-    	<login-box session="{{session}}" on-login="login"></login-box>
+    	<login-box on-login="login"></login-box>
   	<!-- </paper-dialog> -->
     </pop-up>
     
@@ -209,14 +216,24 @@
 				  value: {}
 				},
 				selectedIcon: {
-					type: String,
-					observer: '_selectedIconChanged'
+					type: String
+					// observer: '_selectedIconChanged'
+				},
+				openPopups: {
+					type: Object,
+					value: {},
+					observer: '_openPopupsChanged'
 				}
       },
+
+      observers: ['_openPopupsChanged(openPopups.*)'],
       
       ready: function() {
 			// 	if(!this.session) this.session = {};
 			// 	this.session = null;
+      },
+      noStorage: function() {
+      	if(!this.session) this.set('session', {});
       },
       
     //   loginIconClicked: function(e, detail, sender) {
@@ -251,13 +268,18 @@
 			// 	console.log(this.session);
       },
 
+      setPage: function(e, route) {
+      	// this.set('route', route);
+      	page("/" + route);
+      	this.closePopups();
+      },
+
       routeChanged: function() {
       	if(this.route === "profile") {
       		var profile = this.$$("profile-view");
       		profile.edit = false;
       		profile.page = "profile";
-      	}
-      	else if(this.route === "tracking") this.$$("tracking-view").back();
+      	} else if(this.route === "tracking") this.$$("tracking-view").back();
       },
 
       showLogin: function() {
@@ -290,9 +312,10 @@
       },
 
       authTreat: function(e, message) {
-      	// console.log("AUTH THINGS");
+      	console.log("AUTH THINGS");
       	// console.log(e);
-      	// console.log(message);
+      	console.log(message);
+      	console.log(this.session.user);
       	if(message.iduser) this.$.login.close();
       	else console.log("ERROR on login!, please contact with an administrator");
       },
@@ -302,11 +325,25 @@
       	delete this.session.user;
       	this.session = {};
 
+      	this.closePopups();
       },
 
-      _selectedIconChanged: function() {
+      closePopups: function() {
+      	this.$.ap.close();
+      	this.$.np.close();
+      },
+      updatePopups: function() {
       	if(!this.$.ap.opened && !this.$.np.opened) this.set('selectedIcon', "");
+      },
+
+      notifSelected: function(e, notif) {
+      	page(Teranga.notifPageFor(notif.type).replace("%e", notif.emitter));
+      	this.closePopups();
+      },
+
+      _openPopupsChanged: function() {
+      	this.updatePopups();
       }
-    });    
+    });
   </script>
 </dom-module>

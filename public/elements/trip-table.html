@@ -97,14 +97,16 @@
         <td>Desde: <input type="date" placeholder="Desde" value="{{filters.from::input}}" min="[[today()]]"></td>
         <td>Hasta: <input type="date" placeholder="Hasta" value="{{filters.to::input}}" min="[[today()]]"></td>
       </tr>
-      <tr>
-        <td>
-          <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
-        </td>
-        <td>
-          <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
-        </td>
-      </tr>
+      <template is="dom-if" if="[[petsAndPackages]]">
+        <tr>
+          <td>
+            <filter-selector type="pet" selected="{{filters.animals}}" checked></filter-selector>
+          </td>
+          <td>
+            <filter-selector type="package" selected="{{filters.packages}}" checked></filter-selector>
+          </td>
+        </tr>
+      </template>
       <tr>
         <td class="search-td" colspan="2">
           <paper-button class="search-button" raised on-click="search">Buscar</paper-button>
@@ -126,6 +128,10 @@
           </select>
         </div>
       </div>
+      <template is="dom-if" if="[[!petsAndPackages]]">
+        <filter-selector type="pet" selected="{{localFilters.animals}}" checked></filter-selector>
+        <filter-selector type="package" selected="{{localFilters.packages}}" checked></filter-selector>
+      </template>
     </div>
     <div class="trip-table-content">
       <trip-list>
@@ -143,10 +149,15 @@
     properties: {
       image: String,
       trips: Array,
+      petsAndPackages: Boolean,
       filters: {
         type: Object,
         value: {},
         notify: true
+      },
+      localFilters: {
+        type: Object,
+        value: {}
       },
       fakefilters: {
         type: Object,

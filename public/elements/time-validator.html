@@ -1,0 +1,15 @@
+<link rel="import" href="../bower_components/iron-validator-behavior/iron-validator-behavior.html">
+
+<script>
+
+  Polymer({
+    is: 'time-validator',
+    behaviors: [Polymer.IronValidatorBehavior],
+
+    validate: function(value) {
+      return !value || value.match(/^\d*:\d*$/);
+    }
+
+  });
+
+</script>

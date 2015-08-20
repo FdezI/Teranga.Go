@@ -4,6 +4,9 @@
 // BASE SETUP
 // =============================================================================
 
+var config     = require('./app/config');
+var actions     = require('./app/actions');
+
 // call the packages we need
 var express    = require('express');        // call express
 var bodyParser = require('body-parser');
@@ -11,7 +14,7 @@ var bodyParser = require('body-parser');
 
 var app        = express();                 // define our app using express
 // var db         = require('./app/dbs/mongo/mongoDB');
-var db         = require('./app/dbs/mysqlv3/mysqlDB');
+var db         = require('./app/dbs/' + config.db.name + config.db.version + '/mysqlDB');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -62,6 +65,24 @@ var sessionMW = session({
 app.use(sessionMW);
 ////////////////////////////////
 
+function logErrors(err, req, res, next) {
+  console.error(err.stack);
+  next(err);
+};
+
+function clientErrorHandler(err, req, res, next) {
+  if (req.xhr) {
+    res.status(500).send({ error: 'Something blew up!', whatToDo: 'Contact an administrator' });
+  } else {
+    next(err);
+  }
+};
+
+function errorHandler(err, req, res, next) {
+  res.status(500);
+  res.send('error', { error: 'Something blew up!', whatToDo: 'Contact an administrator' });
+};
+
 
 
 // ROUTES FOR OUR API
@@ -96,8 +117,8 @@ apiRouter.route('/users')
 	.get(db.userController.getAll);
 apiRouter.route('/users/:iduser')
 	.get(db.userController.get)
-	.put(db.userController.update)
-	.delete(db.userController.delete);
+	.put(db.userController.update);
+	// .delete(db.userController.delete);
 	
 apiRouter.route('/users/:iduser/cars')
 	// .post(db.carController.create)
@@ -118,6 +139,12 @@ apiRouter.route('/users/:iduser/trips')
 apiRouter.route('/users/:iduser/favorites')
 	.get(db.userController.getFavorites);
 
+apiRouter.route('/users/:iduser/requests')
+	.get(db.userController.getRequests);
+
+apiRouter.route('/users/:iduser/notifications')
+	.get(db.userController.getNotifications);
+
 // apiRouter.route('/users/:iduser/trips/:idtrip') // Maybe should this be deleted and use unlinked instead
 // 	.get(db.tripController.get)
 // 	.put(db.tripController.addPassenger);
@@ -129,16 +156,23 @@ apiRouter.route('/users/:iduser/favorites')
 // 	.get(db.userController.get)
 // 	.put(db.userController.update)
 // 	.delete(db.userController.delete);
-	
+
+apiRouter.route('/favorites')
+	.get(db.favoriteController.getAll)
+	.post(db.favoriteController.create)
+	.delete(db.favoriteController.delete);
+apiRouter.route('/favorites/:iduser')
+	.get(db.favoriteController.get);
+
 apiRouter.route('/routes')
-	.post(db.routeController.create)
+	// .post(db.routeController.create)
 	.get(db.routeController.getAll);
 apiRouter.route('/routes/:idroute')
 	.get(db.routeController.get)
 	// .get(db.tripUnlinkedController.get)
 // 	.post(db.routeController.update)
-	.delete(db.routeController.delete)
-	.put(db.routeController.addWaypoint);	
+	// .delete(db.routeController.delete)
+	// .put(db.routeController.addWaypoint);	
 
 apiRouter.route('/trips')
 	.post(db.tripUnlinkedController.create)
@@ -146,10 +180,11 @@ apiRouter.route('/trips')
 apiRouter.route('/trips/:idtrip')
 	.get(db.tripUnlinkedController.get)
 // 	.post(db.tripUnlinkedController.update)
-	.delete(db.tripUnlinkedController.delete)
-	.put(db.tripUnlinkedController.addPassenger);
+	// .delete(db.tripUnlinkedController.delete)
+	// .put(db.tripUnlinkedController.addPassenger);
 
 apiRouter.route('/cars')
+	.post(db.carUnlinkedController.create)
 	.get(db.carUnlinkedController.getAll);
 apiRouter.route('/cars/:idcar')
 	.get(db.carUnlinkedController.get)
@@ -157,12 +192,18 @@ apiRouter.route('/cars/:idcar')
 	.delete(db.carUnlinkedController.delete);
 
 apiRouter.route('/request/travel')
-	.get(db.requestController.getAllTravel)
+	// .get(db.requestController.getAllTravel)
 	.post(db.requestController.requestTravel);
+apiRouter.route('/request/accept')
+	.post(db.requestController.acceptRequest);
 
-apiRouter.route('/request/packet')
-	.get(db.requestController.getAllPacket)
-	.post(db.requestController.requestPacket);
+apiRouter.route('/notifications')
+	.get(db.notificationController.getAll)
+	.put(db.notificationController.markRead);
+
+// apiRouter.route('/request/packet')
+	// .get(db.requestController.getAllPacket)
+	// .post(db.requestController.requestPacket);
 
 apiRouter.route('/locations')
 	.get(db.locationController.getAll);
@@ -174,10 +215,22 @@ apiRouter.route('/packages')
 apiRouter.route('/packages/:idpackage')
 	.get(db.packageController.get);
 
+apiRouter.route('/config')
+	.get(db.configController.get);
+apiRouter.route('/config/:param')
+	.get(db.configController.get);
+
+apiRouter.route('/actions')
+	.get(actions.getActions);
+apiRouter.route('/actions/:action')
+	.get(actions.exec);
+apiRouter.route('/actions/:action/:mode')
+	.get(actions.exec);
+
 	
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api/v1', apiRouter);
+app.use('/api/v' + config.api.version, apiRouter);
 // app.use('/components/', express.static(__dirname + '/bower_components/'));
 app.use('/', express.static(__dirname + '/public/'));
 // app.use('*', function(req, res) {
@@ -185,9 +238,9 @@ app.use('/', express.static(__dirname + '/public/'));
 // });
 
 
-
-
-
+app.use(logErrors);
+app.use(clientErrorHandler);
+app.use(errorHandler);
 
 // START THE SERVER
 // =============================================================================

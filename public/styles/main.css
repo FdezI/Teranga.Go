@@ -21,6 +21,10 @@ body {
 	margin-top: 15px;
 }
 
+paper-toast {
+	z-index: 20;
+}
+
 .hidden {
 	display: none;
 }
@@ -81,7 +85,7 @@ body {
 	padding: 0px 10px;
 }
 
-.paper-icon-header-div:hover, .paper-icon-header-div:active {
+.paper-icon-header-div:hover, .paper-icon-header-div:active, .paper-icon-header-div.selected {
 	background: #121212;
 	cursor: pointer;
 }

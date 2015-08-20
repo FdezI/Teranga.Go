@@ -37,13 +37,13 @@
     }
   </style>
   <template>
-    <li class$="[[readable(read)]]">
+    <li class$="[[readable(notification.read)]]" on-click="selectNotif">
       <img class="notification-img" src="../images/user.png"/>
       <div class="vertical layout flex">
-        <span class="notification-info"><span>Carmen</span> quiere viajar contigo</span>
-        <span class="notification-time">Hace <span>2 horas</span></span>
+        <span class="notification-info"><span>[[notifText(notification)]]</span>
+        <span class="notification-time"><span>[[timeText(notification)]]</span></span>
       </div>
-      <template is="dom-if" if="[[!read]]">
+      <template is="dom-if" if="[[!notification.read]]">
       	<iron-icon class="new-notification-icon" icon="av:new-releases"></iron-icon>
       </template>
     </li>
@@ -53,15 +53,29 @@
     Polymer({
       is: "notification-line",
       properties: {
-        user: Object,
-        read: {
-        	type: Boolean,
-        	value: false
-        }
+        notification: Object
+        // index: Number
       },
       readable: function(read) {
       	return "horizontal layout notification" + (read ? "" : " new-notification");
+      },
+
+      selectNotif: function() {
+        this.fire("selected", this);
+      },
+
+      timeText: function(notif) {
+        var date = notif.date;
+        return Teranga.diffFromToday(date) + " a las " + Teranga.time(date);
+      },
+
+      notifText: function(notif) {
+        return Teranga.notifTextFor(notif.type).replace("%en", notif.eName);
       }
+
+      // indexChanged: function() {
+      //   this.set('notification.index', this.index);
+      // }
     });
   </script>
 </dom-module>

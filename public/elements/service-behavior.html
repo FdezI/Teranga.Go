@@ -15,16 +15,23 @@
       update: Object,
       type: String,
       filters: Object,
+      loadOnAttach: Boolean
     },
     
     ready: function() {
       console.log(this.type + "-service ready");
     },
+
+    attached: function() {
+      if(this.loadOnAttach) this.reload();
+    },
     
     callDone: function(e) {
-      console.log("CALL DONE");
+      console.log("Responded: ");
+      console.log(this.data);
       e.stopPropagation();
       this.fire('response', this.data);
+      // console.log("CALL FIRED");
     },
 
     saveData: function(create) {
@@ -35,8 +42,10 @@
       var user = this.user;
 
       req.method = create ? 'POST' : 'PUT';
-
       
+      req.url = Teranga.restAPI + this.type;
+
+
       if(!update) return;
       
       req.url = Teranga.restAPI + this.type; //"users/" + this.user + "/" + this.type;
@@ -45,9 +54,11 @@
         else update.user = user;
       }
 
+      if(!create) req.url += (this.fetch ? "/" + this.fetch : "");
+
       req.body = JSON.stringify(update);
       
-      console.log("Requesting: " + req.url);
+      console.log("Requesting: " + req.method + " " + req.url);
       console.log("With params: " + JSON.stringify(req.params));
       console.log("And body: " + req.body);
       req.generateRequest();
@@ -73,10 +84,27 @@
         console.log("fetching " + fetch);
         req.url = api + type + (fetch ? "/" + fetch : "");
 
-        req.generateRequest();
+        // req.generateRequest();
       }
 
-      console.log("Requesting: " + req.url);
+      console.log("Requesting: " + req.method + " " + req.url);
+      console.log("With params: " + JSON.stringify(req.params));
+      console.log("And body: " + req.body);
+      req.generateRequest();
+    },
+
+    delete: function() {
+      var req = this.$.req;
+      var api = Teranga.restAPI;
+      var type = this.type;
+      var fetch = this.fetch;
+
+      req.method = 'DELETE';
+
+      req.url = api + type + (fetch ? "/" + fetch : "");
+      req.body = JSON.stringify(this.update);
+
+      console.log("Requesting: " + req.method + " " + req.url);
       console.log("With params: " + JSON.stringify(req.params));
       console.log("And body: " + req.body);
       req.generateRequest();

@@ -6,14 +6,22 @@
   <style>
   </style>
   <template>
-    <data-service id="ts" type="trips" fetch="all" filters="[[filters]]" data="{{trips}}"></data-service>
-    <trip-table trips="{{trips}}" filters="{{filters}}" on-search="search" on-selected="tripSelected"></trip-table>
-    <select value="{{selected::input}}">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-    </select>
-    <trip-view idtrip="[[selected]]" user="{{session.user}}"></trip-view>
+    <template is="dom-if" if="[[isPage('search', page)]]">
+      <data-service id="ts" type="trips" fetch="all" filters="[[filters]]" data="{{trips}}"></data-service>
+      <trip-table pets-and-packages trips="{{trips}}" filters="{{filters}}" on-search="search" on-selected="tripSelected"></trip-table>
+
+      <select value="{{selected::input}}">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </template>
+
+    <template is="dom-if" if="[[isPage('info', page)]]">
+      <trip-view idtrip="[[selected]]" user="{{session.user}}" searched="[[filters]]" on-trip-requested="tripRequested"></trip-view>
+    </template>
+
+    <paper-toast id="rDone" text="Solicitud de viaje realizada <a href='/profile'>Ver en perfil</a>."></paper-toast>
   </template>
 
   <script>
@@ -29,6 +37,10 @@
           type: String,
           notify: true
         },
+        page: {
+          type: String,
+          value: "search"
+        },
         filters: Object,
         session: Object
       },
@@ -41,11 +53,25 @@
       },
 
       search: function() {
-        this.$.ts.reload();
+        this.$$("#ts").reload();
       },
 
       tripSelected: function(e, trip) {
         this.set('selected', trip.idtrip);
+        this.goToPage("info");
+      },
+
+      tripRequested: function(e, data) {
+        this.goToPage("search", "rDone");
+      },
+
+      goToPage: function(page, toastid) {
+        this.set('page', page ? page : "search");
+        if(toastid) this.$[toastid].show();
+      },
+
+      isPage: function(name, page) {
+        return name === page;
       }
     });
   </script>

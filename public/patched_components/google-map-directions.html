@@ -2,6 +2,7 @@
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/google-apis/google-maps-api.html">
+<!-- <link rel="import" href="../bower_components/google-map/google-map-marker.html"> -->
 
 <!--
 Provides the Google Maps API Directions Service to provide directions
@@ -140,7 +141,31 @@ Fired whenever the directions service returns a result.
         type: Object,
         observer: '_responseChanged',
         notify: true
-      }
+      },
+
+      suppressMarkers: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+
+      request: Object
+
+      // notStopoverStyleWaypoints: {
+      //   type: Boolean,
+      //   value: false,
+      //   reflectToAttribute: true
+      // },
+
+      // departureTime: {
+
+      // },
+
+      // mapMarkers: {
+      //   type: Array,
+      //   value: function() { return []; }
+      //   readOnly: true
+      // }
     },
 
     observers: [
@@ -163,6 +188,7 @@ Fired whenever the directions service returns a result.
           this.directionsRenderer = new google.maps.DirectionsRenderer();
         }
         this.directionsRenderer.setMap(this.map);
+        if(this.suppressMarkers) this.directionsRenderer.setOptions( { suppressMarkers: true } );
         this._responseChanged();
       } else {
         // If there is no more map, remove the directionsRenderer from the map and delete it.
@@ -188,23 +214,67 @@ Fired whenever the directions service returns a result.
         this.directionsService = new google.maps.DirectionsService();
       }
 
-      console.log("FROM: " + this.startAddress + ", TO: " + this.endAddress);
-      console.log("WPS:");
-      console.log(this.waypointAddresses);
-
-
       var request = {
         origin: this.startAddress,
         destination: this.endAddress,
         waypoints: this.waypointAddresses,
         travelMode: this.travelMode
       };
+
+      this.set('request', request);
+
+      // if(this.mapMarkers) this.mapMarkers.forEach(function(marker) {marker.setMap(null);});
+      // this.set('mapMarkers', []);
+
+      
+      // this.set('mapMakers', markers);
       this.directionsService.route(request, function(response, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
+        if (status == google.maps.DirectionsStatus.OK && response.request == this.request) {
           this.response = response;
           this.fire('google-map-response', {response: response});
+
+          
+          // if(!this.suppressMarkers && this.notStopoverStyleWaypoints) {
+          //   var thisMarkers = this.mapMarkers;
+          //   var markers = [];
+
+          //   var legs = response.routes[0].legs;
+          //   var length = legs.length;
+          //   if(length > 0) {
+          //     var leg = legs[0];
+              
+          //     createMarker(markers, thisMarkers[0], this.map, leg.start_location, leg.start_address, "https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-a.png&text=A&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1", 1);
+
+          //     for(var i = 1; i < length; i++) {
+          //       leg = legs[i];
+          //       createMarker(markers, thisMarkers[i], this.map, leg.start_location, leg.start_address, "https://maps.gstatic.com/mapfiles/dd-via.png", 0);
+          //     }
+
+          //     createMarker(markers, thisMarkers[i - 1], this.map, leg.end_location, leg.end_address, "https://mts.googleapis.com/vt/icon/name=icons/spotlight/spotlight-waypoint-b.png&text=B&psize=16&font=fonts/Roboto-Regular.ttf&color=ff333333&ax=44&ay=48&scale=1", 1);
+
+          //     var size = thisMarkers.length;
+          //     for(; i < size; i++) thisMarkers[i].setMap(null);
+
+          //     this.mapMarkers = markers;
+          //   }
+          // }
         }
       }.bind(this));
     }
   });
+
+  createMarker = function(markers, previous, m, latLng, ttle, ico, zdex) {
+    if(previous && previous.position.equals(latLng)) markers.push(previous);
+    else {
+      if(previous) previous.setMap(null);
+      markers.push(new google.maps.Marker({
+        map: m,
+        position: latLng,
+        title: ttle,
+        // visible: true,
+        icon: ico,
+        zIndex: zdex
+      }));
+    }
+  };
 </script>

@@ -34,7 +34,7 @@
   <template>
     <div class="container">
       <ul>
-        <li on-click="">Ver perfil</li>
+        <li on-click="showProfile">Ver perfil</li>
         <li on-click="logout">Cerrar sesión</li>
       </ul>
     </div>
@@ -49,8 +49,11 @@
       behaviors: [Teranga.PopupBehavior],//[Polymer.IronOverlayBehavior]
 
       logout: function() {
-        console.log("LOGOUT");
         this.fire("logout");
+      },
+
+      showProfile: function() {
+        this.fire("show-site", "profile");
       }
     });
   </script>

@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../elements/trip-list.html">
 <link rel="import" href="../elements/trip-info.html">
@@ -182,13 +183,13 @@
           <div><span>[[trip.comment]]</span></div>
         </div>
 
-          <button on-click="toggle" class="button-request">
+          <paper-button raised on-click="toggle" class="button-request">
             <template is="dom-if" if="[[!opinion]]"><span>Pedir</span></template>
             <template is="dom-if" if="[[opinion]]"><span>Opinar</span></template>
-          </button>
+          </paper-button>
           <iron-collapse class="content" id="collapse">
             <template is="dom-if" if="[[!opinion]]">
-              <trip-request trip="[[trip]]" user="{{user}}"></trip-request>
+              <trip-request trip="[[trip]]" user="{{user}}" point-a="[[pointA]]" point-b="[[pointB]]"></trip-request>
             </template>
             <template is="dom-if" if="[[opinion]]">
               <trip-opinion></trip-opinion>
@@ -228,10 +229,13 @@
           type: Object,
           value: {}
         },
+        pointA: Number,
+        pointB: Number,
         selected: {
           type: String,
           value: "main"
-        }
+        },
+        searched: Object
         // request: Boolean
       },
 
@@ -279,25 +283,35 @@
       tripTweak: function(e, trip) {
         // var trip = this.$.loadOne.lastResponse;
         var wps = trip.wps;
+
+
         if(wps) {
           var size = wps.length;
-          // var cost = 0;
           var seats = trip.seats;
           var free = seats;
+          var self = this;
+          var filter = this.searched;
 
           trip.destiny = wps[size - 1];
-          for(var i = 0; i < size; i++) {
-            var p = wps[i];
+          // for(var i = 0; i < size; i++) {
+          wps.forEach(function(p) {
+            // var p = wps[i];
             seats += p.down - p.up;
-            // cost += p.cost;
 
             p.seats = seats;
             p.day = Teranga.day(p.date);
             p.month = Teranga.month(p.date);
             p.time = Teranga.time(p.date);
+
+            if(filter) {
+              if(p.idlocation == filter.origin) self.set('pointA', p.order);
+              else if(p.idlocation == filter.destination) self.set('pointB', p.order);
+            }
+            
             if(seats < free) free = seats;
-          }
-          // console.log("Coste: " + cost);
+          });
+          // }
+
           trip.cost = trip.destiny.cost;
           trip.free = free;
         }

@@ -1,8 +1,10 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/av-icons.html">
-<link rel="import" href="../elements/notification-line.html">
+<link rel="import" href="notification-line.html">
 
 <link rel="import" href="popup-behavior.html">
+
+<link rel="import" href="data-service.html">
 
 <dom-module name="notification-popup">
   <style>
@@ -43,17 +45,18 @@
     }
   </style>
   <template>
+    <data-service id="ns" type="notifications" user="[[iduser]]" fetch="all" filters="[[filters]]" on-response="newNotifs"></data-service>
+    <data-service id="nus" type="notifications" on-response="readApplied"></data-service>
+
     <div class="container">
       <div class="notification-title">
         <span>Notificaciones</span>
-        <a class="notification-mark-as-read">Marcar como leídas</a>
+        <a class="notification-mark-as-read" on-click="markRead">Marcar como leídas</a>
       </div>
       <ul class="notifications-list">
-        <notification-line></notification-line>
-        <notification-line></notification-line>
-        <notification-line read></notification-line>
-        <!-- <notification-line read></notification-line>
-        <notification-line read></notification-line> -->
+        <template id="notifRepeat" is="dom-repeat" items="[[notifications]]">
+          <notification-line notification="[[item]]" index="[[index]]" on-selected="markRead"></notification-line>
+        </template>
       </ul>
     </div>
   </template>
@@ -62,9 +65,97 @@
     Polymer({
       is: "notification-popup",
       properties: {
-        package: Object
+        notifications: {
+          type: Array,
+          value: []
+        },
+        news: Array,
+        iduser: {
+          type: Number,
+          observer: 'iduserChanged'
+        },
+        tasked: Boolean,
+        filters: {
+          type: Object,
+          value: {}
+        }
       },
-      behaviors: [Teranga.PopupBehavior]
+      behaviors: [Teranga.PopupBehavior],
+
+      observers: ['newsChanged(news.splices)'],
+
+      iduserChanged: function() {
+        if(this.iduser) {
+          if(!this.tasked) {
+            // this.set('tasked', true);
+            this.request(this);
+            setInterval(this.request, Teranga.notificationInterval, this);
+          }
+        }
+      },
+
+      markRead: function(e, line) {
+        var update = {receiver: this.iduser};
+        var notif = line.notification;
+        var self = this;
+
+        if(notif) {
+          if(notif.read) return;
+          line.set('notification.read', 1);
+          var id = notif.idnotification;
+          // this.set('notifications.' + this.notifications.indexOf(notif) + '.read', 1);
+        }
+
+        update.notifications = id ? [id] :
+                                  this.notifications.filter(function(n, index) {
+                                    var pass = !n.read
+                                    if(pass) self.set('notifications.' + index + '.read', 1);
+                                    return pass;
+                                  }).map(function(n) { return n.idnotification; });
+
+        if(update.notifications.length > 0) {
+          this.$.nus.set('update', update);
+          this.$.nus.saveData();
+        }
+      },
+
+      readApplied: function(e, data) {
+        if(data.changed) {
+          // this.set('notifications', this.notifications);
+          // this.splice('notifications', 0, 0);
+          // this.$.notifRepeat.render();
+        }
+      },
+
+      newNotifs: function(e, news) {
+        if(news.length > 0) {
+          var self = this;
+          news.forEach(function(n) {
+            var notifs = self.notifications;
+            var done = false;
+            var length = notifs.length;
+            if(length > 0) {
+              var i = -1;
+              while(++i < length && !done) {
+                var notif = notifs[i];
+                if(n.type == notif.type && n.emitter == notif.emitter && n.object == notif.object) {
+                  self.splice('notifications', i, 1);
+
+                  done = true;
+                }
+              }
+            }
+
+            self.push('notifications', n);
+          });
+        }
+      },
+
+      request: function(self) {
+        self.$.ns.reload();
+
+        self.set('filters.since', Teranga.currentUTCDate().toISOString());
+      }
     });
   </script>
 </dom-module>

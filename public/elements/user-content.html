@@ -1,6 +1,6 @@
 <link rel="import" href="content-behavior.html">
 <link rel="import" href="content-load-behavior.html">
-<!-- <link rel="import" href="generic-content-load.html"> -->
+
 <link rel="import" href="user-box.html">
 
 <link rel="import" href="data-service.html">
@@ -11,11 +11,9 @@
       <data-service type="[[type]]" user="[[iduser]]" data="{{data}}" on-response="loaded" fetch="all"></data-service>
     </template>
 
-    <!-- <generic-content-load iduser="[[iduser]]" data="{{data}}"> -->
-			<template id="repeat" is="dom-repeat" items="[[data]]" filter="filter">
-		    <user-box package="[[item]]" on-click="select"></user-box>
-		  </template>
-	  <!-- </generic-content-load> -->
+		<template id="repeat" is="dom-repeat" items="[[data]]" filter="filter">
+	    <user-box user="[[item]]" on-click="select"></user-box>
+	  </template>
   </template>
 
   <script>

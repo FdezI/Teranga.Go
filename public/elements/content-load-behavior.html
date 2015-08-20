@@ -17,15 +17,15 @@
         type: Boolean,
         value: false
         // readOnly: true
-      },
-      wtf: String
+      }
     },
     attached: function() {
-      console.log("ESTO NO LLLEGGGGGGGGAAAAAAAAA " + this.wtf);
-      // Esto no funciona, el ready no asegura datos, se supone que el domReady
+      console.log("CARGANDO NADA MÁS ATTACHARSE");
+
     	if(this.force || (this.load && !this.data)) this.reloadData();
     },
     reloadData: function() {
+      console.log("RELOAD DATA ON CONTENT-LOAD-BEHAVIOR");
       this.needed = true;
       this.$.load.render();
       this.loading = true;

@@ -1,79 +1,50 @@
+<link rel="import" href="container-behavior.html">
+<link rel="import" href="generic-container.html">
+<link rel="import" href="generic-collapse-container.html">
+
 <link rel="import" href="car-box.html">
 <link rel="import" href="car-edit.html">
 
-<link rel="import" href="data-service.html">
+<!-- <link rel="import" href="data-service.html"> -->
 <link rel="import" href="pop-up.html">
 
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <dom-module name="car-container">
   <template>
-    <!-- <box-container on-reload="reloadCars" open="{{open}}" reloading="{{loading}}" name="Coches">
-      <template is="dom-if" if="[[open]]">
-        <car-service user="[[iduser]]" response="{{cars}}" on-response="loaded" fetch="all"></car-service>
-      </template>
 
-      <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
-        <travel-box departure="[[car.departure]]" arrival="[[car.arrival]]" day="[[day(car.dtime)]]" month="[[month(car.dtime)]]" driver="[[car.driving]]" travelurl="/"></travel-box>
-      </template>
-      
-    </box-container> -->
-    <div class="car-container">
-      <data-service id="ds" type="cars" user="[[iduser]]" data="{{cars}}" on-response="loaded" fetch="all"></data-service>
-      <template id="carsRepeat" is="dom-repeat" items="[[cars]]" as="car">
-        <car-box car="[[car]]" on-click="carSelect"></car-box>
-      </template>
-      <template is="dom-if" if="[[addAllow]]">
-        <car-box newcar="true" on-click="showPopup"></car-box>
-      </template>
-    </div>
+    <template is="dom-if" if="[[collapse]]">
+      <generic-collapse-container>
+        <car-content id="content" iduser="[[iduser]]" data="[[data]]" selected="{{selected}}" load$="[[load]]" loading="{{loading}}"></car-content>
+      </generic-collapse-container>
+    </template>
 
-    <!-- <iron-overlay-backdrop> -->
-    <paper-dialog id="dialog" with-backdrop>
-      <!-- <pop-up id="backdrop" with-backdrop> -->
-        <car-edit iduser="[[iduser]]" on-newcar="carCreated" on-discard="hidePopup"></car-edit>
-      <!-- </pop-up> -->
-    <paper-dialog>
-    <!-- </iron-overlay-backdrop> -->
+    <template is="dom-if" if="[[!collapse]]">
+      <generic-container>
+        <car-content id="content" iduser="[[iduser]]" data="[[data]]" selected="{{selected}}" load$="[[load]]" loading="{{loading}}"></car-content>
+      </generic-container>
+    </template>
+
+    <template is="dom-if" if="[[allowNew]]">
+      <car-box newcar="true" on-click="create"></car-box>
+    </template>
+
+    <pop-up id="dialog" with-backdrop>
+    <!-- <paper-dialog id="dialog" with-backdrop> -->
+      <car-edit id="edit" iduser="[[iduser]]" on-created="onCreated" on-edited="onEdited" on-discard="closePopup"></car-edit>
+    <!-- <paper-dialog> -->
+    </pop-up>
+
+    <paper-toast id="created" text="Coche creado."></paper-toast>
+    <paper-toast id="edited" text="Coche editado."></paper-toast>
   </template>
 
   <script>
     Polymer({
       is: "car-container",
-      properties: {
-        cars: {
-          type: Object,
-          notify: true
-        },
-        iduser: Number,
-        open: Boolean,
-        loading: Boolean,
-        addAllow: Boolean
-      },
-      ready: function() {
-        this.$.ds.reload();
-      },
-      reloadCars: function() {
-        this.loading = true;
-        this.$$("car-service").reload();
-        this.$.carsRepeat.render();
-      },
-      showPopup: function() {
-        this.$.dialog.open();
-      },
-      hidePopup: function() {
-        this.$.dialog.close();
-      },
-      loaded: function() {
-        this.loading = false;
-      },
-      carSelect: function(e) {
-        this.fire('select', e.model.car);
-      },
-      carCreated: function(e, car) {
-        this.push('cars', car);
-        this.hidePopup();
-      }
+
+      behaviors: [Teranga.ContainerBehavior],
     });
   </script>
 </dom-module>

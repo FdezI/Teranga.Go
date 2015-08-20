@@ -1,6 +1,11 @@
 <link rel="import" href="../elements/other-trip-container.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<!-- <link rel="import" href="../bower_components/paper-progress/paper-progress.html"> -->
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 
-<dom-module name="other-profile">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+
+<dom-module name="other-profile-view">
   <style>
     .profile-div {
       display: table;
@@ -32,82 +37,125 @@
   </style>
 
   <template>
-    <div class="profile-div">
-      <div class="profile-center">
-        <div class="profile-basic-info">
-            <div class="other-profile-a">
-              <img class="profile-photo" src="../images/full-star.png"/>
-              <template is="dom-if" if="[[showdriver]]">
-                <div class="profile-stars" onclick=""><stars-rating score="[[user.karma]]"></stars-rating></div>
-              </template>
-            </div>
+    <data-service id="os" type="users" fetch="[[iduser]]" data="{{user}}"></data-service>
+    <data-service id="fsg" type="favorites" fetch="[[iduser]]" on-response="checkFavorite"></data-service>
 
-            <div class="layout vertical other-profile-b">
-                <div class="profile-name"><span>[[user.name]]</span> <span>[[user.surnames]]</span></div>
-                <div class="profile-age"><span>XX</span> años</div>
-            </div>
+    <data-service id="fs" type="favorites" on-response="favoriteChanged" update="[[data]]"></data-service>
 
-            <template is="dom-if" if="[[!showdriver]]">
-              <div class="other-profile-c">
-                <template is="dom-if" if="[[!favourite]]">
-                  <button class="primary-button">Añadir favorito</button>
-                </template>
-                <template is="dom-if" if="[[favourite]]">
-                  <button class="primary-button">Eliminar favorito</button>
+    <template is="dom-if" if="[[user]]">
+      <div class="profile-div">
+        <div class="profile-center">
+          <div class="profile-basic-info">
+              <div class="other-profile-a">
+                <img class="profile-photo" src="../images/full-star.png"/>
+                <template is="dom-if" if="[[user.driver]]">
+                  <div class="profile-stars" onclick=""><stars-rating score="[[user.karma]]"></stars-rating></div>
                 </template>
               </div>
-            </template>
-          </div>
 
-          <div class="vertical-separator"></div>
+              <div class="layout vertical other-profile-b">
+                  <div class="profile-name"><span>[[user.name]]</span> <span>[[user.surnames]]</span></div>
+                  <div class="profile-age"><span>XX</span> años</div>
+              </div>
 
-          <div class="profile-extra-info">
-            <template is="dom-if" if="[[showdriver]]">
-              <!-- <template is="dom-if" if="[[assessments]]"> -->
-                <div class="profile-no-driver">
-                  Este usuario no tiene ningún comentario sobre sus viajes todavía.
+              <template is="dom-if" if="[[!user.driver]]">
+                <div class="other-profile-c">
+                  <template is="dom-if" if="[[!loading]]">
+                    <template is="dom-if" if="[[!favorite]]">
+                      <paper-button raised class="primary-button" on-click="addFavorite">Añadir favorito</paper-button>
+                    </template>
+                    <template is="dom-if" if="[[favorite]]">
+                      <paper-button raised class="primary-button" on-click="removeFavorite">Eliminar favorito</paper-button>
+                    </template>
+                  </template>
+                  <template is="dom-if" if="[[loading]]">
+                    <!-- <paper-progress indeterminate></paper-progress> -->
+                    <paper-spinner alt="Checking favorite" active></paper-spinner>
+                  </template>
                 </div>
-              <!-- </template> -->
-              <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
-                <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
               </template>
-             <!--  <div class="profile-no-driver">
-                BLA BLA BLA BLA BLA BLA BLA
-              </div> -->
-            </template>
-            <template is="dom-if" if="[[!showdriver]]">
-              <div class="profile-no-driver">
-                Este usuario no es conductor, por lo que no podrá crear viajes por ahora.
-              </div>
-            </template>
-          </div>
-      </div>
-      <template is="dom-if" if="[[showdriver]]">
-        <div class="profile-aside">
-          <div>
-            <template is="dom-if" if="[[!favourite]]">
-              <button class="primary-button">Añadir favorito</button>
-            </template>
-            <template is="dom-if" if="[[favourite]]">
-              <button class="primary-button">Eliminar favorito</button>
-            </template>
-          </div>
-          <div>
-            <other-trip-container iduser="[[user.iduser]]" trips="{{user.trips}}" open="true"></other-trip-container>
-          </div>
+            </div>
+
+            <div class="vertical-separator"></div>
+
+            <div class="profile-extra-info">
+              <template is="dom-if" if="[[user.driver]]">
+                <!-- <template is="dom-if" if="[[assessments]]"> -->
+                  <div class="profile-no-driver">
+                    Este usuario no tiene ningún comentario sobre sus viajes todavía.
+                  </div>
+                <!-- </template> -->
+                <template id="assessmentsRepeat" is="dom-repeat" items="[[assessments]]" as="assessment">
+                  <comment-box image="[[getImageUrl(assessment.avatar)]]" profileurl="/" car="[[assessment.car]]" driver="[[assessment.driver]]" comment="[[assessment.comment]]"></comment-box>
+                </template>
+               <!--  <div class="profile-no-driver">
+                  BLA BLA BLA BLA BLA BLA BLA
+                </div> -->
+              </template>
+              <template is="dom-if" if="[[!user.driver]]">
+                <div class="profile-no-driver">
+                  Este usuario no es conductor, por lo que no podrá crear viajes por ahora.
+                </div>
+              </template>
+            </div>
         </div>
+        <template is="dom-if" if="[[user.driver]]">
+          <div class="profile-aside">
+            <div>
+              <template is="dom-if" if="[[!loading]]">
+                <template is="dom-if" if="[[!favorite]]">
+                  <paper-button raised class="primary-button" on-click="addFavorite">Añadir favorito</paper-button>
+                </template>
+                <template is="dom-if" if="[[favorite]]">
+                  <paper-button raised class="primary-button" on-click="removeFavorite">Eliminar favorito</paper-button>
+                </template>
+              </template>
+              <template is="dom-if" if="[[loading]]">
+                <!-- <paper-progress indeterminate></paper-progress> -->
+                <paper-spinner alt="Checking favorite" active></paper-spinner>
+              </template>
+            </div>
+            <div>
+              <other-trip-container iduser="[[user.iduser]]" trips="{{user.trips}}" open="true"></other-trip-container>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <template is="dom-if" if="[[!user]]">
+      <!-- <template is="dom-if" if="[[iduser]]"> -->
+        <paper-spinner alt="Loading user" active$="[[iduser]]"></paper-spinner>
+      <!-- </template> -->
+      <template is="dom-if" if="[[!iduser]]">
+        Usuario no seleccionado
       </template>
-    </div>
+    </template>
+
+    <paper-toast id="fAdded" text="Favorito añadido."></paper-toast>
+    <paper-toast id="fRemoved" text="Favorito eliminado."></paper-toast>
+    <paper-toast id="fFailed" text="No se ha podido realizar la acción."></paper-toast>
   </template>
 
   <script>
     Polymer({
-      is: "other-profile",
+      is: "other-profile-view",
       properties: {
+        session: {
+          type: Object,
+          observer: 'sessionChanged',
+          notify: true
+        },
+        iduser: {
+          type: Number,
+          value: 0,
+          observer: 'iduserChanged'
+        },
       	user: {
-      	  type: Object
-      	},
-        favourite: {
+          type: Object,
+          value: null
+        },
+        favorite: {
           type: Boolean,
           value: false,
           notify: true
@@ -116,11 +164,103 @@
           type: Object,
           value: []
         },
-        showdriver: {
+        loading: {
           type: Boolean,
-          value: false
+          value: true
+        },
+
+        data: Object
+        // showdriver: {
+        //   type: Boolean,
+        //   value: false
+        // }
+      },
+
+      attached: function() {
+        // console.log("AQUI: " + !user);
+      },
+
+      sessionChanged: function() {
+        // if(this.isReady()) {
+        //   this.$.fsg.set('filters', {user1:this.session.user.iduser});
+        //   this.$.fsg.reload();
+        // }
+      },
+
+      isReady: function() {
+        var session = this.session;
+        if(session) {
+          var user = session.user;
+          var iduser = this.iduser;
+          if(iduser && user) {
+            if(iduser == user.iduser) page("/profile");
+            else {
+              this.set('data', {user1:this.session.user.iduser, user2:this.iduser});
+              return true;
+            }
+          }
         }
+        return false;
+      },
+
+      iduserChanged: function() {
+        if(this.isReady()) {
+          this.$.os.reload();
+          this.$.fsg.set('filters', {user1:this.session.user.iduser});
+          this.$.fsg.reload();
+        }
+      },
+
+      addFavorite: function() {
+        if(this.loading) return;
+
+        this.set('loading', true);
+        // this.$.fAdded.show();
+
+        // this.$.fs.update = {user1:this.session.user.iduser, user2:this.iduser};
+        this.$.fs.saveData(true);
+
+      },
+
+      removeFavorite: function() {
+        if(this.loading) return;
+
+        this.set('loading', true);
+        // this.$.fRemoved.show();
+
+        // this.$.fs.update = 
+        this.$.fs.delete();
+      },
+
+      favoriteChanged: function(e, data) {
+        this.checkFavorite(e, data, true);
+      },
+
+      checkFavorite: function(e, data, toast) {
+        // console.log("CHECKING FAV: " );
+        // console.log(data);
+        var fav = (data.id || data.id === 0 || data.user1) ? true : false;
+
+        var favString = 'session.user.favorites';
+        var favs = this.session.user.favorites;
+
+        if(fav) {
+          if(toast) this.$.fAdded.show();
+
+          if(favs) this.push(favString, this.user);
+          else this.set(favString, [this.user]);
+        }
+        else if(data.deleted) {
+          if(toast) this.$.fRemoved.show();
+
+          this.splice(favString, Teranga.indexOf(this.iduser, favs, 'iduser'), 1);
+        }
+        else if(toast) this.$.fFailed.show();
+
+        this.set('favorite', fav);
+        this.set('loading', false);
       }
+
     });
   </script>
 </dom-module>

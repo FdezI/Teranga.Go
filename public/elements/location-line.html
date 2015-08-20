@@ -1,4 +1,8 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-input-container.html">
+<link rel="import" href="../bower_components/paper-input/paper-input-error.html">
+<link rel="import" href="time-input.html">
 
 <dom-module name="location-line">
   <style>
@@ -9,7 +13,7 @@
     display: inline-block;
   }
   .extra-info {
-    display: -webkit-inline-box;
+    /*display: -webkit-inline-box;*/
   }
   .input-location {
     width: 300px;
@@ -19,33 +23,43 @@
   }
   </style>
   <template>
-  <div>
-    <div class="location-name">
-      <span>[[location.city]]</span>
-      <!-- <paper-button toggles><img src="../images/stop.png"></paper-button> -->
-      <paper-icon-button src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
-    </div>
+    <div>
+      <div class="location-name">
+        <span>[[location.city]]</span>
+        <!-- <paper-button toggles><img src="../images/stop.png"></paper-button> -->
+        <paper-icon-button toggles src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
+      </div>
 
-    <div class="extra-info">
-      <input class="input-location" type="text" value="{{location.address::input}}">
-      <div class="other-info layout horizontal">
-        <template is="dom-if" if="[[retardation]]">
+      <div class="extra-info">
+        <paper-input class="input-location" label="Dirección" placeholder="c/ dirección, nºX" value="{{location.address::input}}" readonly$="[[lockAddress]]" maxlength="45" required></paper-input>
+        <div class="other-info layout horizontal">
+          <template is="dom-if" if="[[retardation]]">
+            <div class="layout horizontal">
+              <span>Retardo</span>
+              <paper-input-container always-float-label auto-validate attr-for-value="value">
+                <label>Retardo</label>
+                <time-input class="paper-input-input" value="{{location.retardation}}"></time-input>
+                <paper-input-error>¡Hora inválida!</paper-input-error>
+                <!-- <input is="iron-input" type="number" maxlength="3" bind-value="{{hours}}" > -->
+                <!-- <input is="iron-input" type="number" maxlength="2" bind-value="{{minutes}}" > -->
+                <!-- <input is="iron-input" maxlength="3" bind-value="{{hours}}" size="3"> -->
+                <!-- <paper-input type="number" value="{{location.retardation::input}}"></paper-input> -->
+                <!-- <paper-input type="number"></paper-input> -->
+              </paper-input-container>
+            </div>
+          </template>
           <div class="layout horizontal">
-            <span>Retardo</span>
-            <input type="time" value="{{location.retardation::input}}">
+            <span>[[tag(arrival)]]</span>
+            <div class="layout vertical">
+              <span>[[location.date]]</span>
+              <span>[[isodate(location.date)]]</span>
+              <span>Jun</span>
+            </div>
+            <span>10:30</span>
           </div>
-        </template>
-        <div class="layout horizontal">
-          <span>Salida</span>
-          <div class="layout vertical">
-            <span>10</span>
-            <span>Jun</span>
-          </div>
-          <span>10:30</span>
         </div>
       </div>
     </div>
-  </div>
   </template>
 
   <script>
@@ -56,7 +70,25 @@
         // name: String,
         // address: String,
         stop: Boolean,
-        retardation: Boolean
+        lockAddress: Boolean,
+        retardation: Boolean,
+        arrival: {
+          type: Boolean,
+          value: false
+        }
+      },
+      observers: ['retardationChanged(location.retardation)'],
+      tag: function(arrival) {
+        return arrival ? "Llegada" : "Salida";
+      },
+      day: function(date) {
+        return date.getDay();
+      },
+      isodate: function(date) {
+        if(date) return date.toISOString();
+      },
+      retardationChanged: function() {
+        this.fire('retardation-changed', this.location);
       }
     });
   </script>

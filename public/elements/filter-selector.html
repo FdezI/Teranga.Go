@@ -62,16 +62,21 @@
 				selected: {
 					type: String,
 					notify: true
+				},
+				checked: {
+					type: Boolean,
+	        value: false,
+	        reflectToAttribute: true
 				}
 			},
 			ready: function() {
-				this.set('selected', "");
+				if(this.checked) this.set('selected', "");
 			},
 			img: function(type, mode) {
 				return Teranga.image.URL + type + "-" + mode + ".png";
 			},
 			select: function() {
-				this.fire('selected', this.selected);
+				this.fire('selected', this.selected === "" ? null : Number(this.selected));
 			}
 		});
 	</script>
