@@ -97,7 +97,8 @@
         type: Object
       },
       driver: String,
-      travelurl: String
+      travelurl: String,
+      other: Boolean
     },
     day: function(trip) {
         return Teranga.day(trip.dtime);
@@ -112,7 +113,7 @@
       return new Date() > new Date(Date.parse(trip.dtime));
     },
     text: function(trip) {
-      return new Date() < new Date(Date.parse(trip.atime)) ? "En curso" : (trip.driving ? "Hecho" : "Opinar");
+      return new Date() < new Date(Date.parse(trip.atime)) ? "En curso" : (trip.driving || this.other ? "Hecho" : "Opinar");
     }
   });
   </script>

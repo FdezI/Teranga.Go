@@ -315,6 +315,10 @@
         page("/profile/" + favorite.iduser);
       },
 
+      tripSelected: function(e, trip) {
+        page("/trips/" + trip.idtrip);
+      },
+
       createTrip: function() {
         this.goToPage("createTrip");
         // this.page = "createTrip";

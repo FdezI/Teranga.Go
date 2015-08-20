@@ -195,9 +195,22 @@ exports.get = function(req, res, next) {
 	// 						ON T1.idtrip = trip.idtrip\
 	// 					WHERE trip.idtrip=?', req.params.idtrip, function(err, rows, fields) {
 
-	pool.query('SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
-							FROM trip AS T, car, user\
-							WHERE idtrip=? AND T.car = idcar AND driver = iduser', req.params.idtrip, function(err, rows, fields) {
+	var user = req.session.iduser;
+	var trip = pool.escape(req.params.idtrip);
+	if(user) {
+		var sql = "SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+							,IF(COUNT(UT.user) > 0, if(TP.date < NOW(), 'done', 'accepted'), if(COUNT(R.user) > 0, if(TP.date < NOW(), 'expired', 'pending'), 'waiting')) status\
+							FROM trip T, car, user\
+								LEFT JOIN userTrips UT ON UT.user=" + user +
+								" LEFT JOIN requests R ON R.user=" + user +
+								" JOIN tripPoints TP ON TP.trip = " + trip + " AND TP.order = 99\
+							WHERE idtrip=" + trip + " AND T.car = idcar AND driver = iduser"
+	} else {
+		sql = "SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+							FROM trip T, car, user\
+							WHERE idtrip=" + trip + " AND T.car = idcar AND driver = iduser";
+	}
+	pool.query(sql, req.params.idtrip, function(err, rows, fields) {
 		if(err) return next(err);
 	
 		var trip = rows[0];
@@ -244,7 +257,10 @@ exports.search = function(req, res, next) {
 	var where = "";
 	if(req.query && Object.keys(req.query).length > 0) {
 		var offset = Number(req.query.offset);
-		if(offset || offset === 0) delete req.query.offset;
+		var limit = Number(req.query.limit);
+		if(offset || req.query.hasOwnProperty('offset')) delete req.query.offset;//offset === 0) delete req.query.offset;
+		if(limit || req.query.hasOwnProperty('limit')) delete req.query.limit;
+		else limit = 10;
 
 		Object.keys(req.query).forEach(function(key) {
 			var value = pool.escape(req.query[key]);
@@ -273,8 +289,8 @@ exports.search = function(req, res, next) {
 								JOIN tripPoints AS TP ON location = ? AND TP.stop = true AND TP.order != 99\
 								JOIN tripPoints AS TP2 ON TP2.trip = TP.trip AND TP2.location = ? AND TP2.stop = true AND TP2.order != 0\
 								JOIN user AS U ON iduser = T.driver\
-							WHERE idtrip = TP.trip ' + where + ' ORDER BY idtrip ASC LIMIT ?,10',
-							[l1, l2, offset ? offset : 0], function(err, rows, fields) {
+							WHERE idtrip = TP.trip ' + where + ' ORDER BY idtrip ASC LIMIT ?,?',
+							[l1, l2, offset ? offset : 0, limit], function(err, rows, fields) {
 		if(err) return next(err);
 
 		if(rows.length == 0) {

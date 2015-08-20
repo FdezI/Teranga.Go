@@ -1,42 +1,25 @@
-<link rel="import" href="box-container.html">
-<link rel="import" href="travel-box.html">
+<link rel="import" href="container-behavior.html">
+<link rel="import" href="generic-collapse-container.html">
 
-<link rel="import" href="trip-service.html">
+<link rel="import" href="trip-content.html">
+
+<link rel="import" href="data-service.html">
 
 <dom-module name="other-trip-container">
   <template>
-    <box-container name="[[titlename()]]" open="{{open}}">
-      <trip-service user="[[iduser]]" data="{{trips}}" on-response="loaded" fetch="all"></trip-service>
-      
-      <template id="tripsRepeat" is="dom-repeat" items="[[trips]]" as="trip">
-        <travel-box trip="[[trip]]"></travel-box>
-      </template>
-      
-    </box-container>
+    <generic-collapse-container name="[[titleName(data)]]">
+      <trip-content id="content" iduser="[[iduser]]" selected="{{selected}}" data="{{data}}" load$="[[load]]" loading="{{loading}}" other></trip-content>
+    </generic-collapse-container>
   </template>
 
   <script>
     Polymer({
       is: "other-trip-container",
-      properties: {
-        trips: {
-          type: Object,
-          notify: true
-        },
-        iduser: Number,
-        open: Boolean,
-        loading: Boolean
-      },
-      reloadTrips: function() {
-        this.loading = true;
-        this.$$("trip-service").reload();
-        this.$.tripsRepeat.render();
-      },
-      titlename: function() {
-        return "Este usuario tiene " + "3" + " viajes programados";
-      },
-      loaded: function() {
-        this.loading = false;
+
+      behaviors: [Teranga.ContainerBehavior],
+
+      titleName: function(data) {
+        if(data) return "Este usuario tiene " + data.length + " viajes programados";
       }
     });
   </script>

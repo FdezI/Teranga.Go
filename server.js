@@ -41,9 +41,11 @@ var port = process.env.PORT || 8080;        // set our port
 // SESSIONS
 
 var session = require('express-session');
+var FileStore = require('session-file-store')(session);
 
 var sessionMW = session({
-    secret: "-this is a g00d K3y T@ sTºr€ seS71.ns", 
+		store: new FileStore(), //store: new FileStore(options),
+    secret: "-thiß ıs a gø0d K3y T@ sTºr€ seS71.n§", 
 //     cookie: {
 //         maxAge: new Date(Date.now() + 3600), // 1 hour
 //         httpOnly: true,
@@ -71,11 +73,9 @@ function logErrors(err, req, res, next) {
 };
 
 function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
+  if(req.xhr)
     res.status(500).send({ error: 'Something blew up!', whatToDo: 'Contact an administrator' });
-  } else {
-    next(err);
-  }
+  else next(err);
 };
 
 function errorHandler(err, req, res, next) {
@@ -209,6 +209,7 @@ apiRouter.route('/locations')
 	.get(db.locationController.getAll);
 apiRouter.route('/locations/:idlocation')
 	.get(db.locationController.get);
+	
 apiRouter.route('/packages')
 	.get(db.packageController.getAll)
 	.post(db.packageController.create);

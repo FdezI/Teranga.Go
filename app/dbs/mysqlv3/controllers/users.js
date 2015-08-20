@@ -89,24 +89,39 @@ exports.getTrips = function(req, res, next) {
 	// FIRST METHOD
 
 	var user = req.params.iduser;
-	var query = '(SELECT LA.city AS departure, LB.city arrival, PA.date as dtime, PB.date as atime, false as driving\
-											FROM userTrips\
-												LEFT JOIN tripPoints PA ON userTrips.trip = PA.trip AND pointA = PA.order\
-												LEFT JOIN tripPoints PB ON userTrips.trip = PB.trip AND pointB = PB.order\
+	var escapedUser = pool.escape(user);
+
+	if(req.session.iduser == user) {
+		var sql = "(SELECT UT.trip idtrip, LA.city departure, LB.city arrival, PA.date dtime, PB.date atime, false driving\
+											FROM userTrips UT\
+												INNER JOIN tripPoints PA ON UT.trip = PA.trip AND pointA = PA.order\
+												INNER JOIN tripPoints PB ON UT.trip = PB.trip AND pointB = PB.order\
 												INNER JOIN location LA ON LA.idlocation = PA.location\
 												INNER JOIN location LB ON LB.idlocation = PB.location\
-											WHERE user=?)\
+											WHERE user=" + escapedUser + ")\
 											UNION DISTINCT\
-											(SELECT LA.city, LB.city, PA.date, PB.date, true\
+											(SELECT idtrip, LA.city, LB.city, PA.date, PB.date, true\
 											FROM trip\
-												LEFT JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip \
-												LEFT JOIN tripPoints PB ON PB.order = 99 AND idtrip = PB.trip\
-												INNER JOIN location LA ON LA.idlocation = PA.location\
-												INNER JOIN location LB ON LB.idlocation = PB.location\
-											WHERE trip.driver=?)';
+												INNER JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip \
+												INNER JOIN tripPoints PB ON PB.order = 99 AND idtrip = PB.trip\
+												LEFT JOIN location LA ON LA.idlocation = PA.location\
+												LEFT JOIN location LB ON LB.idlocation = PB.location\
+											WHERE trip.driver=" + escapedUser + ")";
+	} else {
+		var date = new Date();
+    date.setTime(date.getTime() - (date.getTimezoneOffset() * 60000));
+
+		sql = "SELECT idtrip, LA.city departure, LB.city arrival, PA.date dtime, PB.date atime\
+											FROM trip\
+												INNER JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip \
+												INNER JOIN tripPoints PB ON PB.order = 99 AND idtrip = PB.trip\
+												LEFT JOIN location LA ON LA.idlocation = PA.location\
+												LEFT JOIN location LB ON LB.idlocation = PB.location\
+											WHERE trip.driver=" + escapedUser + " AND PA.date>='" + date.toISOString() + "'";
+	}
 
 	// This method is returning: [{departure: '', arrival: '', dtime: null, driving: 0}, {...}]
-	pool.query(query, [user, user], function(err, rows, result) {
+	pool.query(sql, function(err, rows, result) {
 
 		if(err) return next(err);
 		
@@ -138,12 +153,19 @@ exports.getCars = function(req, res, next) {
 
 exports.getPackages = function(req, res, next) {
 	var user = req.params.iduser;
-	pool.query("SELECT idpackage, P.name, size, P.description, if(P.emitter = ?, 'emitter', 'receiver') 'is', iduser as other, U.name as otherName, if(COUNT(PT.package) > 0, if(T.expiration < NOW(), 'done', 'accepted'), if(COUNT(PR.package) > 0, if(T.expiration < NOW(), 'expired', 'pending'), 'waiting')) status\
+	if(req.session.iduser != user) {
+		res.json({failed: "Restricted area"});
+		return;
+	}
+
+	pool.query("SELECT idpackage, P.name, size, P.description, if(P.emitter = ?, 'emitter', 'receiver') 'is', iduser as other, U.name as otherName\
+							,if(COUNT(PT.package) > 0, if(TP.date < NOW(), 'done', 'accepted'), if(COUNT(PR.package) > 0, if(TP.date < NOW(), 'expired', 'pending'), 'waiting')) status\
 							FROM package P\
 								LEFT JOIN user U ON iduser = if(P.emitter = ?, receiver, emitter)\
 								LEFT JOIN packageTrips PT ON PT.package = idpackage\
 								LEFT JOIN packageRequests PR ON PR.package = idpackage\
 								LEFT JOIN trip T ON idtrip = PT.trip OR idtrip = PR.trip\
+								JOIN tripPoints TP ON TP.trip = PT.trip AND TP.order = 99\
 							WHERE emitter = ? OR receiver = ?\
 							GROUP BY idpackage", [user, user, user, user], function(err, rows, fields) {
 		if(err) return next(err);
@@ -154,9 +176,15 @@ exports.getPackages = function(req, res, next) {
 
 exports.getFavorites = function(req, res, next) {
 	var user = req.params.iduser;
-	pool.query("SELECT iduser, name, surnames, karma, karma IS NOT NULL AS driver FROM favorites\
+	var date = new Date();
+  date.setTime(date.getTime() - (date.getTimezoneOffset() * 60000));
+
+	pool.query("SELECT iduser, name, surnames, karma, karma IS NOT NULL AS driver, COUNT(idtrip) plannedTrips\
+							FROM favorites\
 								JOIN user ON iduser=user2\
-							WHERE user1=?", user, function(err, rows, fields) {
+								LEFT JOIN trip T ON driver = iduser\
+								INNER JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip AND PA.date >='" + date.toISOString() + "'\
+							WHERE user1=? GROUP BY iduser", user, function(err, rows, fields) {
 		if(err) return next(err);
 
 		res.json(rows);

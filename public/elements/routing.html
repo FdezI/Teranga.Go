@@ -21,6 +21,11 @@
       app.route = '';
       app.route = 'trips';
     });
+    page('/trips/:idtrip', function (data) {
+      app.route = '';
+      app.route = 'trips';
+      app.params = data.params;
+    });
     page('/tracking', function () {
       // app.route = ''; // Infinite loop
       app.route = 'tracking';

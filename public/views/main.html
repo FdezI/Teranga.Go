@@ -154,7 +154,7 @@
 				    </section>
 				    <section hash="trips">
 				    	<!-- <template> -->
-				      	<trips-view session="{{session}}" route="{{route}}"></trips-view>
+				      	<trips-view session="{{session}}" route="{{route}}" idtrip="[[params.idtrip]]"></trips-view>
 				      <!-- </template> -->
 				    </section>
 				    <section hash="tracking">
@@ -275,6 +275,7 @@
       		profile.edit = false;
       		profile.page = "profile";
       	} else if(this.route === "tracking") this.$$("tracking-view").back();
+      	else if(this.route === "trips") this.$$("trips-view").back();
       },
 
       showLogin: function() {
@@ -331,7 +332,8 @@
       	if(!this.$.ap.opened && !this.$.np.opened) this.set('selectedIcon', "");
       },
 
-      notifSelected: function(e, notif) {
+      notifSelected: function(e, line) {
+      	var notif = line.notification;
       	page(Teranga.notifPageFor(notif.type).replace("%e", notif.emitter));
       	this.closePopups();
       },

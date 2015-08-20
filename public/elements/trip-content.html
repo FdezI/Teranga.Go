@@ -12,7 +12,7 @@
     </template>
 
 		<template id="repeat" is="dom-repeat" items="[[data]]" filter="filter">
-	    <travel-box trip="[[item]]" on-click="select"></travel-box>
+	    <travel-box trip="[[item]]" on-click="select" other$="[[other]]"></travel-box>
 	  </template>
   </template>
 
@@ -20,7 +20,8 @@
     Polymer({
       is: "trip-content",
       properties: {
-	      iduser: Number
+	      iduser: Number,
+        other: Boolean
       },
      	behaviors: [Teranga.ContentBehavior, Teranga.ContentLoadBehavior]
     });
