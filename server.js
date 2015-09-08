@@ -101,198 +101,429 @@ apiRouter.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });   
 });
 
-// apiRouter.route('/bears')
-// 	.post(db.bearController.create)
-// 	.get(db.bearController.getAll);
-// apiRouter.route('/bears/:bear_id')
-// 	.get(db.bearController.get)
-// 	.post(db.bearController.update)
-// 	.delete(db.bearController.delete);
-
 apiRouter.route('/auth')
 	/**
-	* Parameters:
+	* Objects:
 	*   body:
-	*     - email
-	*     - password
+	*     - email: Email
+	*     - password: String
 	*   query:
-	*     - logout
+	*     - logout: Boolean
+	*   parameters:
 	*/
 	.post(db.authController.auth);
 	
 apiRouter.route('/users')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
-	 *     - password
-	 *     - email
+	 *     - password: String
+	 *     - email: Email
 	 *     - *
+	 *   query:
+	 *   parameters:
 	 */
 	.post(db.userController.create)
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
 	 */
 	.get(db.userController.getAll);
+
 apiRouter.route('/users/:iduser')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
 	 *     - *
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.get)
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *     - *
+	 *   parameters:
+	 *     - iduser: ID
+	 *    
 	 */
 	.put(db.userController.update);
-	// .delete(db.userController.delete);
 	
 apiRouter.route('/users/:iduser/cars')
-	// .post(db.carController.create)
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getCars);
-	// .get(db.carController.getAll);
-// apiRouter.route('/users/:iduser/cars/:idcar') // Maybe should this be deleted and use unlinked instead
-// 	.get(db.carController.get)
 
 apiRouter.route('/users/:iduser/assessments')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getAssessments);
 
 apiRouter.route('/users/:iduser/packages')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getPackages);
 
 apiRouter.route('/users/:iduser/trips')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getTrips);
 
 apiRouter.route('/users/:iduser/favorites')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getFavorites);
 
 apiRouter.route('/users/:iduser/requests')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getRequests);
 
 apiRouter.route('/users/:iduser/notifications')
 	/**
-	 * Parameters:
+	 * Objects:
 	 *   body:
 	 *   query:
 	 *     - since: UTC DateISOString
+	 *   parameters:
+	 *     - iduser: ID
 	 */
 	.get(db.userController.getNotifications);
 
-// apiRouter.route('/users/:iduser/trips/:idtrip') // Maybe should this be deleted and use unlinked instead
-// 	.get(db.tripController.get)
-// 	.put(db.tripController.addPassenger);
-	
-// apiRouter.route('/users/:iduser/packages')
-// 	.post(db.userController.create)
-// 	.get(db.userController.getAll);
-// apiRouter.route('/users/:iduser/packages/:idpackage') // Maybe should this be deleted and use unlinked instead
-// 	.get(db.userController.get)
-// 	.put(db.userController.update)
-// 	.delete(db.userController.delete);
-
 apiRouter.route('/favorites')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 */
 	.get(db.favoriteController.getAll)
+	/**
+	 * Objects:
+	 *   body:
+	 *     - user1: ID
+	 *     - user2: ID
+	 *   query:
+	 *   parameters:
+	 */
 	.post(db.favoriteController.create)
+	/**
+	 * Objects:
+	 *   body:
+	 *     - user1: ID
+	 *     - user2: ID
+	 *   query:
+	 *   parameters:
+	 */
 	.delete(db.favoriteController.delete);
+
 apiRouter.route('/favorites/:iduser')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
+	 */
 	.get(db.favoriteController.get);
 
 apiRouter.route('/routes')
-	// .post(db.routeController.create)
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *     - list: Boolean
+	 *   parameters:
+	 */
 	.get(db.routeController.getAll);
+
 apiRouter.route('/routes/:idroute')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idroute: ID
+	 */
 	.get(db.routeController.get)
-	// .get(db.tripUnlinkedController.get)
-// 	.post(db.routeController.update)
-	// .delete(db.routeController.delete)
-	// .put(db.routeController.addWaypoint);	
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idroute: ID
+	 */
+	.delete(db.routeController.delete);
 
 apiRouter.route('/trips')
+	/**
+	 * Objects:
+	 *   body:
+	 *     - wps: Array({location: ID, address: String, stop: Boolean, date: UTC DateISOString, cost: Float, pkcost: Float})
+	 *     - animals: Boolean/Null/None
+	 *     - packages: Boolean/Null/None
+	 *   query:
+	 *   parameters:
+	 */
 	.post(db.tripUnlinkedController.create)
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *     - origin: ID(Location)
+	 *     - destination: ID(Location)
+	 *     - offset: Integer/None
+	 *     - limit: Integer/None
+	 *     - from: UTC DateISOString/None
+	 *     - to: UTC DateISOString/None
+	 *     - animals: Boolean/Null/None
+	 *     - packages: Boolean/Null/None
+	 *   parameters:
+	 */
 	.get(db.tripUnlinkedController.search);
+
 apiRouter.route('/trips/:idtrip')
-	.get(db.tripUnlinkedController.get)
-// 	.post(db.tripUnlinkedController.update)
-	// .delete(db.tripUnlinkedController.delete)
-	// .put(db.tripUnlinkedController.addPassenger);
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idtrip: ID
+	 */
+	.get(db.tripUnlinkedController.get);
 
 apiRouter.route('/cars')
+	/**
+	 * Objects:
+	 *   body:
+	 *     - iduser: ID
+	 *     - seats: Integer
+	 *     - model: String
+	 *     - hp: Integer
+	 *   query:
+	 *   parameters:
+	 */
 	.post(db.carUnlinkedController.create)
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 */
 	.get(db.carUnlinkedController.getAll);
+
 apiRouter.route('/cars/:idcar')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idcar: ID
+	 */
 	.get(db.carUnlinkedController.get)
+	/**
+	 * Objects:
+	 *   body:
+	 *     - seats: Integer/None
+	 *     - model: String/None
+	 *     - hp: Integer/None
+	 *   query:
+	 *   parameters:
+	 *     - idcar: ID
+	 */
 	.put(db.carUnlinkedController.update)
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idcar: ID
+	 */
 	.delete(db.carUnlinkedController.delete);
 
 apiRouter.route('/request/travel')
-	// .get(db.requestController.getAllTravel)
+	/**
+	 * Objects:
+	 *   body:
+	 *     - user: ID
+	 *     - trip: ID
+	 *     - pointA: Integer(Order)
+	 *     - pointB: Integer(Order)
+	 *     - travels: Boolean
+	 *     - cost: Float
+	 *     - packages: Array({package: ID, cost: Float})
+	 *   query:
+	 *   parameters:
+	 */
 	.post(db.requestController.requestTravel);
+
 apiRouter.route('/request/accept')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *     - user: ID
+	 *     - trip: ID
+	 *   parameters:
+	 */
 	.post(db.requestController.acceptRequest);
 
 apiRouter.route('/notifications')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *     - since: UTC DateISOString
+	 *   parameters:
+	 */
 	.get(db.notificationController.getAll)
+	/**
+	 * Objects:
+	 *   body:
+	 *     - emitter: ID(User)
+	 *     - receiver: ID(User)
+	 *     - notifications: Array(ID(Notification))
+	 *   query:
+	 *   parameters:
+	 */
 	.put(db.notificationController.markRead);
 
-// apiRouter.route('/request/packet')
-	// .get(db.requestController.getAllPacket)
-	// .post(db.requestController.requestPacket);
-
 apiRouter.route('/locations')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *     - list: Boolean
+	 *     - route: ID/None
+	 *   parameters:
+	 */
 	.get(db.locationController.getAll);
+
 apiRouter.route('/locations/:idlocation')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idlocation: ID/"random"
+	 */
 	.get(db.locationController.get);
 	
 apiRouter.route('/packages')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 */
 	.get(db.packageController.getAll)
+	/**
+	 * Objects:
+	 *   body:
+	 *     - name: String
+	 *     - size: Integer
+	 *     - emitter: ID(User)
+	 *     - receiver: ID(User)/None
+	 *   query:
+	 *   parameters:
+	 */
 	.post(db.packageController.create);
+
 apiRouter.route('/packages/:idpackage')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - idpackage: ID
+	 */
 	.get(db.packageController.get);
 
 apiRouter.route('/config')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 */
 	.get(db.configController.get);
+
 apiRouter.route('/config/:param')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *     - KmCost: Boolean
+	 *     - KmPkCost: Boolean
+	 *     - version: Boolean
+	 *     - name: Boolean
+	 *     - timezone: Boolean
+	 *   parameters:
+	 *     - param: "trips"/"api"/"db"
+	 */
 	.get(db.configController.get);
 
 apiRouter.route('/actions')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 */
 	.get(actions.getActions);
+
 apiRouter.route('/actions/:action')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - action: "generate"
+	 */
 	.get(actions.exec);
+
 apiRouter.route('/actions/:action/:mode')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - action: "generate"
+	 *     - mode: "car"/"user"/"route"/"trip"
+	 */
 	.get(actions.exec);
 
 	
