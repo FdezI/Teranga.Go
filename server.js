@@ -110,39 +110,106 @@ apiRouter.get('/', function(req, res) {
 // 	.delete(db.bearController.delete);
 
 apiRouter.route('/auth')
+	/**
+	* Parameters:
+	*   body:
+	*     - email
+	*     - password
+	*   query:
+	*     - logout
+	*/
 	.post(db.authController.auth);
 	
 apiRouter.route('/users')
+	/**
+	 * Parameters:
+	 *   body:
+	 *     - password
+	 *     - email
+	 *     - *
+	 */
 	.post(db.userController.create)
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getAll);
 apiRouter.route('/users/:iduser')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 *     - *
+	 */
 	.get(db.userController.get)
+	/**
+	 * Parameters:
+	 *   body:
+	 *     - *
+	 */
 	.put(db.userController.update);
 	// .delete(db.userController.delete);
 	
 apiRouter.route('/users/:iduser/cars')
 	// .post(db.carController.create)
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getCars);
 	// .get(db.carController.getAll);
 // apiRouter.route('/users/:iduser/cars/:idcar') // Maybe should this be deleted and use unlinked instead
 // 	.get(db.carController.get)
 
 apiRouter.route('/users/:iduser/assessments')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getAssessments);
 
 apiRouter.route('/users/:iduser/packages')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getPackages);
 
 apiRouter.route('/users/:iduser/trips')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getTrips);
 
 apiRouter.route('/users/:iduser/favorites')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getFavorites);
 
 apiRouter.route('/users/:iduser/requests')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 */
 	.get(db.userController.getRequests);
 
 apiRouter.route('/users/:iduser/notifications')
+	/**
+	 * Parameters:
+	 *   body:
+	 *   query:
+	 *     - since: UTC DateISOString
+	 */
 	.get(db.userController.getNotifications);
 
 // apiRouter.route('/users/:iduser/trips/:idtrip') // Maybe should this be deleted and use unlinked instead

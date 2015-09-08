@@ -2,7 +2,7 @@ var mysql = require('mysql');
 
 // UNREGISTERED
 exports.auth = function(req, res, next) {
-	if(req.query.logout || req.query.hasOwnProperty('list')) {
+	if(req.query.logout || req.query.hasOwnProperty('logout')) {
 		req.session.destroy(function(err) { if(err) return next(err); })
 	} else {
 		if(!req.body.email || !req.body.password) res.json({});
