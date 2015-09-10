@@ -214,7 +214,7 @@
 // 	case "date":
       }
       
-      return desc ? function(a, b) { a[attr] < b[attr] ? -1 : 1 } : function(a, b) { a[attr] > b[attr] ? -1 : 1 };
+      return desc ? function(a, b) { return a[attr] < b[attr] ? -1 : 1; } : function(a, b) { return a[attr] > b[attr] ? -1 : 1; };
     },
     
     search: function() {
