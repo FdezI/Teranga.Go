@@ -14,7 +14,7 @@
 <dom-module name="tracking-view">
   <style>
     .tracking-img {
-    width: 35%;
+    width: 30%;
     height: auto;
     margin-bottom: 10px;
     margin-top: 5%;
@@ -23,9 +23,16 @@
   .package-input {
     width: 80%;
   }
-  .package-button {
-    width: 150px;
+  .search-package-button {
+    width: 100%;
+    text-align: center;
+    margin: 20px;
   }
+
+  .search-package-button > .primary-button {
+    width: 50%;
+  }
+
   .back-button {
     margin: 5px;
   }
@@ -42,7 +49,9 @@
           <template is="dom-if" if="[[!loading]]">
             <paper-input id="input" class="package-input" placeholder="Introduce el identificador (ID) del paquete" label="ID" pattern="^\d+$" error-message="El identificador debe estar compuesto únicamente por números" required auto-validate on-keydown="search"></paper-input>
           
-            <paper-button class="package-button" raised on-click="search" href="9">Buscar</paper-button>
+            <div class="search-package-button">
+              <paper-button class="primary-button" raised on-click="search" href="9">Buscar</paper-button>
+            </div>
           </template>
           <template is="dom-if" if="[[loading]]">
             <paper-spinner active></paper-spinner>

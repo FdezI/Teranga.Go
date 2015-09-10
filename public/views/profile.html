@@ -53,27 +53,12 @@
 <dom-module name="profile-view">
 
   <template>
-
-    <!-- <user-service id="service" data="{{session.user}}" update="[[update]]" fetch="[[session.user.iduser]]"></user-service> -->
     <data-service id="uss" type="users" update="[[update]]" fetch="[[session.user.iduser]]" on-response="profileSaved"></data-service>
     <data-service id="usl" type="users" data="{{session.user}}" fetch="[[session.user.iduser]]" on-response="profileLoaded"></data-service>
 
     <template id="profileTemplate" is="dom-if" if="[[session.user.iduser]]">
       <template id="profileTemplate" is="dom-if" if="[[isPage('profile', page)]]">
-      <!-- <iron-pages attr-for-selected="page" selected="{{page}}"> -->
-        <!-- <other-profile showdriver="true"></other-profile> -->
-        <!-- <create-trip user="{{session.user}}"></create-trip> -->
-        <!-- <tracking-package></tracking-package> -->
-        <!-- <user-box name="Carmen" score="3" url="/"></user-box> -->
-        <!-- <trip-card  username="Carmen" score="3" start="Granada" departure="Gibraltar" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card>
-        <trip-card  username="Carmen" score="3" start="Granada" arrival="Dogo" day="20" month="Jun" hour="10:30" seats="3" price="12" pets="allow" packages="deny"></trip-card> -->
-        <!-- <travel-box departure="Granada" arrival="Dogo" driver="Carmen" day="20" month="Jun" hour="10:30"></travel-box>
-        <package-box name="Paquete" idpackage="23542795647" status="Inactivo" size="Mediano" url="/"></package-box>
-        <user-box name="Carmen" score="3" url="/"></user-box>
-        <own-request-box departure="Granada" arrival="Dogo" status="Pendiente" day="20" month="Jun" hour="10:30"></own-request-box>
-        <comment-box image="" car="3" driver="6" profileurl="/" comment="bla bla bla bla bla bla bla bla bla bla bla"></comment-box>
-        <request-box departure="Granada" arrival="Dogo" seats="1" packages="3" url="/"></request-box>
- -->
+     
         <article page="profile">
 
           <div class="margin-block layout horizontal">

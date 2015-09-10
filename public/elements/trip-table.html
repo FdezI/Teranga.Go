@@ -1,6 +1,9 @@
 <link rel="import" href="trip-list.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
 <link rel="import" href="filter-selector.html">
 
 <link rel="import" href="location-service.html">
@@ -14,6 +17,9 @@
     border: 1px solid #ccc;
     background: #ddd;
     text-align: center;
+    padding: 5px;
+  }
+  .trip-table-filters {
     padding: 5px;
   }
   .search-td {
@@ -124,34 +130,42 @@
         </table>
       </div>
     </div>
-    
-    <div class="trip-table-header layout horizontal">
-      <div class="layout vertical">
-        <div>Viajes de <span>[[departure]]</span> a <span>[[arrival]]</span></div>
-
-        <div class="trip-table-filters">
-          <span>Ordenar por:</span>
-          <select value="Precio descendente">
-            <option>Precio ascendente</option>
-            <option>Precio descendente</option>
-            <option>Estrellas</option>
-            <option>Fecha y hora</option>
-          </select>
+    <template is="dom-if" if="[[trips]]">
+      <div class="trip-table-header layout horizontal">
+        <div class="layout vertical">
+          <!-- <paper-dropdown-menu label="Ordenar por:">
+            <paper-menu class="dropdown-content trip-table-filters">
+              <paper-item>Precio ascendente</paper-item>
+              <paper-item>Precio descendente</paper-item>
+              <paper-item>Estrellas</paper-item>
+              <paper-item>Fecha y hora</paper-item>
+            </paper-menu>
+          </paper-dropdown-menu> -->
+          <div>
+            <span>Ordenar por:</span>
+            <select  class="trip-table-filters" value="Precio descendente">
+              <option>Precio ascendente</option>
+              <option>Precio descendente</option>
+              <option>Estrellas</option>
+              <option>Fecha y hora</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <template is="dom-if" if="[[!petsAndPackages]]">
-        <filter-selector type="pet" selected="{{localFilters.animals}}" checked></filter-selector>
-        <filter-selector type="package" selected="{{localFilters.packages}}" checked></filter-selector>
-      </template>
-    </div>
-    <div class="trip-table-content">
-      <trip-list>
-        <template is="dom-repeat" items="{{trips}}" as="trip">
-          <!-- <trip-card  username="[[trip.driverName]]" score="3" cities="[[trip.cities]]" departure="[[trip.departure]]" arrival="[[trip.arrival]]" day="[[day(trip)]]" month="[[month(trip)]]" hour="[[time(trip)]]" seats="[[trip.free]]" price="[[trip.cost]]" pets="[[allow(trip.animals)]]" packages="[[allow(trip.packages)]]"></trip-card> -->
-          <trip-card trip="[[trip]]"></trip-card>
+
+      
+        <template is="dom-if" if="[[!petsAndPackages]]">
+          <filter-selector type="pet" selected="{{localFilters.animals}}" checked></filter-selector>
+          <filter-selector type="package" selected="{{localFilters.packages}}" checked></filter-selector>
         </template>
-      </trip-list>
-    </div>
+      </div>
+      <div class="trip-table-content">
+        <trip-list>
+          <template is="dom-repeat" items="{{trips}}" as="trip">
+            <trip-card trip="[[trip]]"></trip-card>
+          </template>
+        </trip-list>
+      </div>
+    </template>
   </template>
 
   <script>

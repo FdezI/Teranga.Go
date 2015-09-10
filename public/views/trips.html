@@ -10,11 +10,11 @@
       <data-service id="ts" type="trips" fetch="all" filters="[[filters]]" data="{{trips}}"></data-service>
       <trip-table pets-and-packages trips="{{trips}}" filters="{{filters}}" on-search="search" on-selected="tripSelected"></trip-table>
 
-      <select value="{{idtrip::input}}">
+      <!-- <select value="{{idtrip::input}}">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
-      </select>
+      </select> -->
     </template>
 
     <template is="dom-if" if="[[isPage('info', page)]]">

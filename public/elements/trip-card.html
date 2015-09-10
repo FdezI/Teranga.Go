@@ -5,52 +5,21 @@
 <dom-module name="trip-card">
   
   <style>
-
-    /*:host {
-      display: block;
-      position: relative;
-      background-color: white;
-      padding: 20px;
-      width: 100%;
-      font-size: 1.2rem;
-      font-weight: 300;
-    }
-    .card-header {
-      margin-bottom: 10px;
-    }
-    polyfill-next-selector { content: '.card-header h2'; }
-    .card-header ::content h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    polyfill-next-selector { content: '.card-header h3'; }
-    .card-header ::content h3 {
-      margin: 0;
-      font-size: 1.2rem;
-      font-weight: bolder;
-    }
-    polyfill-next-selector { content: '.card-header img'; }
-    .card-header ::content img {
-      width: 70px;
-      border-radius: 50%;
-      margin: 10px;
-    }
-    :host([selected]) paper-icon-button {
-      color: #da4336;
-    }*/
     .trip-card-div {
       border: 1px solid #ccc;
       margin: 10px;
+      border-radius: 6px;
     }
     .trip-card-img {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      height: 80px;
+      margin-bottom: 10px;
     }
 
     .trip-card-seat {
-      width: 20px;
-      height: 20px;
+      width: 40px;
+      height: 40px;
+      margin: 10px;
     }
     .trip-card-options {
       width: 40%;
@@ -61,6 +30,9 @@
       margin: 10px;
       text-align: center;
     }
+    .trip-card-1:hover {
+      cursor: pointer;
+    }
     .trip-card-2 {
       width: 60%;
       margin: 10px;
@@ -70,80 +42,88 @@
       margin: 10px;
       text-align: center;
     }
+    .date-zone {
+      background: #222;
+      color: #efefef;
+      margin: 10px;
+      padding: 5px;
+      width: 40px;
+      height: 40px;
+    }
+    .time-zone {
+      font-weight: bold;
+    }
+    .price-div {
+      font-size: 40px;
+      color: #222;
+    }
+    .person-div {
+      color: #999;
+      font-size: 10px;
+    }
+    .zone-div {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .trip-free-div {
+      font-weight: bold;
+      font-size: 20px;
+      margin: 3px;
+    }
+    .title-trip-div {
+      font-weight: bold;
+      font-variant: small-caps;
+      font-size: 30px;
+      color: #FF6A1D;
+    }
   </style>
 
   <template>
     <div class="trip-card-div layout horizontal">
-      <div class="layout vertical center trip-card-1">
-        <img src="[[imguser]]" class="trip-card-img">
+      <div on-click="openUser" class="layout vertical center trip-card-1">
+        <img src="[[userIMG(trip.driver)]]" class="trip-card-img">
         <stars-rating score="[[score]]"></stars-rating>
-        <a href="[[userurl]]">[[trip.driverName]]</a>
+        <span>[[trip.driverName]]</span>
       </div>
 
       <div class="horizontal-separator"></div>
 
       <div class="layout vertical trip-card-2">
-        <div>
+        <div class="title-trip-div">
           <template id="citiesRepeat" is="dom-repeat" items="[[trip.cities]]" as="city">
             <span strong$="[[isSearched(index)]]">[[city]]</span><span>[[dash(index, trip.cities)]]</span>
           </template>
-          <!-- <span>[[cities.departure]]</span><span> - </span>
-          <template is="dom-if" if="[[departure]]">
-            <span>[[departure]]</span><span> - </span>
-          </template>
-          <span>[[cities.arrival]]</span> -->
         </div>
         <div class="layout horizontal center">
-          <div class="layout vertical center">
+          <div class="layout vertical center date-zone">
             <span>[[day(trip)]]</span>
             <span>[[month(trip)]]</span>
           </div>
           <div>
-            <span>[[time(trip)]]</span>
+            <span class="time-zone">[[time(trip)]]</span>
           </div>
         </div>
-        <div>
+        <div class="layout horizontal center">
           <img class="trip-card-seat" src="../images/seat-icon.png">
-          <span>[[trip.free]]</span><span> plazas libres</span>
+          <span class="trip-free-div">[[trip.free]]</span><span> plazas libres</span>
         </div>
       </div>
 
       <div class="trip-card-3">
-        <div><span>[[trip.cost]]</span>€</div>
-        <span>por persona</span>
-        <div class="layout horizontal center">
-          <img class="trip-card-options" src="[[imageURL('pet', allow(trip.animals))]]">
-          <img class="trip-card-options" src="[[imageURL('package', allow(trip.packages))]]">
+        <div class="zone-div">
+          <div class="price-div"><span>[[trip.cost]]</span>€</div>
+          <span class="person-div">por persona</span>
+          <div class="layout horizontal center">
+            <img class="trip-card-options" src="[[imageURL('pet', trip.animals)]]">
+            <img class="trip-card-options" src="[[imageURL('package', trip.packages)]]">
+          </div>
         </div>
-        <paper-button raised on-click="openTrip">Ver</paper-button>
+
+        <paper-button class="primary-button" raised on-click="openTrip">Ver</paper-button>
       </div>
     </div>
     
-
-    <!-- <div class="card-header layout horizontal center">
-
-      <div class="layout vertical">
-        <content select="img"></content>
-        <div class="layout horizontal">
-          <paper-icon-button icon="social:person-outline" on-tap=""></paper-icon-button>
-          <content select="free"></content>
-          <paper-icon-button icon="maps:local-shipping" on-tap="test" hidden$="{{!packages}}"></paper-icon-button>
-        </div>
-      </div>
-      <div class="layout vertical">
-      	<content select="h2"></content>
-      	<content select="h3"></content>
-      	<content></content>  
-      </div>
-
-      <paper-icon-button
-        id="more"
-        icon="more-horiz"
-        on-tap="selectedTapped"
-        class="right">
-      </paper-icon-button>
-
-    </div> -->
   </template>
   <script>
   //TODO instead of getting the trip per attribute bind the full trip
@@ -152,8 +132,14 @@
     properties: {
       trip: Object
     },
+    userIMG: function(iduser) {
+      return Teranga.imageForUser(iduser);
+    },
+    openUser: function() {
+      page("/profile/" + this.trip.driver);
+    },
     imageURL: function(type, mode) {
-      return Teranga.image.URL + type + "-" + mode + ".png";
+      return Teranga.image.URL + type + "-" + this.allow(mode) + ".png";
     },
     isSearched: function(i) {
       return i == this.departure || i == this.arrival;

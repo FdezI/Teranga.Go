@@ -11,7 +11,7 @@
 	
 	images.URL = window.location.origin + "/images/";
 	images.user = {};
-	images.user.URL = images.URL + "images/user/";
+	images.user.URL = images.URL + "user/";
 	images.user.AVATARS = images.user.URL + "avatar/";
 
 	Teranga.months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -22,6 +22,9 @@
 
   Teranga.minPasswordLength = 8;
 
+  Teranga.imageForUser = function(iduser) {
+    return Teranga.image.user.URL + "user" + iduser + ".png";
+  };
   Teranga.packageSizes = function(size) {
     var sizes = Teranga.pSizes;
     return size < sizes.length ? sizes[size] : "Sin tamaño";

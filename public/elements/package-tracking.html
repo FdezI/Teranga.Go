@@ -18,22 +18,32 @@
       box-shadow: 0px 0px 5px #ccc;
       padding: 10px;
       display: inline-block;
+      margin: 15px;
     }
 
-    .name-package {
+    .info-package {
       margin: 20px;
       vertical-align: top;
       display: inline-block;
+    }
+
+    .name-package {
+      font-weight: bold;
+      font-size: 30px;
+      font-variant: small-caps;
     }
 
     .size-package {
       float: right;
       padding: 15px;
-      border: 1px solid #ccc;
+      border: 2px solid #FF6A1D;
       display: inline-block;
       vertical-align: top;
       margin: 20px;
       text-align: center;
+      background: #222;
+      color: #efefef;
+      border-radius: 6px;
     }
     .delete-container {
       display: inline-table;
@@ -43,6 +53,8 @@
       float: right;
       /*border: 1px solid #ccc;*/
       margin: 10px;
+      /*width: 30%;*/
+      width: auto;
       /*padding: 10px;*/
     }
     .comment-package {
@@ -96,18 +108,20 @@
     }
   </style>
   <template>
-    <!-- <data-service id="ds" type="packages" fetch="[[idpackage]]" data="{{package}}"></data-service> -->
-
     <div class="info-container">
       <img class="img-package" src="../images/package-allow.png">
-      <div class="name-package">
-        <span>[[package.name]]</span>
+      <div class="info-package">
+        <span class="name-package">[[package.name]]</span>
         <div>ID: <span>[[package.idpackage]]</span></div>
       </div>
       <div class="size-package">[[size(package.size)]]</div>
     </div>
     <div class="comment-package">[[package.description]]</div>
-    <div class="delete-container"><paper-button class="delete-package" raised on-click="delete">Eliminar paquete</paper-button></div>
+    <div class="delete-container">
+      <div class="delete-package">
+        <paper-button class="primary-button" raised on-click="delete">Eliminar paquete</paper-button>
+      </div>
+    </div>
     <div class="vertical-separator"></div>
 
     <template is="dom-if" if="[[traveling()]]">
@@ -115,8 +129,8 @@
     </template>
 
     <div class="status-package">
-      <div>Estado: <span>Inactivo</span></div>
       <template is="dom-if" if="[[traveling()]]">
+        <div><b>Estado: </b><span>Activo</span></div>
         <div>Fecha estimada de salida: <span>10</span> <span>Junio</span> a las <span>10:30</span></div>
         <div>Fecha estimada de llegada: <span>10</span> <span>Junio</span> a las <span>10:30</span></div>
         <div>Última localización: <span>Motril</span></div>
@@ -147,7 +161,7 @@
       traveling: function() {
         // if(package && package.status == "inactivo") return false;
         // else return true;
-        return true;
+        return false;
       },
 
       size: function(size) {
