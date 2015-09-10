@@ -143,11 +143,11 @@
           </paper-dropdown-menu> -->
           <div>
             <span>Ordenar por:</span>
-            <select  class="trip-table-filters" value="Precio descendente">
-              <option>Precio ascendente</option>
-              <option>Precio descendente</option>
-              <option>Estrellas</option>
-              <option>Fecha y hora</option>
+            <select class="trip-table-filters" value="[[sortValue::input]]">
+              <option value="priceASC">Precio ascendente</option>
+              <option value="priceDES">Precio descendente</option>
+              <option value="stars">Estrellas</option>
+              <option value="date">Fecha y hora</option>
             </select>
           </div>
         </div>
@@ -160,7 +160,7 @@
       </div>
       <div class="trip-table-content">
         <trip-list>
-          <template is="dom-repeat" items="{{trips}}" as="trip">
+          <template is="dom-repeat" items="{{trips}}" as="trip" sort="[[sortTrips(sortValue)]]">
             <trip-card trip="[[trip]]"></trip-card>
           </template>
         </trip-list>
@@ -189,7 +189,11 @@
         value: {},
         readOnly: true
       },
-      wps: Array
+      wps: Array,
+      sortValue: {
+	type: String,
+	value: "priceDES"
+      }
     },
 
     observers: ['fromChanged(filters.from)', 'toChanged(filters.to)', 'validate(fakefilters.origin)', 'validate(fakefilters.destination)'],
@@ -198,6 +202,19 @@
       this.$.ls.reload();
       this.set('filters.from', this.today());
       this.set('filters.to', this.today());
+    },
+    
+    sortTrips: function(value) {
+      var attr = "date";
+      var desc = false;
+      switch(value) {
+	case "priceDES": desc = true;
+	case "priceASC": attr = "cost"; break;
+	case "stars": attr = "karma"; break;
+// 	case "date":
+      }
+      
+      return desc ? function(a, b) { a[attr] < b[attr] ? -1 : 1 } : function(a, b) { a[attr] > b[attr] ? -1 : 1 };
     },
     
     search: function() {
