@@ -64,7 +64,7 @@
           <div class="margin-block layout horizontal">
             <div class="layout vertical profile-a">
               <div class="profile-photo-super">
-                <img class="profile-photo" src="../images/full-star.png"/>
+                <img class="profile-photo" src="[[userIMG(session.user.iduser)]]"/>
                 <template is="dom-if" if="[[edit]]">
                   <div class="profile-photo-div"><img src="../images/edit.png"></div>
                 </template>
@@ -242,6 +242,9 @@
       //     this.$.usl.reload();
       //   }
       // },
+      userIMG: function(iduser) {
+        return Teranga.imageForUser(iduser);
+      },
       editProfile: function() {
 
         var update = {};
