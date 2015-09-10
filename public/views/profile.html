@@ -84,7 +84,7 @@
 
             <div class="layout vertical profile-b">
               <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
-              <div class="profile-age"><span>XX</span> años</div>
+              <div class="profile-age"><span><b>20</b></span> años</div>
               <template is="dom-if" if="[[edit]]">
                 <form>
                   <!-- <table style="width:100%"> -->
@@ -150,22 +150,26 @@
                 <!-- <request-container iduser="[[session.user.iduser]]" packages="{{session.user.requests}}"></request-container> -->
               </div>
             </div>
-
-            <generic-collapse-container name="Paquetes" reloadable additable>
-              <package-content iduser="[[session.user.iduser]]" on-select="packageSelected" data="{{session.user.packages}}"></package-content>
-            </generic-collapse-container>
-
-            <!-- <package-container iduser="[[session.user.iduser]]" packages="{{session.user.packages}}" on-select="packageSelected"></package-container> -->
-            <!-- <user-container iduser="[[session.user.iduser]]" packages="{{session.user.users}}"></user-container> -->
-            <generic-collapse-container name="Usuarios favoritos" reloadable>
-              <user-content type="favorites" iduser="[[session.user.iduser]]" on-select="favoriteSelected" data="{{session.user.favorites}}"></user-content>
-            </generic-collapse-container>
-            
-            <template is="dom-if" if="[[session.user.driver]]">
-              <generic-collapse-container name="Opiniones" reloadable additable>
-                <assessment-content iduser="[[session.user.iduser]]" on-select="assessmentSelected" data="{{session.user.assessments}}"></assessment-content>
+            <div class="profile-container">
+              <generic-collapse-container name="Paquetes" reloadable additable>
+                <package-content iduser="[[session.user.iduser]]" on-select="packageSelected" data="{{session.user.packages}}"></package-content>
               </generic-collapse-container>
-              <!-- <assessment-container iduser="[[session.user.iduser]]" assessments="{{session.user.assessments}}"></assessment-container> -->
+            </div>
+
+            <div class="profile-container">
+              <generic-collapse-container name="Usuarios favoritos" reloadable>
+                <user-content type="favorites" iduser="[[session.user.iduser]]" on-select="favoriteSelected" data="{{session.user.favorites}}"></user-content>
+              </generic-collapse-container>
+            </div>
+
+            <template is="dom-if" if="[[session.user.driver]]">
+              <div class="vertical-separator"></div>
+
+              <div class="profile-container">
+                <!-- <generic-collapse-container name="Opiniones" reloadable additable> -->
+                  <assessment-content iduser="[[session.user.iduser]]" on-select="assessmentSelected" data="{{session.user.assessments}}"></assessment-content>
+                <!-- </generic-collapse-container> -->
+              </div>
             </template>
           </template>
 
