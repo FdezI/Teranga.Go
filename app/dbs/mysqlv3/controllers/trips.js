@@ -94,7 +94,7 @@ exports.create = function(req, res, next) {
 // AUTHENTICATED
 exports.getAll = function(req, res, next) {
 	// TODO
-	pool.query('SELECT idtrip, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+	pool.query('SELECT idtrip, karma, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
 							FROM trip AS T, car, user\
 							WHERE T.car = idcar AND driver = iduser', function(err, rows, fields) {
 		if(err) return next(err);
