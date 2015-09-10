@@ -10,20 +10,22 @@
       padding: 30px 20px 20px 20px;
       display: inline-block;
       vertical-align: top;
-      background-color: #EBEBEB;
+      background-color: #DDD;
       text-align: center;
+      border-radius: 6px;
     }
     .contentinfo.column > ::content img {
       margin-top: -80px;
       width: 50px;
       height: 50px;
-      border: 1px solid #ccc;
+      border: 2px solid #000;
       border-radius: 50%;
-      background: #ddd;
+      background: #FF6A1D;
       padding: 10px;
     }
     .contentinfo.column > ::content h3 {
       margin: 0;
+      color: #222;
     }
     .contentinfo.column > ::content button {
       width: 150px;
@@ -37,7 +39,7 @@
       <content select="h3"></content>
       <content select="p"></content>
       <template is="dom-if" if="[[button]]">
-      	<paper-button class="btn green" raised on-click="select">
+      	<paper-button class="primary-button" raised on-click="select">
       		<span>[[button]]</span>
     		</paper-button>
       </template>
