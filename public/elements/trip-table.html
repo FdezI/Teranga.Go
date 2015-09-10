@@ -206,15 +206,17 @@
     
     sortTrips: function(value) {
       var attr = "date";
-      var desc = false;
+      var order = 1;
       switch(value) {
-	case "priceDES": desc = true;
+	case "priceDES": order = -1;
 	case "priceASC": attr = "cost"; break;
 	case "stars": attr = "karma"; break;
 // 	case "date":
       }
       
-      return desc ? function(a, b) { return a[attr] < b[attr] ? -1 : 1; } : function(a, b) { return a[attr] > b[attr] ? -1 : 1; };
+      return function(a, b) {
+		return a[attr] === b[attr] ? 0 : (a[attr] < b[attr] ? -order : order);
+	      };
     },
     
     search: function() {
