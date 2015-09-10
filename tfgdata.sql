@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: TFGv3
 -- ------------------------------------------------------
--- Server version	5.5.44-0ubuntu0.14.04.1
+-- Server version	5.5.44-0ubuntu0.14.10.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -119,7 +119,7 @@ DELIMITER ;;
 
 BEGIN
 
--- Notify the driver
+
 REPLACE INTO `notification` (emitter, receiver, type) VALUES (NEW.user1, NEW.user2, 'favorite');
 
 END */;;
@@ -153,7 +153,7 @@ CREATE TABLE `location` (
 
 LOCK TABLES `location` WRITE;
 /*!40000 ALTER TABLE `location` DISABLE KEYS */;
-INSERT INTO `location` VALUES (1,'Granada','España','','',0),(2,'Motril','España','','',0),(3,'Gibraltar','España','','',0),(4,'Dogo','Mali','','',0),(5,'Touba','Senegal',NULL,NULL,0);
+INSERT INTO `location` VALUES (1,'Granada','España','Granada es una ciudad y municipio español, capital de la provincia homónima, en la comunidad autónoma de Andalucía.','http://assets.tours2dream.com/images/tours/26',0),(2,'Motril','España','Motril es una ciudad y municipio español situado en la parte central de la comarca de la Costa Granadina, en la provincia de Granada, comunidad autónoma de Andalucía.','http://canales.opinionmalaga.com/turismo/wp-c',0),(3,'Gibraltar','España','Gibraltar es un territorio británico de ultramar situado en una pequeña península del extremo sur de la península ibérica, haciendo frontera únicamente con España, país que reclama su soberanía.','https://upload.wikimedia.org/wikipedia/common',0),(4,'Dogo','Mali','Dogo is a small town and commune in the Cercle of Bougouni in the Sikasso Region of southern Mali. As of 2009 the commune had a population of 33,466.','https://farm3.staticflickr.com/2775/438465531',0),(5,'Touba','Senegal','Touba es una ciudad en el corazón de Senegal. Se trata de la ciudad sagrada del Muridismo y lugar de entierro de su fundador, Shaikh Aamadu Bàmba Mbàkke. Cerca de su tumba se encuentra una gran mezquita fechada en 1963.','https://upload.wikimedia.org/wikipedia/common',0);
 /*!40000 ALTER TABLE `location` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -398,10 +398,10 @@ BEGIN
 
 DECLARE driver INT(11);
 
--- Find driver
+
 SELECT driver FROM trip WHERE idtrip = NEW.trip INTO driver;
 
--- Notify the driver
+
 REPLACE INTO `notification` (emitter, receiver, type, object) VALUES (NEW.user, driver, 'tripReq', NEW.trip);
 
 END */;;
@@ -610,4 +610,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-27 21:50:19
+-- Dump completed on 2015-09-10 19:43:05
