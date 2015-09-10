@@ -36,35 +36,54 @@
     .travel-box-button {
       width: 100%;
     }
+
+    .title-container {
+      font-size: 20px;
+      font-weight: bold;
+      font-variant: small-caps;
+      color: #FF6A1D;
+    }
+
+    .date-zone {
+      background: #222;
+      color: #efefef;
+      margin: 10px;
+      padding: 5px;
+      width: 40px;
+      height: 40px;
+    }
+    .time-zone {
+      font-weight: bold;
+    }
   </style>
   
   <template>
     <a id="linktravel" href="[[travelurl]]">
       <div class="travel">
         <table>
-          <tr>
+          <tr class="title-container">
             <td colspan="4">
               <span>[[trip.departure]]</span>
             </td>
           </tr>
-          <tr>
+          <tr class="title-container">
             <td colspan="4">
               <span>/</span>
             </td>
           </tr>
-          <tr>
+          <tr class="title-container">
             <td colspan="4">
               <span>[[trip.arrival]]</span>
             </td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td>
               <img src="../images/driverIcon.jpg">
             </td>
             <td colspan="3">
               <span>[[driver]]</span>
             </td>
-          </tr>
+          </tr> -->
           <tr>
             <template is="dom-if" if="[[done(trip)]]">
               <td colspan="4">
@@ -74,13 +93,13 @@
 
             <template is="dom-if" if="[[!done(trip)]]">
               <td colspan="2">
-                <div class="layout vertical">
+                <div class="layout vertical date-zone">
                   <span>[[day(trip)]]</span>
                   <span>[[month(trip)]]</span>
                 </div>
               </td>
               <td colspan="2">
-                <span>[[[[time(trip)]]]]</span>
+                <span class="time-zone">[[[[time(trip)]]]]</span>
               </td>
             </template>
           </tr>

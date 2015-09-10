@@ -1,3 +1,5 @@
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
 <dom-module name="request-box">
   <style>
     .request {
@@ -30,18 +32,24 @@
       font-size: 23px;
       padding: 0px;
     }
+    .title-container {
+      font-size: 20px;
+      font-weight: bold;
+      font-variant: small-caps;
+      color: #222;
+    }
   </style>
   
   <template>  
     <div class="request">
       <table>
-        <tr>
+        <tr class="title-container">
           <td colspan="4">[[request.departure]]</td>
         </tr>
-        <tr>
+        <tr class="title-container">
           <td colspan="4">/</td>
         </tr>
-        <tr>
+        <tr class="title-container">
           <td colspan="4">[[request.arrival]]</td>
         </tr>
 
@@ -52,7 +60,10 @@
             <td><img class="request-box-img" src="../images/package-allow.png"></td>
             <td><span>[[request.packages]]</span></td>
           </tr>
-          <tr><td colspan="4"><button class="request-box-button" on-click="showInfo">Ver</button></td></tr>
+          <tr><td colspan="4">
+            <paper-button class="primary-button" raised on-click="showInfo">Ver</paper-button>
+            <!-- <button class="request-box-button" on-click="showInfo">Ver</button> -->
+          </td></tr>
         </template>
         <template is="dom-if" if="[[!isDriver(request)]]">
           <span>[[status]]</span>
