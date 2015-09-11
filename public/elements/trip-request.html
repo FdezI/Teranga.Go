@@ -434,8 +434,10 @@
         return value.stop;
       },
       arrivalFilter: function(value) {
+        if(!this.request) return;
         // return value.stop && value.order > this.trip.wps[this.d].order;
         console.log("---------");
+        console.log(this.request);
         var pointA = this.request.pointA;
         console.log(value);
         console.log(pointA);

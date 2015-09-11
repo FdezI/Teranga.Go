@@ -360,23 +360,20 @@
       },
 
       actionBText: function() {
-        return this.canAssess() ? "Opinar" : (this.canRequest() ? "Pedir" : "Viaje terminado");
+        return this.opinion ? "Opinar" : "Pedir";
       },
       showActions: function(trip, user) {
-        return !this.isDriver(trip, user) && (this.canAssess() || this.canRequest());
+        return !this.isDriver(trip, user) && (this.canAssess(trip.status) || this.canRequest(trip.status));
       },
       isDriver: function(trip, user) {
         return trip.iduser == user.iduser;
       },
-      canAssess: function() {
-        if(this.trip.status) return this.trip.status.toLowerCase() == "done";
+      canAssess: function(status) {
+        if(status) return status.toLowerCase() == "done";
       },
-      canRequest: function() {
-
-        if(this.trip.status) {
-          console.log("STATUS: " + this.trip.status + ": " + (this.trip.status.toLowerCase() == "waiting"));
-          return this.trip.status.toLowerCase() == "waiting";
-        }
+      canRequest: function(status) {
+        console.log("STATUS: " + status);
+        if(status) return status.toLowerCase() == "waiting";
       }
     });
   </script>
