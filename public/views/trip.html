@@ -20,8 +20,10 @@
     .principal-travel-info {
       width: 80%;
     }
-    .travel-info {
-      width: 120px;
+    .travel-info-div {
+      width: 130px;
+      border: 1px solid #999;
+      border-radius: 6px;
     }
     .title-travel {
       font-weight: bold;
@@ -35,6 +37,7 @@
     .money-travel {
       font-weight: bold;
       font-size: 36px;
+      color: #333;
       margin: 5px 5px 0px 5px;
     }
     .per-person-travel {
@@ -45,33 +48,42 @@
     .info-image-travel {
       width: 50px;
       height: 50px;
-      border: 1px solid #999;
-      padding: 5px;
+      padding: 8px;
+    }
+    .small-container-div {
+      min-width: 240px;
+      width: 46%;
+      margin: 30px 10px 30px 10px;
+      height: 200px;
+      vertical-align: top;
+      display: inline-block!important;
     }
 
     .small-container {
-      width: 240px;
-      background: #ccc;
-      margin: 0px 10px 0px 10px;
-      display: inline-block;
-      height: 200px;
-      vertical-align: top;
+      background: #efefef;
+      border: 1px solid #999;
+      height: 82%;
     }
     .smalls-containers {
-      display: table;
-      background: #369;
-      margin-top: 30px;
-      margin-bottom: 30px;
-      width: 100%;
+      text-align: center;
     }
     .title-small-container {
-      background: #f00;
+      background: #FF6A1D;
       padding: 5px;
       font-weight: bold;
       font-size: 20px;
       font-variant: small-caps;
       text-align: center;
+      color: #111;
+      border-radius: 10px 10px 0px 0px;
     }
+    .comment-container {
+      background: #efefef;
+      border: 1px solid #999;
+      padding: 15px;
+      color: #999;
+    }
+
     .profile-img-small-container {
       width: 60px;
       height: 60px;
@@ -84,15 +96,16 @@
       margin: 5px 10px 5px 5px;
     }
     .stars-small-container {
-      height: 20px;
-      width: 100%;
-      background: #0f0;
+      width: 70px;
       margin-top: 5px;
     }
     .info-small-container {
       margin: 5px 5px 5px 0px;
       width: 70%;
-
+      line-height: 23px;
+      text-align: left;
+      margin-left: 10px;
+      margin-top: 10px;
     }
     .button-request {
       margin-top: 30px;
@@ -111,6 +124,14 @@
     }
     .comment-text-area {
       width: 100%;
+    }
+    .user-name-small-container {
+      font-size: 20px;
+      color: #111;
+      margin-bottom: 5px;
+    }
+    .light-letter-span {
+      color: #999;
     }
   </style>
   <template>
@@ -134,7 +155,7 @@
             <p class="departure-time"><span>Hora de salida </span><span>[[time(trip.wps.0.date)]]</span></p>
           </div>
           <div>
-            <div class="travel-info">
+            <div class="travel-info-div">
               <div class="layout vertical center">
                 <div class="money-travel"><span>[[trip.cost]]</span><span>€</span></div><span class="per-person-travel"> por persona</span>
               </div>
@@ -148,25 +169,27 @@
 
         <div class="smalls-containers">
 
-          <div class="small-container">
+          <div class="small-container-div layout vertical">
             <div class="title-small-container">Conductor</div>
-            <div class="layout horizontal">
+            <div class="layout horizontal small-container">
               <div class="pictures-small-container">
-                <img src="" class="profile-img-small-container">
-                <div class="stars-small-container"></div>
+                <img src="[[userIMG(trip.iduser)]]" class="profile-img-small-container">
+                <div class="stars-small-container">
+                  <stars-rating score="[[trip.karma]]"></stars-rating>
+                </div>
               </div>
               <div class="layout vertical info-small-container">
-                <span><span>[[trip.driver]]</span> <span>[[trip.driversn]]</span></span>
-                <span><span>[[age(trip.birth)]]</span> años</span>
-                <span>email@email.com</span>
-                <span>666666666</span>
+                <span class="user-name-small-container"><span>[[trip.driver]]</span> <span>[[trip.driversn]]</span></span>
+                <span><span><b>[[age(trip.birth)]]</b></span> años</span>
+                <span class="light-letter-span">email@email.com</span>
+                <span class="light-letter-span">666666666</span>
               </div>
             </div>
           </div> 
 
-          <div class="small-container">
+          <div class="small-container-div layout vertical">
             <div class="title-small-container">Coche</div>
-            <div class="layout vertical">
+            <div class="layout horizontal small-container">
               <span>[[trip.model]]</span>
               <span>[[trip.car]]</span>
               <div class="layout horizontal center-justified">
@@ -178,9 +201,9 @@
 
         </div>
 
-        <div class="comment-container">
+        <div class="comment-container-div">
           <div class="title-small-container">Comentario del conductor</div>
-          <div><span>[[trip.comment]]</span></div>
+          <div class="comment-container"><span>[[trip.comment]]</span></div>
         </div>
 
         <template is="dom-if" if="[[showActions(trip, user)]]">
@@ -246,6 +269,9 @@
         // console.log("ASD");
         this.$$("#collapse").toggle();
         this.request = !this.request;
+      },
+      userIMG: function(iduser) {
+        return Teranga.imageForUser(iduser);
       },
       idtripChanged: function() {
         this.$.ts.reload();
