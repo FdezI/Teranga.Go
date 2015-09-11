@@ -227,7 +227,7 @@
               <trip-request trip="[[trip]]" user="{{user}}" point-a="[[pointA]]" point-b="[[pointB]]"></trip-request>
             </template>
             <template is="dom-if" if="[[canAssess(trip.status)]]">
-              <trip-opinion></trip-opinion>
+              <trip-opinion trip="[[trip]]"></trip-opinion>
             </template>
           </iron-collapse>
         </template>

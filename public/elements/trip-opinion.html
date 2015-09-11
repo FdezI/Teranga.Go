@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+
 <dom-module name="trip-opinion">
   <style>
   .opinion-img {
@@ -52,6 +54,8 @@
   }
   </style>
   <template>
+    <data-service id="tas" type="assessment" update="[[data]]" on-response="onAssessed"></data-service>
+    
     <div class="opinion">
       <div class="layout horizontal">
         <div>
@@ -59,25 +63,40 @@
             <img src="../images/car.png" class="opinion-img">
             <span class="text-center">Coche</span>
           </div>
-          <paper-slider min="1" max="10" pin snaps editable></paper-slider>
+          <paper-slider min="1" max="10" pin snaps editable value="{{data.car}}"></paper-slider>
           <div class="layout horizontal">
             <img src="../images/user.png" class="opinion-img">
             <span class="text-center">Conductor</span>
           </div>
-          <paper-slider min="1" max="10" pin snaps editable></paper-slider>
+          <paper-slider min="1" max="10" pin snaps editable value="{{data.driver}}"></paper-slider>
         </div>
-        <div class="flex"><textarea class="opinion-text" rows="8" placeholder="Escribe aquí tu opinión"></textarea></div>
+        <div class="flex"><textarea class="opinion-text" rows="8" placeholder="Escribe aquí tu opinión" value="{{data.comment::input}}"></textarea></div>
       </div>
-      <div class="save-button"><paper-button on-click="saveData">Enviar opinión</paper-button></div>
+      <div class="save-button"><paper-button class="primary-button" raised on-click="saveData">Enviar opinión</paper-button></div>
     </div>
+    
+    <paper-toast id="aDone" text="Opinión enviada."></paper-toast>
+    <paper-toast id="aError" text="No se ha podido enviar la opinión (¿Quizás ya has opinado para este viaje?)"></paper-toast>
   </template>
 
   <script>
     Polymer({
       is: "trip-opinion",
       properties: {
-        user: Object,
-        filters: Object
+        trip: Object,
+        data: {
+	  type: Object,
+	  value: {comment:""}
+	}
+      },
+      saveData: function() {
+	this.set('data.trip', this.trip.idtrip);
+	this.$.tas.saveData(true);
+      },
+      
+      onAssessed: function(e, response) {
+	if(response && response.hasOwnProperty('id')) this.$.aDone.show();
+	else this.$.aError.show();
       }
     });
   </script>
