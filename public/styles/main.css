@@ -222,3 +222,8 @@ paper-toast {
 	width: 20%;
 	background: #ccc;
 }
+.pop-up {
+	background: #efefef!important;
+	padding: 30px;
+	border-radius: 3px;
+}

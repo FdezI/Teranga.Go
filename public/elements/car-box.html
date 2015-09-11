@@ -32,16 +32,21 @@
       height: 35px;
     }
 
-    .points-car-box {
-      font-weight: bold;
-    }
-
     .car-box-plus {
       width: 50%;
       height: auto;
       position: relative;
       top: 50%;
       transform: translateY(-50%);
+    }
+    .car-model {
+      font-size: 30px;
+      font-weight: bold;
+      padding-bottom: 6px;
+    }
+    .car-id {
+      color: #999;
+      padding-bottom: 10px;
     }
   </style>
   
@@ -55,10 +60,10 @@
       <div class="car">
       	<table>
          <tr>
-           <td class="points-car-box" colspan="4">[[car.model]]</td>
+           <td class="car-model" colspan="4">[[car.model]]</td>
          </tr> 
          <tr>
-           <td class="points-car-box" colspan="4">[[car.idcar]]</td>
+           <td class="car-id" colspan="4">[[car.idcar]]</td>
          </tr> 
          <tr>
            <td><img src="../images/seat-icon.png"></td>
@@ -67,7 +72,7 @@
            <td>[[car.hp]]</td>
          </tr>
          <tr>
-           <td colspan="4"><span>Compartido por <span>[[car.owners]]</span> personas</span></td>
+           <td colspan="4"><span>Compartido por <span><b>[[car.owners]]</b></span> personas</span></td>
          </tr> 
         </table>
       </div>
