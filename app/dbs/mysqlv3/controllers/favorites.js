@@ -29,6 +29,7 @@ exports.get = function(req, res, next) {
 	if(keys.length > 0)
 		keys.forEach(function(key) { where += " AND " + pool.escapeId(key) + "=" + pool.escape(filters[key]); });
 
+	// console.log("SELECT * FROM favorites WHERE user2=" + req.params.iduser + where);
 	pool.query('SELECT * FROM favorites WHERE user2=?' + where, req.params.iduser, function(err, rows, fields) {
 		if(err) return next(err);
 		

@@ -183,7 +183,7 @@ exports.getFavorites = function(req, res, next) {
 							FROM favorites\
 								JOIN user ON iduser=user2\
 								LEFT JOIN trip T ON driver = iduser\
-								INNER JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip AND PA.date >='" + date.toISOString() + "'\
+								LEFT JOIN tripPoints PA ON PA.order = 0 AND idtrip = PA.trip AND PA.date >='" + date.toISOString() + "'\
 							WHERE user1=? GROUP BY iduser", user, function(err, rows, fields) {
 		if(err) return next(err);
 
