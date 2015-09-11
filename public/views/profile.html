@@ -84,7 +84,7 @@
 
             <div class="layout vertical profile-b">
               <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
-              <div class="profile-age"><span><b>20</b></span> años</div>
+              <div class="profile-age"><span><b>[[age(session.user.birth)]]</b></span> años</div>
               <template is="dom-if" if="[[edit]]">
 <!--                 <form> -->
                   <!-- <table style="width:100%"> -->
@@ -138,7 +138,7 @@
           <template id="moreInfo" is="dom-if" if="[[!edit]]">
             <div>
               <div class="profile-container-half">
-                 <generic-collapse-container name="Viajes" reloadable additable>
+                 <generic-collapse-container on-add="createTrip" name="Viajes" reloadable additable>
                     <trip-content iduser="[[session.user.iduser]]" on-select="tripSelected" data="{{session.user.trips}}"></trip-content>
                   </generic-collapse-container>
                 <!-- <trip-container iduser="[[session.user.iduser]]" trips="{{session.user.trips}}"></trip-container> -->
@@ -244,6 +244,9 @@
       // },
       userIMG: function(iduser) {
         return Teranga.imageForUser(iduser);
+      },
+      age: function(date) {
+        return Teranga.age(date);
       },
       editProfile: function() {
 

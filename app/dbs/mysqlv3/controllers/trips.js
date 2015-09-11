@@ -198,7 +198,7 @@ exports.get = function(req, res, next) {
 	var user = req.session.iduser;
 	var trip = pool.escape(req.params.idtrip);
 	if(user) {
-		var sql = "SELECT idtrip, karma, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+		var sql = "SELECT idtrip, karma, car.model, driver as iduser, user.name as driver, user.surnames as driversn, phone as driverphn, email as driverml, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
 							,IF(COUNT(UT.user) > 0, if(TP.date < NOW(), 'done', 'accepted'), if(COUNT(R.user) > 0, if(TP.date < NOW(), 'expired', 'pending'), 'waiting')) status\
 							FROM trip T, car, user\
 								LEFT JOIN userTrips UT ON UT.user=" + user +
@@ -206,7 +206,7 @@ exports.get = function(req, res, next) {
 								" JOIN tripPoints TP ON TP.trip = " + trip + " AND TP.order = 99\
 							WHERE idtrip=" + trip + " AND T.car = idcar AND driver = iduser"
 	} else {
-		sql = "SELECT idtrip, karma, car.model, driver as iduser, user.name as driver, user.surnames as driversn, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
+		sql = "SELECT idtrip, karma, car.model, driver as iduser, user.name as driver, user.surnames as driversn, phone as driverphn, email as driverml, birth, comment, car, T.seats, packages = 1 as packages, animals = 1 as animals\
 							FROM trip T, car, user\
 							WHERE idtrip=" + trip + " AND T.car = idcar AND driver = iduser";
 	}
