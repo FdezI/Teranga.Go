@@ -133,6 +133,12 @@
     .light-letter-span {
       color: #999;
     }
+    .car-model-span {
+      font-weight: bold;
+      font-size: 30px;
+      color: #111;
+      margin: 10px;
+    }
   </style>
   <template>
     <data-service id="ts" type="trips" fetch="[[idtrip]]" on-response="tripTweak"></data-service>
@@ -141,10 +147,6 @@
         <template is="dom-repeat" items="{{trip.wps}}" as="wp">
           <location-box first="[[!index]]" stop="[[wp.stop]]" location="[[wp.city]]" day="[[day(wp.date)]]" seats="[[wp.seats]]" month="[[month(wp.date)]]" hour="[[time(wp.date)]]"></location-box>
         </template>
-        <!-- <location-box first="true" stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
-        <location-box location="Motril"></location-box>
-        <location-box stop="true" location="Granada" day="10" seats="3" month="Septiembre" hour="10:30"></location-box>
-        <location-box location="Motril"></location-box> -->
       </travel-line>
 
       <div class="layout vertical content-travel-info">
@@ -189,8 +191,8 @@
 
           <div class="small-container-div layout vertical">
             <div class="title-small-container">Coche</div>
-            <div class="layout horizontal small-container">
-              <span>[[trip.model]]</span>
+            <div class="layout vertical small-container">
+              <span class="car-model-span">[[trip.model]]</span>
               <span>[[trip.car]]</span>
               <div class="layout horizontal center-justified">
                 <img src="../images/seat-icon.png">
