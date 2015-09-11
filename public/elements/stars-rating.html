@@ -18,10 +18,13 @@
   Polymer({
     is: "stars-rating",
     properties: {
-      score: Number,
+      score: {
+	type: Number,
+	observer: 'scoreChanged'
+      },
       stars: Array
     },
-    ready: function() {
+    scoreChanged: function() {
       var maxStars = 5;
       var starscore = this.score/2 - 1;
       var i;
