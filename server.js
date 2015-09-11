@@ -260,6 +260,16 @@ apiRouter.route('/favorites/:iduser')
 	 */
 	.get(db.favoriteController.get);
 
+apiRouter.route('/assessments')
+	/**
+	 * Objects:
+	 *   body:
+	 *   query:
+	 *   parameters:
+	 *     - iduser: ID
+	 */
+	.post(db.assessmentController.create);
+
 apiRouter.route('/routes')
 	/**
 	 * Objects:
