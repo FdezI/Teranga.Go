@@ -175,7 +175,7 @@
       if(!this.user.packages) this.set('user.packages', [package]);
       else this.push('user.packages', package);
 
-      this.fire('newpackage', package);
+      this.fire('new-package', package);
     },
     selectFavorite: function(e, user) {
       this.$.addFavorite.close();
