@@ -19,6 +19,7 @@ body {
   margin-left: auto;
 	margin-right: auto;
 	margin-top: 15px;
+	margin-bottom: 10px;
 }
 
 paper-toast {
@@ -220,4 +221,9 @@ paper-toast {
 .travel-info {
 	width: 20%;
 	background: #ccc;
+}
+.pop-up {
+	background: #efefef!important;
+	padding: 30px;
+	border-radius: 3px;
 }

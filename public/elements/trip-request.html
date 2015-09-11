@@ -26,7 +26,8 @@
       margin: 10px;
     }
     .comment-text-area {
-      width: 99%;
+      width: 93%;
+      padding: 10px;
     }
     .package-button {
       float: right;
@@ -34,6 +35,8 @@
     .add-package {
       margin: 10px 5% 10px 5%;
       background: #efefef;
+      border: 2px solid #FF6A1D;
+      border-radius: 6px;
     }
     .y-o-span {
       align-self: flex-end;
@@ -77,22 +80,26 @@
       border-width: 13px;
       margin-left: -13px;
     }
+    .spacing-select {
+      padding: 5px;
+    }
+    .adress-span {
+      color: #999;
+      padding: 10px 0px 10px 20px;
+    }
+    .final-price {
+      font-size: 30px;
+      color: #222;
+    }
   </style>
 	<template>
     <data-service id="tr" type="request" fetch="travel" on-response="onRequested"></data-service>
 		<div class="request layout vertical">
       <table class="table-request">
         <tr> 
-          <td>Salida</td> 
+          <td><b>Salida:</b></td> 
           <td>
-            <!-- <paper-dropdown-menu label="Seleccione un origen" selectedItemLabel="{{pointA}}">
-              <paper-menu class="dropdown-content">
-                <template id="depRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
-                  <paper-item label="[[item.order]]">[[item.city]]</paper-item>
-                </template>
-              </paper-menu>
-            </paper-dropdown-menu> -->
-          	<select value="{{pointA::input}}">
+          	<select class="spacing-select" value="{{pointA::input}}">
 		        	<template id="depRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
 		        		<option value="[[item.order]]">[[item.city]]</option>
 		        	</template>
@@ -102,19 +109,12 @@
           <td><span>[[request.pointA.time]]</span></td>
         </tr>
         <tr>
-          <td colspan="4"><span>[[request.pointA.address]]</span></td>
+          <td colspan="4" class="adress-span"><b>Dirección:</b> <span>[[request.pointA.address]]</span></td>
         </tr>
         <tr> 
-          <td>Llegada</td> 
+          <td><b>Llegada:</b></td> 
           <td>
-            <!-- <paper-dropdown-menu label="Seleccione un origen" selectedItemLabel="{{pointB}}">
-              <paper-menu class="dropdown-content">
-                <template id="arrRepeat" is="dom-repeat" items="[[trip.wps]]" filter="departureFilter">
-                  <paper-item label="[[item.order]]"><span>[[item.city]]</span> (<span>[[getT(d, item.order, seat, selectedPackages.length)]]</span>€)</paper-item>
-                </template>
-              </paper-menu>
-            </paper-dropdown-menu> -->
-          	<select value="{{pointB::input}}">
+          	<select class="spacing-select" value="{{pointB::input}}">
 		        	<template id="arrRepeat" is="dom-repeat" items="[[trip.wps]]" filter="arrivalFilter">
 		        		<option value="[[item.order]]"><span>[[item.city]]</span> (<span>[[getT(request.pointA, item, seat, selectedPackages.length)]]</span>€)</option>
 		        	</template>
@@ -124,11 +124,11 @@
           <td><span>[[request.pointB.time]]</span></td>
         </tr>
         <tr>
-          <td colspan="4"><span>[[request.pointB.address]]</span></td>
+          <td colspan="4" class="adress-span"><b>Dirección:</b> <span>[[request.pointB.address]]</span></td>
         </tr>
 
         <tr>
-          <td>Comentario</td>
+          <td><b>Comentario</b></td>
         </tr>
         <tr>
           <td colspan="4"><textarea class="comment-text-area" rows="4" name="comment"></textarea></td>
@@ -161,7 +161,7 @@
                     <div class="layout horizontal header-add-package">
                       <paper-button raised class="package-button" on-click="openAdd">Añadir paquete</paper-button>
                       <div class="flex"></div>
-                      <div class="layout horizontal center"><paper-button raised class="package-button" on-click="openNew">Crear paquete</paper-button></div>
+                      <div class="layout horizontal center"><paper-button raised class="package-button primary-button" on-click="openNew">Crear paquete</paper-button></div>
                     </div>
                   </template>
 
@@ -188,9 +188,9 @@
           <!-- </template> -->
         </template>
         <tr>
-          <td colspan="2">Precio final</td>
-          <td><span>[[total]]</span>€</td>
-          <td><paper-button raised on-click="requestTrip">Solicitar</paper-button></td>
+          <td colspan="2"><b>Precio final</b></td>
+          <td class="final-price"><span>[[total]]</span>€</td>
+          <td><paper-button class="primary-button" raised on-click="requestTrip">Solicitar</paper-button></td>
         </tr>
 
       </table>
