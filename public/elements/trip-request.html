@@ -198,7 +198,7 @@
     <pop-up id="newPackage" with-backdrop>
       <!-- <template is="dom-if" if="[[npopened]]"> -->
         <generic-container>
-          <package-new user="{{user}}" on-discard="closeNew" on-newpackage="addPackage"></package-new>
+          <package-new user="{{user}}" on-discard="closeNew" on-new-package="createPackage"></package-new>
         <generic-container>
       <!-- </template> -->
     </pop-up>
@@ -214,7 +214,8 @@
     <!-- </paper-dialog> -->
     </pop-up>
 
-    <paper-toast id="tCreated" text="Creación de viaje fallida."></paper-toast>
+    <paper-toast id="pCreated" text="Paquete creado."></paper-toast>
+    <paper-toast id="rFailed" text="Solicitud de viaje fallida."></paper-toast>
 	</template>
 	<script>
 		Polymer({
@@ -396,6 +397,10 @@
       // },
       removePackage: function(e, package) {
         this.splice('selectedPackages', this.selectedPackages.indexOf(package), 1);
+      },
+      createPackage: function(e, package) {
+	this.$.pCreated.show();
+	this.addPackage(e, package);
       },
       addPackage: function(e, package) {
         // this.$$("#addPackage").close();
