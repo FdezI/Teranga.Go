@@ -111,7 +111,6 @@
       margin-top: 30px;
       width: 20%;
       height: 40px;
-      background: #f00;
 
     }
     .collapse-content-comment {
@@ -138,6 +137,15 @@
       font-size: 30px;
       color: #111;
       margin: 10px;
+    }
+    .car-span {
+      color: #999;
+      margin-bottom: 20px;
+    }
+    .seats-image-container {
+      height: 40px;
+      width: 40px;
+      margin-right: 10px;
     }
   </style>
   <template>
@@ -193,10 +201,12 @@
             <div class="title-small-container">Coche</div>
             <div class="layout vertical small-container">
               <span class="car-model-span">[[trip.model]]</span>
-              <span>[[trip.car]]</span>
+              <span class="car-span">[[trip.car]]</span>
               <div class="layout horizontal center-justified">
-                <img src="../images/seat-icon.png">
-                <span><span>[[trip.free]]</span> asientos libres</span>
+                <img src="../images/seat-icon.png" class="seats-image-container">
+                <div class="layout horizontal center">
+                  <span><span><b>[[trip.free]]</b></span> asientos libres</span>
+                </div>
               </div>
             </div>
           </div> 
@@ -209,7 +219,9 @@
         </div>
 
         <template is="dom-if" if="[[showActions(trip, user)]]">
-          <paper-button raised on-click="toggle" class="button-request">[[actionBText()]]</paper-button>
+          <div class="button-request">
+            <paper-button raised on-click="toggle" class="primary-button">[[actionBText()]]</paper-button>
+          </div>
           <iron-collapse class="content" id="collapse">
             <template is="dom-if" if="[[canRequest(trip.status)]]">
               <trip-request trip="[[trip]]" user="{{user}}" point-a="[[pointA]]" point-b="[[pointB]]"></trip-request>

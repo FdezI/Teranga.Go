@@ -18,21 +18,31 @@
       vertical-align: top;
       width: 200px;
       display: table-cell;
-      background: #f00;
     }
     .profile-basic-info {
       display: table;
     }
     .other-profile-a {
       display: table-cell;
-      width: 100px;
+      width: 146px;
     }
     .other-profile-b {
       display: table-cell;
       margin-left: 15px;
+      padding: 10px;
     }
     .other-profile-c {
       display: table-cell;
+    }
+    .profile-no-driver {
+      border: 1px solid #ccc;
+      padding: 20px;
+      text-align: center;
+      margin: 10px;
+      font-size: 20px;
+    }
+    .trips-other-container {
+      margin: 10px;
     }
   </style>
 
@@ -45,9 +55,9 @@
     <template is="dom-if" if="[[user]]">
       <div class="profile-div">
         <div class="profile-center">
-          <div class="profile-basic-info">
+          <div class="profile-basic-info layout horizontal">
               <div class="other-profile-a">
-                <img class="profile-photo" src="../images/full-star.png"/>
+                <img class="profile-photo" src="[[userIMG(user.iduser)]]"/>
                 <template is="dom-if" if="[[user.driver]]">
                   <div class="profile-stars" onclick=""><stars-rating score="[[user.karma]]"></stars-rating></div>
                 </template>
@@ -55,7 +65,7 @@
 
               <div class="layout vertical other-profile-b">
                   <div class="profile-name"><span>[[user.name]]</span> <span>[[user.surnames]]</span></div>
-                  <div class="profile-age"><span>XX</span> años</div>
+                  <div class="profile-age"><span><b>[[age(user.birth)]]</b></span> años</div>
               </div>
 
               <template is="dom-if" if="[[!user.driver]]">
@@ -115,7 +125,7 @@
                 <paper-spinner alt="Checking favorite" active></paper-spinner>
               </template>
             </div>
-            <div>
+            <div class="trips-other-container">
               <other-trip-container iduser="[[user.iduser]]" on-select="tripSelected" load></other-trip-container>
             </div>
           </div>
@@ -179,7 +189,12 @@
       attached: function() {
         // console.log("AQUI: " + !user);
       },
-
+      age: function(date) {
+        return Teranga.age(date);
+      },
+      userIMG: function(iduser) {
+        return Teranga.imageForUser(iduser);
+      },
       sessionChanged: function() {
         // if(this.isReady()) {
         //   this.$.fsg.set('filters', {user1:this.session.user.iduser});

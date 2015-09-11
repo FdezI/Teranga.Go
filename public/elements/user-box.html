@@ -23,23 +23,36 @@
     }
 
     .user-box-img {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+    }
+    .user-name-span {
+      font-weight: bold;
+      font-size: 19px;
+    }
+    .star-zone-div {
+      width: 70%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 5px;
     }
   </style>
   
   <template>
     <!-- <a id="linkuser" href="[[user.url]]"> -->
       <div id="linkuser" class="user">
-        <img class="user-box-img" src="[[user.avatar]]">
+        <img class="user-box-img" src="[[userIMG(user.iduser)]]">
         <template is="dom-if" if="[[user.driver]]">
-          <stars-rating score="[[user.karma]]"></stars-rating>
+          <div class="star-zone-div">
+            <stars-rating score="[[user.karma]]"></stars-rating>
+          </div>
         </template>
         
-        <span>[[user.name]]</span>
+        <span class="user-name-span">[[user.name]]</span>
 
         <template is="dom-if" if="[[user.driver]]">
-          <div><span>[[user.plannedTrips]]</span> viajes programados</div>
+          <div><span><b>[[user.plannedTrips]]</b></span> viajes programados</div>
         </template>
       </div>
     <!-- </a> -->
@@ -54,7 +67,10 @@
       // img: String,
       // score: String,
       // url: String
-    }
+    },
+    userIMG: function(iduser) {
+      return Teranga.imageForUser(iduser);
+    },
   });
   </script>
 </dom-module>
