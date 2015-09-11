@@ -143,7 +143,7 @@
           </paper-dropdown-menu> -->
           <div>
             <span>Ordenar por:</span>
-            <select class="trip-table-filters" value="[[sortValue::input]]">
+            <select class="trip-table-filters" value="{{sortValue::input}}">
               <option value="priceASC">Precio ascendente</option>
               <option value="priceDES">Precio descendente</option>
               <option value="stars">Estrellas</option>
@@ -213,6 +213,8 @@
 	case "stars": attr = "karma"; break;
 // 	case "date":
       }
+      
+      console.log("SORTING");
       
       return function(a, b) {
 		return a[attr] === b[attr] ? 0 : (a[attr] < b[attr] ? -order : order);
