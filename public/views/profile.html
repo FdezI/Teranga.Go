@@ -86,7 +86,7 @@
               <div class="profile-name"><span>[[session.user.name]]</span> <span>[[session.user.surnames]]</span></div>
               <div class="profile-age"><span><b>20</b></span> años</div>
               <template is="dom-if" if="[[edit]]">
-                <form>
+<!--                 <form> -->
                   <!-- <table style="width:100%"> -->
                     <!-- <tr> -->
                       <!-- <td>E-mail:</td> -->
@@ -97,7 +97,7 @@
                     <!-- <tr>  -->
                       <!-- <td>Teléfono:</td>  -->
                       <!-- <td> -->
-                        <gold-phone-input label="Teléfono" always-float-label name="phone" value="{{update.phone}}" phone-number-pattern="XXX-XXX-XXX" country-code="0"></gold-phone-input>
+                        <gold-phone-input label="Teléfono" name="phone" value="{{update.phone}}" phone-number-pattern="XXX-XXX-XXX" country-code="0"></gold-phone-input>
                       <!-- </td> -->
                     <!-- </tr> -->
                     <!-- <tr>  -->
@@ -113,7 +113,7 @@
                       <!-- </td> -->
                     <!-- </tr> -->
                   <!-- </table> -->
-                </form>
+<!--                 </form> -->
               </template>
             </div>
             <div class="profile-c layout self-end profile-buttons">
