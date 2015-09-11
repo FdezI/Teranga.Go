@@ -260,7 +260,7 @@ apiRouter.route('/favorites/:iduser')
 	 */
 	.get(db.favoriteController.get);
 
-apiRouter.route('/assessments')
+apiRouter.route('/assessment')
 	/**
 	 * Objects:
 	 *   body:
