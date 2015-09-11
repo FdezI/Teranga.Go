@@ -125,6 +125,7 @@
       <!-- </template> -->
     </pop-up>
     <!-- </paper-dialog> -->
+    
   </template>
 
   <script>
@@ -145,7 +146,13 @@
     },
     saveData: function() {
       this.loading = true;
-      this.update.receiver = this.favorite.iduser;
+      
+      var fav = this.favorite;
+      if(fav) var iduser = this.favorite.iduser;
+      
+      if(iduser) this.update.receiver = iduser;
+      
+//       this.update.receiver = this.favorite.iduser;
       console.log("LLEGA A SAVE");
       this.$.ps.saveData(true);
     },
