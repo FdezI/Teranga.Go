@@ -320,7 +320,7 @@
       },
 
       actionBText: function() {
-        return this.opinion ? "Opinar" : "Pedir";
+        return this.canAssess() ? "Opinar" : (this.canRequest() ? "Pedir" : "Viaje terminado");
       },
       showActions: function(trip, user) {
         return !this.isDriver(trip, user) && (this.canAssess(trip.status) || this.canRequest(trip.status));
