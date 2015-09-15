@@ -7,26 +7,120 @@
 <dom-module name="location-line">
   <style>
   .stop-img {
-    width: 30px;
+    --iron-icon-width: 40px;
+    --iron-icon-height: 40px;
+/*    --paper-icon-button-disabled: {
+      /*filter: grayscale(1);
+      filter: gray;
+      -webkit-filter: grayscale(1);
+      border: 3px solid #000;
+    };*/
+    /*--paper-icon-button: {
+      /*filter: grayscale(0);
+      filter: none; 
+      -webkit-filter: grayscale(0);
+    };*/
+    margin-right: 10px;
   }
+
+  .stop-img[active] {
+    filter: grayscale(1);
+    filter: gray;
+    -webkit-filter: grayscale(1);
+  }
+
   .location-name {
+    font-weight: bold;
+    font-size: 26px;
+    height: 80px;
+    min-width: 200px;
+    margin-right: 10px;
+  }
+
+  .line-location {
     display: inline-block;
+    height: 80px;
+    margin: 5px 0px;
+    vertical-align: top;
   }
-  .extra-info {
-    /*display: -webkit-inline-box;*/
-  }
+
   .input-location {
     width: 300px;
+    margin: 0px 5px;
   }
-  .other-info {
-    float: right;
+
+  .date-zone {
+    background: #222;
+    color: #efefef;
+    margin: 0px 10px;
+    padding: 5px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .time-zone {
+    font-weight: bold;
+    height: 40px;
+    border: 1px solid #222;
+    padding: 10px;
+    margin: 0px 10px;
+    font-size: 25px;
+    border-radius: 3px;
+  }
+
+  .condition-stop {
+    color: #ccc;
+  }
+
+  .tag-location {
+    min-width: 70px;
+  }
+
+  .time-zone-location {
+    min-width: 200px;
   }
   </style>
   <template>
     <div>
+      <div class="line-location">
+        <div class="layout horizontal">
+          <div class="location-name layout horizontal center">
+            <paper-icon-button active="{{act}}" class="stop-img" toggles src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
+            <span>[[location.city]]</span>
+          </div>  
+
+          <div class="time-zone-location layout horizontal center">
+            <span class="tag-location">[[tag(arrival)]]</span>
+            <div class="layout vertical center date-zone">
+              <span>[[day(location.date)]]</span>
+              <span>[[month(location.date)]]</span>
+            </div>
+            <span class="time-zone layout horizontal center">[[time(location.date)]]</span>
+          </div>  
+        </div>
+      </div>
+
+      <template is="dom-if" if="[[!act]]">
+        <div class="line-location">
+          <div class="layout horizontal center">
+            <paper-input class="input-location" label="Dirección" placeholder="c/ dirección, nºX" value="{{location.address::input}}" readonly$="[[lockAddress]]" maxlength="45" required></paper-input>
+
+            <template is="dom-if" if="[[retardation]]">
+              <paper-input-container always-float-label auto-validate attr-for-value="value">
+                <label>Retardo</label>
+                <time-input class="paper-input-input" value="{{location.retardation}}"></time-input>
+                <paper-input-error>¡Hora inválida!</paper-input-error>
+              </paper-input-container>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- <div>
       <div class="location-name">
         <span>[[location.city]]</span>
-        <!-- <paper-button toggles><img src="../images/stop.png"></paper-button> -->
         <paper-icon-button toggles src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
       </div>
 
@@ -40,11 +134,6 @@
                 <label>Retardo</label>
                 <time-input class="paper-input-input" value="{{location.retardation}}"></time-input>
                 <paper-input-error>¡Hora inválida!</paper-input-error>
-                <!-- <input is="iron-input" type="number" maxlength="3" bind-value="{{hours}}" > -->
-                <!-- <input is="iron-input" type="number" maxlength="2" bind-value="{{minutes}}" > -->
-                <!-- <input is="iron-input" maxlength="3" bind-value="{{hours}}" size="3"> -->
-                <!-- <paper-input type="number" value="{{location.retardation::input}}"></paper-input> -->
-                <!-- <paper-input type="number"></paper-input> -->
               </paper-input-container>
             </div>
           </template>
@@ -52,14 +141,12 @@
             <span>[[tag(arrival)]]</span>
             <div class="layout vertical">
               <span>[[location.date]]</span>
-              <span>[[isodate(location.date)]]</span>
-              <span>Jun</span>
             </div>
-            <span>10:30</span>
+            <span>[[isodate(location.date)]]</span>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </template>
 
   <script>
@@ -70,6 +157,7 @@
         // name: String,
         // address: String,
         stop: Boolean,
+        act: Boolean,
         lockAddress: Boolean,
         retardation: Boolean,
         arrival: {
@@ -82,7 +170,13 @@
         return arrival ? "Llegada" : "Salida";
       },
       day: function(date) {
-        return date.getDay();
+        return Teranga.day(date);
+      },
+      month: function(date) {
+       return Teranga.month(date);
+      },
+      time: function(date) {
+        return Teranga.time(date);
       },
       isodate: function(date) {
         if(date) return date.toISOString();

@@ -71,6 +71,19 @@
       background: #ccc;
       border: 1px solid #aaa;
     }
+    .title-locations {
+      font-size: 30px;
+      font-variant: small-caps;
+      font-weight: bold;
+      color: #FF6A1D;
+    }
+    .date-input-travel {
+      height: 30px;
+      margin-top: 5px;
+    }
+    .time-zone-travel {
+      margin: 10px;
+    }
   </style>
   <template>
     <data-service id="rs" type="routes" fetch="list" data="{{routes}}"></data-service>
@@ -144,13 +157,13 @@
 
         <div class="layout horizontal">
           <template is="dom-if" if="[[selected.destination]]">
-            <div class="layout vertical">
+            <div class="layout vertical time-zone-travel">
               <span>Fecha</span>
-              <input type="date" value="{{fakefilters.date::input}}" min="[[today()]]" required>
+              <input class="date-input-travel" type="date" value="{{fakefilters.date::input}}" min="[[today()]]" required>
             </div>
-            <div class="layout vertical">
+            <div class="layout vertical time-zone-travel">
               <span>Hora</span>
-              <input type="time" value="{{fakefilters.time::input}}" required>
+              <input class="date-input-travel" type="time" value="{{fakefilters.time::input}}" required>
             </div>
           </template>
         </div>
@@ -202,7 +215,7 @@
       <div class="vertical-separator"></div>
 
       <div class="create-trip-other-locations">
-        <span>Trayecto completo</span>
+        <span class="title-locations">Trayecto completo</span>
         <location-line location="[[selected.origin]]" stop lock-address></location-line>
         <template is="dom-repeat" items="[[others]]">
           <location-line location="[[item]]" retardation on-retardation-changed="recalculateDate"></location-line>
@@ -210,12 +223,13 @@
         <location-line location="[[selected.destination]]" stop lock-address arrival></location-line>
       </div>
 
-
-
-
       <div>
-        <paper-button raised on-click="saveData">Guardar</paper-button>
-        <paper-button raised on-click="discardData">Cancelar</paper-button>
+        <div style="width:100px; margin-right: 10px; margin-top: 20px; display: inline-block;">
+          <paper-button raised class="primary-button" on-click="saveData">Guardar</paper-button>
+        </div>
+        <div style="width:100px; margin-top: 20px; display: inline-block;">
+        <paper-button raised class="secondary-button" on-click="discardData">Cancelar</paper-button>
+        </div>
       </div>
     </template>
     <pop-up id="car_select" with-backdrop>
