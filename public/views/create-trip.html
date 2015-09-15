@@ -66,7 +66,7 @@
       margin: 2.5%;
       padding: 10px;
       vertical-align: top;
-      display: inline-block!important;
+      display: inline-block;
       width: 25%;
       background: #ccc;
       border: 1px solid #aaa;
@@ -172,36 +172,43 @@
     </div>
 
     <div class="extra-info">
-      <template is="dom-if" if="[[fakefilters.time]]">
-        <div class="column1-3 layout vertical">
-          <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
-          <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
-        </div>
-      </template>
-
-      <template id="aaa" is="dom-if" if="[[petsAndPackages(filters.animals, filters.packages)]]">
-        <div class="column2-3 layout vertical">
-          <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[car.idcar]]"></paper-input>
+      <template is="dom-if" if="[[timeSetted(fakefilters.time)]]">
+        <div class="column1-3">
           <div class="layout vertical">
-            <span>Asientos libres</span>
-            <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="[[freeSeats(car)]]" value="{{filters.seats}}" pin snaps editable></paper-slider>
+            <filter-selector type="pet" selected="{{filters.animals}}"></filter-selector>
+            <filter-selector type="package" selected="{{filters.packages}}"></filter-selector>
           </div>
         </div>
       </template>
 
-      <template is="dom-if" if="[[car.idcar]]">
-        <div class="column3-3 layout vertical">
-          <data-service id="cc" type="config" fetch="trips" data="{{costs}}" load-on-attach></data-service>
-
-          <span>Precio</span>
-          <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
-          <div class="layout horizontal">
-            <span class="flex">Asiento</span>
-            <div>x <span>[[userCost(costs, legs.splices, lastLeg)]]</span>€</div>
+      <template id="aaa" is="dom-if" if="[[petsAndPackages(filters.*)]]">
+        <div class="column2-3">
+          <div class="layout vertical">
+            <paper-input class="create-trip-input" label="Coche" readonly always-float-label on-keypress="showCarSelect" on-click="showCarSelect" value="[[car.idcar]]"></paper-input>
+            <div class="layout vertical">
+              <span>Asientos libres</span>
+              <paper-slider class="create-trip-input" label="Asientos" always-float-label min="1" max="[[freeSeats(car)]]" value="{{filters.seats}}" pin snaps editable></paper-slider>
+            </div>
           </div>
-          <div class="layout horizontal">
-            <span class="flex">Paquete</span>
-            <div>x <span>[[packageCost(costs, legs.splices, lastLeg)]]</span>€</div>
+        </div>
+      </template>
+      
+      <data-service id="cc" type="config" fetch="trips" data="{{costs}}" load-on-attach></data-service>
+      <template is="dom-if" if="[[car.idcar]]">
+        <div class="column3-3">
+          <div class="layout vertical">
+	    <!--<data-service id="cc" type="config" fetch="trips" data="{{costs}}" load-on-attach></data-service>-->
+
+	    <span>Precio</span>
+	    <paper-slider class="price-slider" always-float-label min="1" max="4" pin snaps editable></paper-slider>
+	    <div class="layout horizontal">
+	      <span class="flex">Asiento</span>
+	      <div>x <span>[[userCost(costs.KmCost, legs.splices, lastLeg, car)]]</span>€</div>
+	    </div>
+	    <div class="layout horizontal">
+	      <span class="flex">Paquete</span>
+	      <div>x <span>[[packageCost(costs.KmPkCost, legs.splices, lastLeg, car)]]</span>€</div>
+	    </div>
           </div>
         </div>
       </template>
@@ -263,8 +270,8 @@
         others: Array,
         fakefilters: {
           type: Object,
-          value: {},
-          readOnly: true
+          value: {}
+//           readOnly: true
         },
         filters: {
           type: Object,
@@ -280,6 +287,45 @@
         costs: Object
       },
       observers: ['locSelected("origin", fakefilters.origin)', 'locSelected("destination", fakefilters.destination)', 'timeChanged(filters.time)', 'recalculateDate(selected.origin.idlocation, selected.destination.idlocation, legs.splices, lastLeg, fakefilters.date, fakefilters.time)', 'recalculateDate(others.*.retardation)'],
+      
+      clearValues: function() {
+// 	console.log("-------..-----------");
+        this.set("car", {seats:3});
+//         this.routes = [];
+// 	console.log("0");
+        this.set("selected", {});
+//         console.log("1");
+        this.set("origins", []);
+//         console.log("2");
+        this.set("destinations", []);
+//         console.log("3");
+        this.splice("others", 0, this.others.length);
+//         console.log("4");
+        this.set("fakefilters", {});
+//         console.log("5");
+        this.set("filters", {wps:[], animals:null, packages:null});
+//         this.set("mapData", 'undefined');
+//         this.set("mapData", {});
+// this.mapData = {};
+        console.log("6");
+//         this.set("legs", 'undefined');
+//         this.set("legs", null);
+// this.legs = undefined;
+        console.log("7");
+//         this.set("lastLegs", 'undefined');
+//         this.set("lastLeg", null);
+// this.lastLeg = undefined;
+        console.log("8");
+        
+//         delete this.filters.animals;
+//         delete this.filters.packages;
+//         this.set("filters.wps", []);
+        
+//         this.$.aaa.render();
+//         this.set("filters.animals", undefined);
+//         this.set("filters.packages", undefined);
+        console.log("LLEGA O NO");
+      },
       freeSeats: function(car) {
         var free = car.seats - 1;
         this.set('filters.seats', free);
@@ -403,6 +449,7 @@
       // destSelected: function() {return this.locSelected('destination')},
 
       discardData: function() {
+	this.clearValues();
         this.fire('discard');
       },
 
@@ -535,6 +582,7 @@
         ts.update = f;
         ts.saveData(true);
 
+        this.clearValues();
       },
 
       onTripCreated: function(e, data) {
@@ -602,20 +650,31 @@
         this.set('selected.destination.date', addTime(date, this.lastLeg.duration.value));
       },
 
-      petsAndPackages: function(pets, pack) {
-        return true;
+      timeSetted: function(time) {
+        return time ? true : false;
+      },
+      petsAndPackages: function(filters) {
+        var f = this.filters;
+        console.log("ME CAGO");
+        console.log(f);
+        return (f.animals || f.animals === "") && (f.packages || f.packages === "");
+//         return pets !== 'undefined' && pack !== 'undefined';
         // return typeof pets != 'undefined' && typeof pack != 'undefined';
       },
 
       userCost: function() {
+        console.log("userCost");
         return this.cost("Km");
       },
       packageCost: function() {
         return this.cost("KmPk");
       },
       cost: function(type) {
+        console.log(this.costs);
         if(!this.costs) return;
-
+        
+        console.log("cost for: " + type);
+        
         var mult = this.costs[type + "Cost"];
         var cost = 0;
         this.legs.forEach(function(leg) {

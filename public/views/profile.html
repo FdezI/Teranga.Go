@@ -180,7 +180,7 @@
       </template>
       <template id="profileTemplate" is="dom-if" if="[[isPage('createTrip', page)]]">
         <article page="createTrip">
-          <create-trip user="[[session.user]]" on-discard="goToPage" on-trip-created="tripCreated"></create-trip>
+          <create-trip user="[[session.user]]" on-discard="discardTrip" on-trip-created="tripCreated"></create-trip>
         </article>
       </template>
     </template>
@@ -191,6 +191,7 @@
 
     <paper-toast id="pSaved" text="Cambios guardados."></paper-toast>
     <paper-toast id="tCreated" text="Viaje creado."></paper-toast>
+    <paper-toast id="tDiscarded" text="Creación de viaje cancelada."></paper-toast>
   </template>
 
   <script>
@@ -323,6 +324,10 @@
       tripCreated: function() {
         this.goToPage("profile", "tCreated");
         // this.$.tCreated.show();
+      },
+      
+      discardTrip: function() {
+        this.goToPage("profile", "tDiscarded");
       },
 
       goToPage: function(page, toastid) {

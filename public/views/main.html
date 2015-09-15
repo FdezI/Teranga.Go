@@ -129,7 +129,7 @@
 
 				  <template is="dom-if" if="[[!session.user]]">
 					  <paper-button class="paper-icon-header layout horizontal center" on-click="showLogin">Loguearse</paper-button>
-					  <paper-button class="layout horizontal center paper-icon-header">Registrarse</paper-button>
+					  <paper-button class="layout horizontal center paper-icon-header" on-click="showRegister">Registrarse</paper-button>
 				  </template>
 				  
 				  <!-- Application name -->
@@ -280,6 +280,11 @@
 
       showLogin: function() {
       	this.$.login.open();
+      },
+      
+      showRegister: function(e) {
+        this.setPage(e, "profile");
+// 	this.set("route", "profile");
       },
 
       toggleAccount: function() {

@@ -8,8 +8,8 @@
 <dom-module name="pop-up">
 
   <style>
-    paper-dialog {
-      display: inline-table;
+    paper-dialog:not([aria-hidden]) {
+      display: inline-table!important;
     }
   </style>
 
@@ -40,7 +40,6 @@
         notify: true
         // observer: ['openedChanged']
       },
-
       // ready: {
       //   type: Boolean,
       //   value: false,
