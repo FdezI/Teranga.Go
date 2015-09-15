@@ -86,7 +86,7 @@
       <div class="line-location">
         <div class="layout horizontal">
           <div class="location-name layout horizontal center">
-            <paper-icon-button active="{{act}}" class="stop-img" toggles src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
+            <paper-icon-button active="{{location.stop}}" class="stop-img" toggles src="../images/stop.png" disabled$="[[stop]]"></paper-icon-button>
             <span>[[location.city]]</span>
           </div>  
 
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <template is="dom-if" if="[[!act]]">
+      <template is="dom-if" if="[[!location.stop]]">
         <div class="line-location">
           <div class="layout horizontal center">
             <paper-input class="input-location" label="Dirección" placeholder="c/ dirección, nºX" value="{{location.address::input}}" readonly$="[[lockAddress]]" maxlength="45" required></paper-input>
@@ -157,7 +157,7 @@
         // name: String,
         // address: String,
         stop: Boolean,
-        act: Boolean,
+        // act: Boolean,
         lockAddress: Boolean,
         retardation: Boolean,
         arrival: {
@@ -166,6 +166,9 @@
         }
       },
       observers: ['retardationChanged(location.retardation)'],
+      attached: function() {
+        if(this.stop) this.location.stop = true;
+      },
       tag: function(arrival) {
         return arrival ? "Llegada" : "Salida";
       },
