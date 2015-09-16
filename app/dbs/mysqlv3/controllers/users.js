@@ -165,7 +165,7 @@ exports.getPackages = function(req, res, next) {
 								LEFT JOIN packageTrips PT ON PT.package = idpackage\
 								LEFT JOIN packageRequests PR ON PR.package = idpackage\
 								LEFT JOIN trip T ON idtrip = PT.trip OR idtrip = PR.trip\
-								JOIN tripPoints TP ON TP.trip = PT.trip AND TP.order = 99\
+								LEFT JOIN tripPoints TP ON TP.trip = PT.trip AND TP.order = 99\
 							WHERE emitter = ? OR receiver = ?\
 							GROUP BY idpackage", [user, user, user, user], function(err, rows, fields) {
 		if(err) return next(err);
