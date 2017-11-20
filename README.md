@@ -1,14 +1,15 @@
 # Teranga.Go
 
+Memoria [disponible en el repositorio](https://github.com/FdezI/Teranga.Go/blob/master/Memoria.pdf).
 
-##Instalación
+## Instalación
 
-####Requisitos previos:
+#### Requisitos previos:
 
 - **Nodejs:** ```# apt-get install nodejs```
 - **MySQL:** ```# apt-get install mysql-server```
 
-####Descarga del proyecto:
+#### Descarga del proyecto:
 
 * Mediante el uso de git:
 
@@ -17,7 +18,7 @@
 * A través de la [interfaz web](https://github.com/FdezI/Teranga.Go), utilizando el botón "[Download ZIP](https://github.com/FdezI/Teranga.Go/archive/master.zip)"
 
 
-####Puesta en marcha de la base de datos de prueba:
+#### Puesta en marcha de la base de datos de prueba:
 
 ```$  mysql -u root -p[root_password] < Teranga.Go/tfgdata.sql```
 
@@ -25,12 +26,12 @@ La instrucción anterior creará la base de datos necesaria así como creará al
 (Recomendado poner un espacio antes de la órden para no registrar la misma, junto con la contraseña, en el historial)
 
 
-##Ejecución
+## Ejecución
 
 ```$ cd Teranga.Go/ && nodejs server.js```
 
 
-##Acceso
+## Acceso
 
 Desde cualquier navegador (recomendado chrome):
 
@@ -39,7 +40,7 @@ Desde cualquier navegador (recomendado chrome):
 Para acceder a la API REST (web-service), basta con realizar una petición *GET*, *POST* o *PUT* al servidor, dependiendo de la acción deseada (recomendado usar la aplicación **POSTMAN**)
 
 
-##Actualización a la última versión:
+## Actualización a la última versión:
 
 Desde la misma carpeta que se ejecutó el clone:
 
